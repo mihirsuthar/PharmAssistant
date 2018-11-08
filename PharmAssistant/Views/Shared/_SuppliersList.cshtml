@@ -1,0 +1,39 @@
+﻿@model ICollection<PharmAsistant.Models.Supplier>
+
+
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Supplier Name</th>
+                <th>Phone No.</th>
+                <th>EmailId</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var supplier in Model)
+            {
+                <tr>
+                    <td>@supplier.SupplierId</td>
+                    <td>@supplier.Name</td>
+                    <td>@supplier.ContactNo</td>
+                    <td>@supplier.EmailId</td>
+                    <td>
+                        @Html.ActionLink("Edit", "EditSupplier", "Supplier", new { ID = supplier.SupplierId }, new { @class = "label label-primary" })
+                        @Html.ActionLink("Delete", "DeleteSupplier", "Supplier", new { ID = supplier.SupplierId }, new { @class = "label label-danger", onclick = "return confirm('Are sure to delete record of \"" +  supplier.Name.Trim() + "\"?');" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        <i class="fa fa-warning"></i> No suppliers available yet!
+    </div>
+}

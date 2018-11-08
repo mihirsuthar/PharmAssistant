@@ -1,0 +1,171 @@
+﻿@model PharmAssistant.Models.ViewModels.SupplierViewModel
+
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		//validate Contact Number
+		$('#contactno').on('keydown', function (e) {
+			if (e.which == '8' || e.which == '46') {
+				if ($('#contactno').val().length > 12) {
+					$('#contactnoErrorMsg').html('Contact number must have maximum 12 digits.');
+				}
+				else {
+					$('#contactnoErrorMsg').html('');
+				}
+			}
+		});
+
+		$('#contactno').on('keypress', function (e) {
+
+			if (e.metaKey || e.which <= 0 || /[0-9]/.test(String.fromCharCode(e.which)) || e.which == '8' || e.which == '46') {
+				if ($('#contactno').val().length > 11) {
+					$('#contactnoErrorMsg').html('Contact number must have maximum 12 digits.');
+					return false;
+				}
+				else {
+					$('#contactnoErrorMsg').html('');
+					return true;
+				}
+
+				$('#contactnoErrorMsg').html('');
+				return true;
+			}
+			else {
+				$('#contactnoErrorMsg').html('Only numbers are allowed for contact number.');
+				return false;
+			}
+		})
+	});
+
+	function validateForm() {
+		//validate Email Id
+		var email = $('#emailid').val().trim();
+		var pattern = /^\b[A-Z0-9._%-]+@@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i;
+
+		if (!pattern.test(email)) {
+			//Show Invalid email Message
+			$('#emailid').val('');
+			$('#emailidErrorMsg').html('Invalid Email Id');
+			return false;
+		}
+	}
+
+	function onSuccess() {
+		alert('Success');
+		$('#addUpdateButton').val('Add Supplier');
+		resetFields();
+	}
+
+	function onFailure() {
+		alert('Failure');
+	}
+
+	function resetErrorMessages() {
+		$('#nameErrorMsg').html("");
+		$('#addressErrorMsg').html("");
+		$('#contactnoErrorMsg').html("");
+		$('#emailidErrorMsg').html("");
+	}
+
+	function resetFields() {
+		resetErrorMessages();
+
+		$('#name').val("");
+		$('#address').val("");
+		$('#contactno').val("");
+		$('#emailid').val("");
+		$('#description').val("");
+	}
+</script>
+
+
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="panel">
+			<div class="panel-heading">
+				<h3 class="panel-title">Add Supplier</h3>
+			</div>
+			<div class="panel-body">
+				@{
+					string action = "";
+				}
+
+				@if (Model.Supplier.Name != null)
+				{
+					action = "UpdateSupplier";
+				}
+				else
+				{
+					action = "AddSupplier";
+				}
+
+				@*@using (Html.BeginForm("AddSupplier", "Supplier", FormMethod.Post))*@
+				@using (Ajax.BeginForm(action, "Supplier", new AjaxOptions
+				{
+					HttpMethod = "POST",
+					UpdateTargetId = "SuppliersList",
+					InsertionMode = InsertionMode.Replace,
+					OnSuccess = "onSuccess",
+					OnFailure = "onFailure"
+				}))
+				{
+					@Html.AntiForgeryToken()
+
+					@Html.HiddenFor(model => model.Supplier.SupplierId)
+
+					@Html.TextBoxFor(model => model.Supplier.Name, new { id = "name", @class = "form-control", placeholder = "Supplier Name" })
+					@Html.ValidationMessageFor(model => model.Supplier.Name, "", new { @class = "text-danger", id = "nameErrorMsg" })<br />
+
+					@Html.TextAreaFor(model => model.Supplier.Address, new { id = "address", @class = "form-control", placeholder = "Address", rows = "4" })
+					@Html.ValidationMessageFor(model => model.Supplier.Address, "", new { @class = "text-danger", id = "addressErrorMsg" })<br />
+
+					@Html.TextBoxFor(model => model.Supplier.ContactNo, "{0:#.#}", new { id = "contactno", @class = "form-control", placeholder = "Contact Number" })
+					@Html.ValidationMessageFor(model => model.Supplier.ContactNo, "", new { @class = "text-danger", id = "contactnoErrorMsg" })<br />
+
+					@Html.TextBoxFor(model => model.Supplier.EmailId, new { id = "emailid", @class = "form-control", placeholder = "Email Id" })
+					@Html.ValidationMessageFor(model => model.Supplier.EmailId, "", new { @class = "text-danger", id = "emailidErrorMsg" })<br />
+
+					@Html.TextAreaFor(model => model.Supplier.Description, new { id = "description", @class = "form-control", placeholder = "Description", rows = "4" })
+					<br />
+
+					<div class="row">
+						<div class="col-md-6">
+							@if (Model.Supplier.Name != null)
+							{
+								<input type="submit" id="addUpdateButton" value="Update" class="btn btn-primary btn-block" onclick="return validateForm();" />
+							}
+							else
+							{
+								<input type="submit" id="addUpdateButton" value="Add Supplier" class="btn btn-primary btn-block" onclick="return validateForm();" />
+							}
+
+						</div>
+						<div class="col-md-6">
+							<button type="button" class="btn btn-default btn-block" onclick="resetFields();">Cancel</button>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-8">
+		<div class="panel">
+			<div class="panel-heading">
+				<h3>Suppliers</h3>
+			</div>
+			<div class="panel-body" id="SuppliersList">
+				@{ Html.RenderPartial("_SuppliersList", Model.SuppliersList); }
+			</div>
+		</div>
+	</div>
+</div>
