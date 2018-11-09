@@ -1,4 +1,4 @@
-﻿using PharmAsistant.Models;
+﻿using PharmAssistant.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

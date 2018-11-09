@@ -235,7 +235,6 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RoleAdminController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
@@ -243,29 +242,35 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\AppIdentityDbContext.cs" />
     <Compile Include="Infrastructure\AppRoleManager.cs" />
     <Compile Include="Infrastructure\AppUserManager.cs" />
     <Compile Include="Infrastructure\ClaimAccessAttribute.cs" />
     <Compile Include="Infrastructure\ClaimsRoles.cs" />
     <Compile Include="Infrastructure\IdentityHelpers.cs" />
     <Compile Include="Infrastructure\LocationClaimsProvider.cs" />
+    <Compile Include="Migrations\201811090653065_FirstCommit.cs" />
+    <Compile Include="Migrations\201811090653065_FirstCommit.Designer.cs">
+      <DependentUpon>201811090653065_FirstCommit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\AppUser.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Doctor.cs" />
     <Compile Include="Models\Manufacturer.cs" />
     <Compile Include="Models\MembershipAccount.cs" />
+    <Compile Include="Models\MembershipDiscount.cs" />
+    <Compile Include="Models\MembershipType.cs" />
     <Compile Include="Models\PharmAssistantContext.cs" />
-    <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\ProductCategory.cs" />
+    <Compile Include="Models\Medicine.cs" />
+    <Compile Include="Models\MedicineCategory.cs" />
     <Compile Include="Models\PurchaseItem.cs" />
     <Compile Include="Models\PurchaseOrder.cs" />
     <Compile Include="Models\SalesItem.cs" />
     <Compile Include="Models\SalesOrder.cs" />
+    <Compile Include="Models\Shelf.cs" />
     <Compile Include="Models\StockEntry.cs" />
     <Compile Include="Models\Supplier.cs" />
-    <Compile Include="Models\User.cs" />
     <Compile Include="Models\ViewModels\UserViewModels.cs" />
     <Compile Include="Models\ViewModels\SupplierViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -289,6 +294,11 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Diagram\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201811090653065_FirstCommit.resx">
+      <DependentUpon>201811090653065_FirstCommit.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

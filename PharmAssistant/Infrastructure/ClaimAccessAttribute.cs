@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 
-namespace PharmAsistant.Infrastructure
+namespace PharmAssistant.Infrastructure
 {
     public class ClaimAccessAttribute: AuthorizeAttribute
     {

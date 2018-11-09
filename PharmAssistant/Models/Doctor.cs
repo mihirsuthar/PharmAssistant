@@ -5,7 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PharmAsistant.Models
+namespace PharmAssistant.Models
 {
     public class Doctor
     {
@@ -13,17 +13,21 @@ namespace PharmAsistant.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
         public int DoctorId { get; set; }
+
         [StringLength(25)]
         [Column(TypeName = "char")]
-        [Required]
+        [Required(ErrorMessage = "Doctor name is required.")]
         public string Name { get; set; }
+
         [StringLength(50)]
         [Column(TypeName = "char")]
         public string Address { get; set; }
+
         public long ContactNo { get; set; }
+
         [StringLength(30)]
         [Column(TypeName = "char")]
-        [Required]
+        [Required(ErrorMessage = "Specialization is required.")]
         public string Specilization { get; set; }
 
         public virtual ICollection<SalesOrder> SalesOrders { get; set; }

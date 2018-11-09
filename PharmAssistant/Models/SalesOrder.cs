@@ -5,7 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PharmAsistant.Models
+namespace PharmAssistant.Models
 {
     public class SalesOrder
     {
@@ -13,30 +13,33 @@ namespace PharmAsistant.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
         public int SalesOrderId { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Please enter date.")]
         public DateTime Date { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Please enter amount.")]
         public double Amount { get; set; }
-        [Required]
+        
         public double Discount { get; set; }
-        [Required]
+
         public double Tax { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Grand total is required.")]
         public double GrandTotal { get; set; }
-        [Required]
-        public int StockId { get; set; }
+        
         [Required]
         public int CustomerId { get; set; }
+
         public int DoctorId { get; set; }
-        [StringLength(20)]
-        [Column(TypeName = "char")]
+
+        [StringLength(128)]
+        [Column(TypeName = "nvarchar")]
         [Required]
         public string UserId { get; set; }
-
-        public virtual StockEntry StockEntry { get; set; }
+                
         public virtual Customer Customer { get; set; }
         public virtual Doctor Doctor { get; set; }
-        public virtual User User { get; set; }
+        public virtual AppUser User { get; set; }
         public virtual ICollection<SalesItem> SalesItems { get; set; }
     }
 }

@@ -1,25 +1,20 @@
 ﻿using Microsoft.AspNet.Identity;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin;
-using IdentityDemo.Infrastructure;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-using PharmAsistant.Infrastructure;
+using PharmAssistant.Infrastructure;
 using PharmAssistant.Models.ViewModels;
-using PharmAsistant.Models;
+using PharmAssistant.Models;
 
 namespace PharmAsistant.Controllers
 {
     [Authorize]
     public class RoleAdminController : Controller
     {
-
         private AppUserManager UserManager
         {
             get
@@ -34,8 +29,7 @@ namespace PharmAsistant.Controllers
                 return HttpContext.GetOwinContext().GetUserManager<AppRoleManager>();
             }
         }
-
-
+        
         // GET: RoleAdmin
         public ActionResult Index()
         {
@@ -46,8 +40,7 @@ namespace PharmAsistant.Controllers
         {
             return View();
         }
-
-
+        
         [HttpPost]
         public async Task<ActionResult> Create([Required] string name)
         {

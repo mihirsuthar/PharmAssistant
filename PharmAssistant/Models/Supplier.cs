@@ -5,7 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PharmAsistant.Models
+namespace PharmAssistant.Models
 {
     public class Supplier
     {
@@ -36,7 +36,7 @@ namespace PharmAsistant.Models
         [Column(TypeName = "char")]
         public string Description { get; set; }
 
-        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<Medicine> Products { get; set; }
         public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
     }
 }

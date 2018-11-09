@@ -5,7 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PharmAsistant.Models
+namespace PharmAssistant.Models
 {
     public class PurchaseItem
     {
@@ -17,21 +17,21 @@ namespace PharmAsistant.Models
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Required]
+        [Required(ErrorMessage = "Please select medicine.")]
         [Column(Order = 2)]
-        public int ProductId { get; set; }
-        [Required]
-        public long BatchNo { get; set; }
-        [Required]
+        public int MedicineId { get; set; }
+        [Required(ErrorMessage = "Batch number is required.")]
+        public long BatchNumber { get; set; }
+        [Required(ErrorMessage = "Please specify quantity.")]
         public int Quantity { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Cost price is required.")]
         public double CostPrice { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Selling price is required.")]
         public double SellingPrice { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Please select expiry date.")]
         public DateTime ExpiryDate { get; set; }
 
         public virtual PurchaseOrder PurchaseOrder { get; set; }
-        public virtual Product Product { get; set; }
+        public virtual Medicine Medicine { get; set; }
     }
 }

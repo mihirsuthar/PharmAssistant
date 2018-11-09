@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Web;
 
-namespace PharmAsistant.Infrastructure
+namespace PharmAssistant.Infrastructure
 {
     public class ClaimsRoles
     {

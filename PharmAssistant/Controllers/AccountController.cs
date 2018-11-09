@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using PharmAsistant.Infrastructure;
-using PharmAsistant.Models;
 using PharmAssistant.Infrastructure;
+using PharmAssistant.Models;
 using PharmAssistant.Models.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -30,6 +27,80 @@ namespace PharmAsistant.Controllers
             }
         }
 
+        // GET: Admin
+        public ActionResult Index()
+        {
+            return View(UserManager.Users);
+        }
+
+        public ActionResult Create()
+        {
+            return View(new CreateUserModel());
+        }
+
+        [HttpPost]
+        [ActionName("CreateNewUser")]
+        public async Task<ActionResult> Create(CreateUserModel user)
+        {
+            if (ModelState.IsValid)
+            {
+                AppUser newUser = new AppUser { UserName = user.Name, Email = user.Email, City = user.City };
+                IdentityResult result = await UserManager.CreateAsync(newUser, user.Password);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    AddErrorsFromResult(result);
+                }
+            }
+            return View(user);
+        }
+
+        public ActionResult EditUser(string id)
+        {
+            TempData["UserId"] = id;
+            return RedirectToAction("EditUser");
+        }
+
+        public ActionResult EditUser()
+        {
+            string id = TempData["UserId"].ToString();
+            return View();
+        }
+
+        public ActionResult DeleteUser(string id)
+        {
+            TempData["UserId"] = id;
+            return RedirectToAction("DeleteUser");
+        }
+
+        public async Task<ActionResult> DeleteUser()
+        {
+            string id = TempData["UserId"].ToString();
+            AppUser user = await UserManager.FindByIdAsync(id);
+
+            if (user != null)
+            {
+                IdentityResult result = await UserManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return View("Error", result.Errors);
+                }
+            }
+            else
+            {
+                return View("Error", new string[] { "User not found." });
+            }
+        }
+        
         [AllowAnonymous]
         // GET: Account
         public ActionResult Login(string returnUrl)
@@ -73,6 +144,19 @@ namespace PharmAsistant.Controllers
         {
             AuthManager.SignOut();
             return RedirectToAction("Index", "Home");
+        }
+
+        private void AddErrorsFromResult(IdentityResult result)
+        {
+            List<string> errors = new List<string>();
+
+            foreach (string error in result.Errors)
+            {
+                errors.Add(error);
+                //ModelState.AddModelError("", error);
+            }
+
+            ViewBag.Errors = errors;
         }
     }
 }

@@ -5,25 +5,28 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PharmAsistant.Models
+namespace PharmAssistant.Models
 {
-    public class Product
+    public class Medicine
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
-        public int ProductId { get; set; }
+        public int MedicineId { get; set; }
+
         [StringLength(30)]
         [Column(TypeName = "char")]
-        [Required]
+        [Required(ErrorMessage = "Medicine name is required.")]
         public string Name { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Please select manufacturer.")]
         public int ManufacturerId { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Please select medicine category.")]
         public int CategoryId { get; set; }
 
         public virtual ICollection<Supplier> Suppliers { get; set; }
         public virtual Manufacturer Manufacturer { get; set; }
-        public virtual ProductCategory ProductCategory { get; set; }
+        public virtual MedicineCategory MedicineCategory { get; set; }
     }
 }

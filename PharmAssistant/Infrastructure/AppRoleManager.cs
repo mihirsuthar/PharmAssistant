@@ -2,13 +2,13 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using PharmAsistant.Models;
+using PharmAssistant.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace IdentityDemo.Infrastructure
+namespace PharmAssistant.Infrastructure
 {
     public class AppRoleManager : RoleManager<AppRole>, IDisposable
     {   
@@ -17,7 +17,7 @@ namespace IdentityDemo.Infrastructure
 
         public static AppRoleManager Create(IdentityFactoryOptions<AppRoleManager> options, IOwinContext context)
         {
-            return new AppRoleManager(new RoleStore<AppRole>(context.Get<AppIdentityDbContext>()));
+            return new AppRoleManager(new RoleStore<AppRole>(context.Get<PharmAssistantContext>()));
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace PharmAsistant.Controllers
+namespace PharmAssistant.Controllers
 {
     public class HomeController : Controller
     {

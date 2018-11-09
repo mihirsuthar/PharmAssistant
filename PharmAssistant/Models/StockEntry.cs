@@ -5,7 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PharmAsistant.Models
+namespace PharmAssistant.Models
 {
     public class StockEntry
     {
@@ -14,12 +14,12 @@ namespace PharmAsistant.Models
         [Required]
         public int StockId { get; set; }
 
-        [Required]
-        public int ProductId { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Please select medicine.")]
+        public int MedicineId { get; set; }
+        [Required(ErrorMessage = "Purchase order id is required.")]
         public int PurchaseOrderId { get; set; }
 
-        public virtual Product Product { get; set; }
+        public virtual Medicine Medicine { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }
     }
 }

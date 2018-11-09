@@ -1,4 +1,4 @@
-﻿using PharmAsistant.Models;
+﻿using PharmAssistant.Models;
 using PharmAssistant.Models.ViewModels;
 using System;
 using System.Collections.Generic;
