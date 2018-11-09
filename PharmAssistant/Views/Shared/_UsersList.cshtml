@@ -1,0 +1,30 @@
+﻿@model IQueryable<PharmAssistant.Models.AppUser>
+
+@if (Model != null && Model.Count() > 0)
+{
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>User Name</th>
+				<th>Phone Number</th>
+				<th>Email</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var user in Model)
+			{
+			<tr>
+				<td>@user.UserName</td>
+				<td>@user.PhoneNumber</td>
+				<td>@user.Email</td>
+				<td>
+					@Html.ActionLink("Edit", "EditUser", "Account", new { id = user.Id }, new { @class = "label label-primary"})
+					@Html.ActionLink("Delete", "DeleteUser", "Account", new { id = user.Id }, new { @class = "label label-danger", onclick = "return confirm('Are you sure to delete record of \"" + user.UserName.Trim() + "\"?')" })
+				</td>
+			</tr>
+			}
+		</tbody>
+	</table>
+
+}

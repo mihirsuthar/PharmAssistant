@@ -60,12 +60,12 @@
                             </li>*@
                         <!-- #endregion-->
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/assets/img/user.png" class="img-circle" alt="Avatar"> <span>Samuel</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/assets/img/user.png" class="img-circle" alt="Avatar"> <span>@HttpContext.Current.User.Identity.Name</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#"><i class="lnr lnr-user"></i> <span>My Profile</span></a></li>
                                 <li><a href="#"><i class="lnr lnr-envelope"></i> <span>Message</span></a></li>
                                 <li><a href="#"><i class="lnr lnr-cog"></i> <span>Settings</span></a></li>
-                                <li><a href="#"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
+                                <li><a href="@Url.Action("Logout", "Account")"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
                             </ul>
                         </li>
                     </ul>
@@ -83,8 +83,8 @@
                             <a href="#purchase" data-toggle="collapse" class="collapsed"><i class="lnr lnr-store"></i> <span>Purchase</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
                             <div id="purchase" class="collapse ">
                                 <ul class="nav">
-                                    <li><a href="page-profile.html" class="">New Purchase</a></li>
-                                    <li><a href="page-login.html" class="">Purchase History</a></li>
+                                    <li><a href="#" class="">New Purchase</a></li>
+                                    <li><a href="#" class="">Purchase History</a></li>
                                     <li><a href="@Url.Action("Index", "Supplier")" class="">Suppliers</a></li>
                                 </ul>
                             </div>
@@ -93,10 +93,10 @@
                             <a href="#inventory" data-toggle="collapse" class="collapsed"><i class="lnr lnr-database"></i> <span>Inventory</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
                             <div id="inventory" class="collapse ">
                                 <ul class="nav">
-                                    <li><a href="page-profile.html" class="">Stock</a></li>
-                                    <li><a href="page-login.html" class="">Generic Names</a></li>
-                                    <li><a href="page-lockscreen.html" class="">Items</a></li>
-                                    <li><a href="page-lockscreen.html" class="">Manufacturers</a></li>
+                                    <li><a href="#" class="">Stock</a></li>
+                                    <li><a href="#" class="">Generic Names</a></li>
+                                    <li><a href="#" class="">Items</a></li>
+                                    <li><a href="#" class="">Manufacturers</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -104,23 +104,32 @@
                             <a href="#sales" data-toggle="collapse" class="collapsed"><i class="lnr lnr-briefcase"></i> <span>Sales</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
                             <div id="sales" class="collapse ">
                                 <ul class="nav">
-                                    <li><a href="page-profile.html" class="">New Sales</a></li>
-                                    <li><a href="page-login.html" class="">Sales History</a></li>
-                                    <li><a href="page-lockscreen.html" class="">Sales Return</a></li>
+                                    <li><a href="#" class="">New Sales</a></li>
+                                    <li><a href="#" class="">Sales History</a></li>
+                                    <li><a href="#" class="">Sales Return</a></li>
                                 </ul>
                             </div>
                         </li>
-                        <li>
+						<li>
+							<a href="#users" data-toggle="collapse" class="collapsed"><i class="lnr lnr-users"></i><span>Authentication</span><i class="icon-submenu lnr lnr-chevron-right"></i></a>
+							<div id="users" class="collapse ">
+								<ul class="nav">
+									<li><a href="@Url.Action("Index", "Account")" class="">Users</a></li>
+									<li><a href="#" class="">Roles</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
                             <a href="#reports" data-toggle="collapse" class="collapsed"><i class="lnr lnr-chart-bars"></i> <span>Reports</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
                             <div id="reports" class="collapse ">
                                 <ul class="nav">
-                                    <li><a href="page-profile.html" class="">Stocks</a></li>
-                                    <li><a href="page-login.html" class="">Sales</a></li>
-                                    <li><a href="page-lockscreen.html" class="">Purchase</a></li>
+                                    <li><a href="#" class="">Stocks</a></li>
+                                    <li><a href="#" class="">Sales</a></li>
+                                    <li><a href="#" class="">Purchase</a></li>
                                 </ul>
                             </div>
                         </li>
-                        <li><a href="tables.html" class=""><i class="lnr lnr-users"></i> <span>Users</span></a></li>
+                        
                     </ul>
                 </nav>
             </div>

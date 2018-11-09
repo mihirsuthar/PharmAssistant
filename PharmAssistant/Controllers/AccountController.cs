@@ -5,6 +5,7 @@ using PharmAssistant.Infrastructure;
 using PharmAssistant.Models;
 using PharmAssistant.Models.ViewModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -30,61 +31,95 @@ namespace PharmAsistant.Controllers
         // GET: Admin
         public ActionResult Index()
         {
-            return View(UserManager.Users);
+            UserViewModel userData = new UserViewModel();
+            userData.User = new CreateUserModel();
+            userData.UsersList = UserManager.Users;
+
+            return View(userData);
         }
 
-        public ActionResult Create()
-        {
-            return View(new CreateUserModel());
-        }
+        //public ActionResult Create()
+        //{
+        //    return View(new CreateUserModel());
+        //}
 
-        [HttpPost]
-        [ActionName("CreateNewUser")]
-        public async Task<ActionResult> Create(CreateUserModel user)
+        [HttpPost]        
+        //public async Task<ActionResult> CreateUser(CreateUserModel user)
+        public ActionResult CreateUser(CreateUserModel user)
         {
+            //IQueryable<AppUser> users = null;
             if (ModelState.IsValid)
             {
-                AppUser newUser = new AppUser { UserName = user.Name, Email = user.Email, City = user.City };
-                IdentityResult result = await UserManager.CreateAsync(newUser, user.Password);
+                AppUser newUser = new AppUser { UserName = user.Name, PhoneNumber = user.PhoneNumber.ToString(), Email = user.Email, City = user.City };
+                IdentityResult result = UserManager.Create(newUser, user.Password);
+                
+
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index");
+                    //users = UserManager.Users;
+                    ViewBag.SuccessMessage = "User Created Successfully.";
                 }
                 else
                 {
-                    AddErrorsFromResult(result);
-                }
+                    ViewBag.ErrorMessage = "Unable to create user.";
+                }                
             }
-            return View(user);
+
+            //return RedirectToAction("Index");
+            return PartialView("_UsersList", GetAllUsers());
         }
 
         public ActionResult EditUser(string id)
         {
-            TempData["UserId"] = id;
-            return RedirectToAction("EditUser");
+            UserViewModel userData = new UserViewModel(); ;
+
+            using (PharmAssistantContext db = new PharmAssistantContext())
+            {
+                AppUser user = UserManager.FindById(id);
+                userData.User = new CreateUserModel { Name = user.UserName, PhoneNumber = long.Parse(user.PhoneNumber), Email = user.Email, City = user.City };
+                userData.UsersList = UserManager.Users;                
+            }
+
+            ViewBag.UserId = id;
+
+            return View("Index", userData);
+            
         }
 
-        public ActionResult EditUser()
+        public ActionResult UpdateUser(CreateUserModel user, string UserId)
         {
-            string id = TempData["UserId"].ToString();
-            return View();
+            AppUser updateUser = UserManager.FindById(UserId);
+
+            if(updateUser != null)
+            {
+                updateUser.Email = user.Email;
+                updateUser.PhoneNumber = user.PhoneNumber.ToString();
+
+                IdentityResult result = UserManager.Update(updateUser);
+
+                if (result.Succeeded)
+                {   
+                    return Json(new { RedirectUrl = Url.Action("Index") });
+                }
+                else
+                {
+                    return View("Error", result.Errors);
+                }
+            }
+            else
+            {
+                return View("Error", new string[] { "User not found." });
+            }
         }
 
         public ActionResult DeleteUser(string id)
-        {
-            TempData["UserId"] = id;
-            return RedirectToAction("DeleteUser");
-        }
-
-        public async Task<ActionResult> DeleteUser()
-        {
-            string id = TempData["UserId"].ToString();
-            AppUser user = await UserManager.FindByIdAsync(id);
+        {   
+            AppUser user = UserManager.FindById(id);
 
             if (user != null)
             {
-                IdentityResult result = await UserManager.DeleteAsync(user);
+                IdentityResult result = UserManager.Delete(user);
 
                 if (result.Succeeded)
                 {
@@ -122,7 +157,8 @@ namespace PharmAsistant.Controllers
             AppUser user = await UserManager.FindAsync(details.Name, details.Password);
             if(user == null)
             {
-                ModelState.AddModelError("", "Invalid Username or Password.");
+                //ModelState.AddModelError("", "Invalid Username or Password.");
+                ViewBag.AuthError = "Invalid Username or Password.";
             }
             else
             {
@@ -157,6 +193,11 @@ namespace PharmAsistant.Controllers
             }
 
             ViewBag.Errors = errors;
+        }
+
+        private IQueryable<AppUser> GetAllUsers()
+        {
+            return UserManager.Users;
         }
     }
 }

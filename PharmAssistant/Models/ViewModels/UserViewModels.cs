@@ -9,18 +9,24 @@ namespace PharmAssistant.Models.ViewModels
 {
     public class CreateUserModel
     {
-        [Required]
+        [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Phone number is required")]
+        public long PhoneNumber { get; set; }
+        [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
+        [Required(ErrorMessage = "Password is required")]
+        [Compare("Password", ErrorMessage = "Both passwords must match")]
+        public string ConfirmPassword { get; set; }
 
         public string City { get; set; }
     }
 
     public class LoginModel
     {
+        [Key]
         [Required]
         public string Name { get; set; }
         [Required]

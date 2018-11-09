@@ -1,0 +1,202 @@
+﻿@model PharmAssistant.Models.ViewModels.UserViewModel
+
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		//validate Contact Number
+		$('#phoneNumber').on('keydown', function (e) {
+			if (e.which == '8' || e.which == '46') {
+				if ($('#phoneNumber').val().length > 12) {
+					$('#phoneNumberMessage').html('Phone number must have maximum 12 digits.');
+				}
+				else {
+					$('#phoneNumberMessage').html('');
+				}
+			}
+		});
+
+		$('#phoneNumber').on('keypress', function (e) {
+
+			if (e.metaKey || e.which <= 0 || /[0-9]/.test(String.fromCharCode(e.which)) || e.which == '8' || e.which == '46') {
+				if ($('#phoneNumber').val().length > 11) {
+					$('#phoneNumberMessage').html('Phone number must have maximum 12 digits.');
+					return false;
+				}
+				else {
+					$('#phoneNumberMessage').html('');
+					return true;
+				}
+
+				$('#phoneNumberMessage').html('');
+				return true;
+			}
+			else {
+				$('#phoneNumberMessage').html('Only numbers are allowed for contact number.');
+				return false;
+			}
+		})
+	});
+
+	function validateForm() {
+		//validate Email Id
+		var email = $('#email').val().trim();
+		var pattern = /^\b[A-Z0-9._%-]+@@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i;
+
+		if (!pattern.test(email)) {
+			//Show Invalid email Message
+			$('#email').val('');
+			$('#emailMessage').html('Invalid Email Id');
+			return false;
+		}
+	}
+
+	function onSuccess(data) {
+		alert('Success');
+
+		if (data.RedirectUrl) {
+			window.location.href = data.RedirectUrl;
+		}
+
+		$('#addUpdateButton').val('Add User');
+		resetFields();
+	}
+
+	function onFailure() {
+		alert('Failure');
+	}
+
+	function resetErrorMessages() {
+		$('#userNameMessage').html("");
+		$('#emailMessage').html("");
+		$('#phoneNumberMessage').html("");
+		$('#passwordMessage').html("");
+		$('#confirmPasswordMessage').html("");
+	}
+
+	function resetFields() {
+		resetErrorMessages();
+
+		$('#addUpdateButton').val('Add User');
+
+		$('#userName').val("");
+		$('#email').val("");
+		$('#phoneNumber').val("");
+		$('#password').val("");
+		$('#confirmPassword').val("");
+	}
+
+</script>
+
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="panel">
+			<div class="panel-heading">
+				<h3 class="panel-title">Add User</h3>
+			</div>
+			<div class="panel-body">
+				@{
+					string action = "";
+					string UserId = ViewBag.UserId;
+				}
+
+				@if (Model.User.Name != null)
+				{
+					action = "UpdateUser";
+				}
+				else
+				{
+					action = "CreateUser";
+				}
+
+				@using (Ajax.BeginForm(action, "Account", new AjaxOptions
+				{
+					HttpMethod = "POST",
+					UpdateTargetId = "UsersList",
+					InsertionMode = InsertionMode.Replace,
+					OnSuccess = "onSuccess",
+					OnFailure = "onFailure"
+				}))
+				{
+					@Html.AntiForgeryToken()
+
+					if (ViewBag.SuccessMessage != null)
+					{
+						<span class="alert alert-success">ViewBag.SuccessMessage</span>
+					}
+					if (ViewBag.ErrorMessage != null)
+					{
+						<span class="alert alert-danger">ViewBag.ErrorMessage</span>
+					}
+
+					@Html.Hidden("UserId", UserId)
+
+					if (action == "UpdateUser")
+					{
+						@Html.TextBoxFor(model => model.User.Name, new { id = "userName", @class = "form-control", placeholder = "User Name", @readonly = "readonly" })
+						@Html.ValidationMessageFor(model => model.User.Name, "", new { @class = "text-danger", id = "userNameMessage" })<br />
+					}
+					else
+					{
+						@Html.TextBoxFor(model => model.User.Name, new { id = "userName", @class = "form-control", placeholder = "User Name" })
+						@Html.ValidationMessageFor(model => model.User.Name, "", new { @class = "text-danger", id = "userNameMessage" })<br />
+					}
+									   
+					@Html.TextBoxFor(model => model.User.Email, new { id = "email", @class = "form-control", placeholder = "Email Id" })
+					@Html.ValidationMessageFor(model => model.User.Email, "", new { @class = "text-danger", id = "emailMessage" })<br />
+
+					@Html.TextBoxFor(model => model.User.PhoneNumber, "{0:#.#}", new { id = "phoneNumber", @class = "form-control", placeholder = "Phone Number" })
+					@Html.ValidationMessageFor(model => model.User.PhoneNumber, "", new { @class = "text-danger", id = "phoneNumberMessage" })<br />
+
+					if (action == "CreateUser")
+					{
+						@Html.PasswordFor(model => model.User.Password, new { id = "password", @class = "form-control", placeholder = "Password" })
+						@Html.ValidationMessageFor(model => model.User.Password, "", new { @class = "text-danger", id = "passwordMessage" })<br />
+
+						@Html.PasswordFor(model => model.User.ConfirmPassword, new { id = "confirmPassword", @class = "form-control", placeholder = "Confirmation Password" })
+						@Html.ValidationMessageFor(model => model.User.ConfirmPassword, "", new { @class = "text-danger", id = "confirmPasswordMessage" })<br />
+					}
+
+					<div class="row">
+						<div class="col-md-6">
+							@if (Model.User.Name != null)
+							{
+								<input type="submit" id="addUpdateButton" value="Update" class="btn btn-primary btn-block" onclick="return validateForm();" />
+							}
+							else
+							{
+								<input type="submit" id="addUpdateButton" value="Add User" class="btn btn-primary btn-block" onclick="return validateForm();" />
+							}
+
+						</div>
+						<div class="col-md-6">
+							<button type="button" class="btn btn-default btn-block" onclick="resetFields();">Cancel</button>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-8">
+		<div class="panel">
+			<div class="panel-heading">
+				<h3>Users</h3>
+			</div>
+			<div class="panel-body" id="UsersList">
+				@{ Html.RenderPartial("_UsersList", Model.UsersList); }
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
