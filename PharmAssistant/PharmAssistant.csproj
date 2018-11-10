@@ -271,6 +271,7 @@
     <Compile Include="Models\Shelf.cs" />
     <Compile Include="Models\StockEntry.cs" />
     <Compile Include="Models\Supplier.cs" />
+    <Compile Include="Models\ViewModels\RoleViewModel.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
     <Compile Include="Models\ViewModels\UserViewModels.cs" />
     <Compile Include="Models\ViewModels\SupplierViewModel.cs" />
@@ -288,6 +289,9 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Shared\_UsersList.cshtml" />
+    <Content Include="Views\RoleAdmin\Index.cshtml" />
+    <Content Include="Views\Shared\_RolesList.cshtml" />
+    <Content Include="Views\RoleAdmin\EditRole.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

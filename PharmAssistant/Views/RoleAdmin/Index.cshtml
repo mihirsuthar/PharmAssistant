@@ -1,0 +1,95 @@
+﻿@model IQueryable<PharmAssistant.Models.AppRole>
+@{
+	ViewBag.Title = "Roles";
+	Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<script type="text/javascript">
+
+	function validateForm() {
+		//validate Email Id
+		var roleName = $('#roleName').val().trim();
+		if (!roleName || roleName == '' || roleName == undefined) {
+			alert("Role Name is required.");
+			$('#roleNameErrorMessage').html("Role Name is required.");//innerHTML = "Role Name is required."; //
+			return false;
+		}
+		return true;
+	}
+
+	function onSuccess() {
+		alert('Success');		
+		resetFields();
+	}
+
+	function onFailure() {
+		alert('Failure');
+	}
+
+	function resetErrorMessages() {		
+		$('#roleNameErrorMessage').html("");
+	}
+
+	function resetFields() {
+		resetErrorMessages();
+
+		$('#roleName').val("");		
+	}
+
+</script>
+
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="panel">
+			<div class="panel-heading">
+				<h3 class="panel-title">Add Role</h3>
+			</div>
+			<div class="panel-body">
+				@using (Ajax.BeginForm("CreateRole", "RoleAdmin", new AjaxOptions
+				{
+					HttpMethod = "POST",
+					UpdateTargetId = "RolesList",
+					InsertionMode = InsertionMode.Replace,
+					OnSuccess = "onSuccess",
+					OnFailure = "onFailure"
+				}))
+				{
+					@Html.AntiForgeryToken()
+
+					@Html.TextBox("name", "", new { @class = "form-control", id="roleName", placeholder = "Enter Role Name" })
+					<span id="roleNameErrorMessage" class="text text-danger"></span><br/><br/>
+
+					<div class="row">
+						<div class="col-md-6">
+							<input type="submit" id="addUpdateButton" value="Add Role" class="btn btn-primary btn-block" onclick="return validateForm();" />
+						</div>
+						<div class="col-md-6">
+							<button type="button" class="btn btn-default btn-block" onclick="resetFields();">Cancel</button>
+						</div>
+					</div>
+
+
+				}
+
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-8">
+		<div class="panel">
+			<div class="panel-heading">
+				<h3>Roles</h3>
+			</div>
+			<div class="panel-body" id="RolesList">
+				@{ Html.RenderPartial("_RolesList", Model); }
+			</div>
+		</div>
+	</div>
+
+
+</div>

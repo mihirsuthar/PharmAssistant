@@ -42,15 +42,15 @@ namespace PharmAsistant.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult> Create([Required] string name)
+        public async Task<ActionResult> CreateRole([Required] string name)
         {
             if (ModelState.IsValid)
             {
                 IdentityResult result = await RoleManager.CreateAsync(new AppRole(name));
 
                 if (result.Succeeded)
-                {
-                    return RedirectToAction("Index");
+                {   
+                    return PartialView("_RolesList", RoleManager.Roles);
                 }
                 else
                 {
@@ -60,15 +60,14 @@ namespace PharmAsistant.Controllers
 
             return View(name);
         }
-
-        [HttpPost]
-        public async Task<ActionResult> Delete(string id)
+        
+        public ActionResult DeleteRole(string id)
         {
-            AppRole role = await RoleManager.FindByIdAsync(id);
+            AppRole role = RoleManager.FindById(id);
 
             if (role != null)
             {
-                IdentityResult result = await RoleManager.DeleteAsync(role);
+                IdentityResult result = RoleManager.Delete(role);
 
                 if (result.Succeeded)
                 {
@@ -92,7 +91,7 @@ namespace PharmAsistant.Controllers
             IEnumerable<AppUser> members = UserManager.Users.Where(x => memberIDs.Any(y => y == x.Id));
             IEnumerable<AppUser> nonMembers = UserManager.Users.Except(members);
 
-            return View(new RoleEditModel
+            return View("EditRole", new RoleEditModel
                         {
                             Role = role,
                             Members = members,
@@ -111,7 +110,8 @@ namespace PharmAsistant.Controllers
                     result = await UserManager.AddToRoleAsync(userId, model.RoleName);
                     if (!result.Succeeded)
                     {
-                        return View("Error", result.Errors);
+                        ViewBag.Errors = result.Errors;
+                        return View("EditRoles");
                     }
                 }
                 foreach (string userId in model.IdsToDelete ?? new string[] { })
@@ -119,7 +119,8 @@ namespace PharmAsistant.Controllers
                     result = await UserManager.RemoveFromRoleAsync(userId, model.RoleName);
                     if (!result.Succeeded)
                     {
-                        return View("Error", result.Errors);
+                        ViewBag.Errors = result.Errors;
+                        return View("EditRoles");
                     }
                 }
                 return RedirectToAction("Index");

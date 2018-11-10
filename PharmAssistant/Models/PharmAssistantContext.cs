@@ -43,6 +43,8 @@ namespace PharmAssistant.Models
         public System.Data.Entity.DbSet<PharmAssistant.Models.ViewModels.LoginModel> LoginModels { get; set; }
 
         public System.Data.Entity.DbSet<PharmAssistant.Models.AppUser> IdentityUsers { get; set; }
+
+        public System.Data.Entity.DbSet<PharmAssistant.Models.ViewModels.RoleModificationModel> RoleModificationModels { get; set; }
     }
 
     public class PharmAssistentDbInit : NullDatabaseInitializer<PharmAssistantContext>

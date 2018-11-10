@@ -35,12 +35,14 @@ namespace PharmAssistant.Models.ViewModels
 
     public class RoleEditModel
     {
+        [Key]
         public AppRole Role { get; set; }
         public IEnumerable<AppUser> Members { get; set; }
         public IEnumerable<AppUser> NonMembers { get; set; }
     }
     public class RoleModificationModel
     {
+        [Key]
         [Required]
         public string RoleName { get; set; }
         public string[] IdsToAdd { get; set; }
