@@ -18,6 +18,12 @@ namespace PharmAssistant.Models
         public int MedicineId { get; set; }
         [Required(ErrorMessage = "Purchase order id is required.")]
         public int PurchaseOrderId { get; set; }
+        public string BatchNumber { get; set; }
+        public int Quantity { get; set; }
+        public float CostPrice { get; set; }
+        public float SellingPrice { get; set; }
+
+        public DateTime ExpiryDate { get; set; }
 
         public virtual Medicine Medicine { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }

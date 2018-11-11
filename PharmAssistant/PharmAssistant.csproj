@@ -265,6 +265,10 @@
     <Compile Include="Migrations\201811090653065_FirstCommit.Designer.cs">
       <DependentUpon>201811090653065_FirstCommit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811111959481_databaseSchemaUpdated.cs" />
+    <Compile Include="Migrations\201811111959481_databaseSchemaUpdated.Designer.cs">
+      <DependentUpon>201811111959481_databaseSchemaUpdated.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\AppUser.cs" />
@@ -325,6 +329,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201811090653065_FirstCommit.resx">
       <DependentUpon>201811090653065_FirstCommit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811111959481_databaseSchemaUpdated.resx">
+      <DependentUpon>201811111959481_databaseSchemaUpdated.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

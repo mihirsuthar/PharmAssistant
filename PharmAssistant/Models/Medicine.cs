@@ -25,8 +25,23 @@ namespace PharmAssistant.Models
         [Required(ErrorMessage = "Please select medicine category.")]
         public int CategoryId { get; set; }
 
+        [Required(ErrorMessage = "Shelf Id is required.")]
+        public int ShelfId { get; set; }
+
+        [Required(ErrorMessage = "Cost Price is required.")]
+        public float CostPrice { get; set; }
+
+        [Required(ErrorMessage = "Selling Price is required.")]
+        public float SellingPrice { get; set; }
+
+        [StringLength(50)]
+        [Column(TypeName = "char")]
+        public string Description { get; set; }
+
+
         public virtual ICollection<Supplier> Suppliers { get; set; }
         public virtual Manufacturer Manufacturer { get; set; }
         public virtual MedicineCategory MedicineCategory { get; set; }
+        public virtual Shelf Shelf { get; set; }
     }
 }

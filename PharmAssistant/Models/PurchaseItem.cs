@@ -20,15 +20,18 @@ namespace PharmAssistant.Models
         [Required(ErrorMessage = "Please select medicine.")]
         [Column(Order = 2)]
         public int MedicineId { get; set; }
-        [Required(ErrorMessage = "Batch number is required.")]
+        
         public long BatchNumber { get; set; }
+
         [Required(ErrorMessage = "Please specify quantity.")]
         public int Quantity { get; set; }
+
         [Required(ErrorMessage = "Cost price is required.")]
         public double CostPrice { get; set; }
+
         [Required(ErrorMessage = "Selling price is required.")]
         public double SellingPrice { get; set; }
-        [Required(ErrorMessage = "Please select expiry date.")]
+
         public DateTime ExpiryDate { get; set; }
 
         public virtual PurchaseOrder PurchaseOrder { get; set; }
