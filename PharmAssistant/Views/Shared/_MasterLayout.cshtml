@@ -79,51 +79,60 @@
         <div id="sidebar-nav" class="sidebar">
             <div class="sidebar-scroll">
                 <nav>
-                    <ul class="nav">
-                        <li><a href="@Url.Action("Index", "Home")" class=""><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
+					<ul class="nav">
+						<li><a href="@Url.Action("Index", "Home")" class=""><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
 						<li>
-							<a href="#medicines" data-toggle="collapse" class="collapsed"><i class="lnr lnr-store"></i> <span>Medicines</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
+							<a href="#medicines" data-toggle="collapse" class="collapsed"><i class="lnr lnr-briefcase"></i> <span>Medicines</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
 							<div id="medicines" class="collapse ">
 								<ul class="nav">
+									<li><a href="#" class="">Shelves</a></li>
 									<li><a href="@Url.Action("MedicineCategories", "Medicine")" class="">Medicine Categories</a></li>
 									<li><a href="#" class="">Manage Medicines</a></li>
 								</ul>
 							</div>
-						</li>						
+						</li>
 						<li>
-                            <a href="#purchase" data-toggle="collapse" class="collapsed"><i class="lnr lnr-store"></i> <span>Purchase</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
-                            <div id="purchase" class="collapse ">
+							<a href="#purchase" data-toggle="collapse" class="collapsed"><i class="lnr lnr-store"></i> <span>Purchase</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
+							<div id="purchase" class="collapse ">
 								<ul class="nav">
-									<li><a href="#" class="">New Purchase</a></li>
-									<li><a href="#" class="">Purchase History</a></li>
 									<li><a href="@Url.Action("Index", "Manufacturer")" class="">Manufacturers</a></li>
 									<li><a href="@Url.Action("Index", "Supplier")" class="">Suppliers</a></li>
+									<li><a href="#" class="">Purchase Orders</a></li>
+									<li><a href="#" class="">Purchase Returns</a></li>
 								</ul>
-                            </div>
-                        </li>
-                        <li>
-                            <a href="#inventory" data-toggle="collapse" class="collapsed"><i class="lnr lnr-database"></i> <span>Inventory</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
-                            <div id="inventory" class="collapse ">
-                                <ul class="nav">
-                                    <li><a href="#" class="">Stock</a></li>
-                                    <li><a href="#" class="">Generic Names</a></li>
-                                    <li><a href="#" class="">Items</a></li>
-                                    <li><a href="#" class="">Manufacturers</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <a href="#sales" data-toggle="collapse" class="collapsed"><i class="lnr lnr-briefcase"></i> <span>Sales</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
-                            <div id="sales" class="collapse ">
-                                <ul class="nav">
-                                    <li><a href="#" class="">New Sales</a></li>
-                                    <li><a href="#" class="">Sales History</a></li>
-                                    <li><a href="#" class="">Sales Return</a></li>
-                                </ul>
-                            </div>
-                        </li>
+							</div>
+						</li>
 						<li>
-							<a href="#users" data-toggle="collapse" class="collapsed"><i class="lnr lnr-users"></i><span>Authentication</span><i class="icon-submenu lnr lnr-chevron-right"></i></a>
+							<a href="#inventory" data-toggle="collapse" class="collapsed"><i class="lnr lnr-database"></i> <span>Inventory</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
+							<div id="inventory" class="collapse ">
+								<ul class="nav">									
+									<li><a href="#" class="">Stock</a></li>
+									<li><a href="#" class="">Settings</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="#customers" data-toggle="collapse" class="collapsed"><i class="lnr lnr-users"></i> <span>Customers</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
+							<div id="customers" class="collapse ">
+								<ul class="nav">
+									<li><a href="#" class="">Memberships</a></li>
+									<li><a href="#" class="">Manage Customers</a></li>
+									<li><a href="#" class="">Track Discounts</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="#sales" data-toggle="collapse" class="collapsed"><i class="lnr lnr-cart"></i> <span>Sales</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
+							<div id="sales" class="collapse ">
+								<ul class="nav">
+									<li><a href="#" class="">New Sales</a></li>
+									<li><a href="#" class="">Sales History</a></li>
+									<li><a href="#" class="">Sales Return</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="#users" data-toggle="collapse" class="collapsed"><i class="lnr lnr-user"></i><span>Authentication</span><i class="icon-submenu lnr lnr-chevron-right"></i></a>
 							<div id="users" class="collapse ">
 								<ul class="nav">
 									<li><a href="@Url.Action("Index", "Account")" class="">Users</a></li>
@@ -132,17 +141,17 @@
 							</div>
 						</li>
 						<li>
-                            <a href="#reports" data-toggle="collapse" class="collapsed"><i class="lnr lnr-chart-bars"></i> <span>Reports</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
-                            <div id="reports" class="collapse ">
-                                <ul class="nav">
-                                    <li><a href="#" class="">Stocks</a></li>
-                                    <li><a href="#" class="">Sales</a></li>
-                                    <li><a href="#" class="">Purchase</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        
-                    </ul>
+							<a href="#reports" data-toggle="collapse" class="collapsed"><i class="lnr lnr-chart-bars"></i> <span>Reports</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
+							<div id="reports" class="collapse ">
+								<ul class="nav">
+									<li><a href="#" class="">Stocks</a></li>
+									<li><a href="#" class="">Sales</a></li>
+									<li><a href="#" class="">Purchase</a></li>
+								</ul>
+							</div>
+						</li>
+
+					</ul>
                 </nav>
             </div>
         </div>

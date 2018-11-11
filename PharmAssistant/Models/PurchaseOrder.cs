@@ -26,8 +26,11 @@ namespace PharmAssistant.Models
         [StringLength(100)]
         [Column(TypeName = "char")]
         public string Remarks { get; set; }
+        [StringLength(100)]
+        [Column(TypeName = "char")]
+        public string PaymentMode { get; set; }
         [Required]
-        public bool Payment { get; set; }
+        public bool PaymentStatus { get; set; }
 
         public int SupplierId { get; set; }
 
