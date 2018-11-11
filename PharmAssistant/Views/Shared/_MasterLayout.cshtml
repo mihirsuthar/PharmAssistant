@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-
+﻿
+<!DOCTYPE html>
 <html>
 <head>
     <title>@ViewBag.Title</title>
@@ -20,6 +20,8 @@
     <!-- ICONS -->
     <link rel="apple-touch-icon" sizes="76x76" href="~/assets/img/apple-icon.png">
     <link rel="icon" type="image/png" sizes="96x96" href="~/assets/img/favicon.png">
+
+	
 
 </head>
 <body>
@@ -79,14 +81,24 @@
                 <nav>
                     <ul class="nav">
                         <li><a href="@Url.Action("Index", "Home")" class=""><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
-                        <li>
+						<li>
+							<a href="#medicines" data-toggle="collapse" class="collapsed"><i class="lnr lnr-store"></i> <span>Medicines</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
+							<div id="medicines" class="collapse ">
+								<ul class="nav">
+									<li><a href="@Url.Action("MedicineCategories", "Medicine")" class="">Medicine Categories</a></li>
+									<li><a href="#" class="">Manage Medicines</a></li>
+								</ul>
+							</div>
+						</li>						
+						<li>
                             <a href="#purchase" data-toggle="collapse" class="collapsed"><i class="lnr lnr-store"></i> <span>Purchase</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
                             <div id="purchase" class="collapse ">
-                                <ul class="nav">
-                                    <li><a href="#" class="">New Purchase</a></li>
-                                    <li><a href="#" class="">Purchase History</a></li>
-                                    <li><a href="@Url.Action("Index", "Supplier")" class="">Suppliers</a></li>
-                                </ul>
+								<ul class="nav">
+									<li><a href="#" class="">New Purchase</a></li>
+									<li><a href="#" class="">Purchase History</a></li>
+									<li><a href="@Url.Action("Index", "Manufacturer")" class="">Manufacturers</a></li>
+									<li><a href="@Url.Action("Index", "Supplier")" class="">Suppliers</a></li>
+								</ul>
                             </div>
                         </li>
                         <li>
@@ -445,6 +457,9 @@
             </div>
         </footer>
     </div>
+
+	
+
     <!-- END WRAPPER -->
     <!-- Javascript -->
     <script src="~/assets/vendor/jquery/jquery.min.js"></script>

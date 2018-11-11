@@ -1,0 +1,34 @@
+﻿@model ICollection<PharmAssistant.Models.MedicineCategory>
+
+@{
+	int SrNo = 1;
+}
+
+@if (Model != null && Model.Count > 0)
+{
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Sr. No.</th>
+				<th>Category Name</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var category in Model)
+			{
+				<tr>
+					<td>@(SrNo++)</td>
+					<td>@category.Name</td>
+					<td>
+						@Html.ActionLink("Delete", "DeleteCategory", "Medicine", new { id = category.CategoryId }, new { @class = "label label-danger", onclick = "return confirm('Are you sure to delete record of \"" + category.Name.Trim() + "\" category?')" })
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+else
+{
+	<span class="alert alert-warning">No categories have been defined yet.</span><br/><br/>
+}

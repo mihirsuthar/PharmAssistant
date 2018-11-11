@@ -1,13 +1,15 @@
 ﻿@model PharmAssistant.Models.ViewModels.UserViewModel
 
 @{
-    ViewBag.Title = "Users";
-    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+	ViewBag.Title = "Users";
+	Layout = "~/Views/Shared/_MasterLayout.cshtml";
 }
 
-<script src="~/Scripts/jquery-1.10.2.js"></script>
+@Scripts.Render("~/bundles/jquery")
+
+@*<script src="~/Scripts/jquery-1.10.2.js"></script>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@
 
 <script type="text/javascript">
 	$(document).ready(function () {
@@ -149,7 +151,7 @@
 						@Html.TextBoxFor(model => model.User.Name, new { id = "userName", @class = "form-control", placeholder = "User Name" })
 						@Html.ValidationMessageFor(model => model.User.Name, "", new { @class = "text-danger", id = "userNameMessage" })<br />
 					}
-									   
+
 					@Html.TextBoxFor(model => model.User.Email, new { id = "email", @class = "form-control", placeholder = "Email Id" })
 					@Html.ValidationMessageFor(model => model.User.Email, "", new { @class = "text-danger", id = "emailMessage" })<br />
 

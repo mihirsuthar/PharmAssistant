@@ -1,15 +1,15 @@
-﻿@model PharmAssistant.Models.ViewModels.SupplierViewModel
+﻿@model PharmAssistant.Models.ViewModels.ManufacturerViewModel
 
 @{
-	ViewBag.Title = "Suppliers";
+	ViewBag.Title = "Manufacturers";
 	Layout = "~/Views/Shared/_MasterLayout.cshtml";
 }
 
 @Scripts.Render("~/bundles/jquery")
 
 @*<script src="~/Scripts/jquery-1.10.2.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@
+	<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+	<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@
 
 <script type="text/javascript">
 
@@ -63,7 +63,8 @@
 
 	function onSuccess() {
 		alert('Success');
-		$('#addUpdateButton').val('Add Supplier');
+		$('#addUpdateButton').val('Add Manufacturer');
+		$('#panelTitle').val('Add Manufacturer');
 		resetFields();
 	}
 
@@ -93,27 +94,27 @@
 	<div class="col-md-4">
 		<div class="panel">
 			<div class="panel-heading">
-				<h3 class="panel-title">Add Supplier</h3>
+				<h3 class="panel-title" id="panelTitle">Add Manufacturer</h3>
 			</div>
 			<div class="panel-body">
 				@{
 					string action = "";
 				}
 
-				@if (Model.Supplier.Name != null)
+				@if (Model.Manufacturer.Name != null)
 				{
-					action = "UpdateSupplier";
+					action = "UpdateManufacturer";
 				}
 				else
 				{
-					action = "AddSupplier";
+					action = "AddManufacturer";
 				}
 
 				@*@using (Html.BeginForm("AddSupplier", "Supplier", FormMethod.Post))*@
-				@using (Ajax.BeginForm(action, "Supplier", new AjaxOptions
+				@using (Ajax.BeginForm(action, "Manufacturer", new AjaxOptions
 				{
 					HttpMethod = "POST",
-					UpdateTargetId = "SuppliersList",
+					UpdateTargetId = "ManufacturersList",
 					InsertionMode = InsertionMode.Replace,
 					OnSuccess = "onSuccess",
 					OnFailure = "onFailure"
@@ -121,32 +122,32 @@
 				{
 					@Html.AntiForgeryToken()
 
-					@Html.HiddenFor(model => model.Supplier.SupplierId)
+					@Html.HiddenFor(model => model.Manufacturer.ManufacturerId)
 
-					@Html.TextBoxFor(model => model.Supplier.Name, new { id = "name", @class = "form-control", placeholder = "Supplier Name" })
-					@Html.ValidationMessageFor(model => model.Supplier.Name, "", new { @class = "text-danger", id = "nameErrorMsg" })<br />
+					@Html.TextBoxFor(model => model.Manufacturer.Name, new { id = "name", @class = "form-control", placeholder = "Manufacturer Name" })
+					@Html.ValidationMessageFor(model => model.Manufacturer.Name, "", new { @class = "text-danger", id = "nameErrorMsg" })<br />
 
-					@Html.TextAreaFor(model => model.Supplier.Address, new { id = "address", @class = "form-control", placeholder = "Address", rows = "4" })
-					@Html.ValidationMessageFor(model => model.Supplier.Address, "", new { @class = "text-danger", id = "addressErrorMsg" })<br />
+					@Html.TextAreaFor(model => model.Manufacturer.Address, new { id = "address", @class = "form-control", placeholder = "Address", rows = "4" })
+					@Html.ValidationMessageFor(model => model.Manufacturer.Address, "", new { @class = "text-danger", id = "addressErrorMsg" })<br />
 
-					@Html.TextBoxFor(model => model.Supplier.ContactNo, "{0:#.#}", new { id = "contactno", @class = "form-control", placeholder = "Contact Number" })
-					@Html.ValidationMessageFor(model => model.Supplier.ContactNo, "", new { @class = "text-danger", id = "contactnoErrorMsg" })<br />
+					@Html.TextBoxFor(model => model.Manufacturer.ContactNo, "{0:#.#}", new { id = "contactno", @class = "form-control", placeholder = "Contact Number" })
+					@Html.ValidationMessageFor(model => model.Manufacturer.ContactNo, "", new { @class = "text-danger", id = "contactnoErrorMsg" })<br />
 
-					@Html.TextBoxFor(model => model.Supplier.EmailId, new { id = "emailid", @class = "form-control", placeholder = "Email Id" })
-					@Html.ValidationMessageFor(model => model.Supplier.EmailId, "", new { @class = "text-danger", id = "emailidErrorMsg" })<br />
+					@Html.TextBoxFor(model => model.Manufacturer.EmailId, new { id = "emailid", @class = "form-control", placeholder = "Email Id" })
+					@Html.ValidationMessageFor(model => model.Manufacturer.EmailId, "", new { @class = "text-danger", id = "emailidErrorMsg" })<br />
 
-					@Html.TextAreaFor(model => model.Supplier.Description, new { id = "description", @class = "form-control", placeholder = "Description", rows = "4" })
+					
 					<br />
 
 					<div class="row">
 						<div class="col-md-6">
-							@if (Model.Supplier.Name != null)
+							@if (Model.Manufacturer.Name != null)
 							{
 								<input type="submit" id="addUpdateButton" value="Update" class="btn btn-primary btn-block" onclick="return validateForm();" />
 							}
 							else
 							{
-								<input type="submit" id="addUpdateButton" value="Add Supplier" class="btn btn-primary btn-block" onclick="return validateForm();" />
+								<input type="submit" id="addUpdateButton" value="Add" class="btn btn-primary btn-block" onclick="return validateForm();" />
 							}
 
 						</div>
@@ -162,10 +163,10 @@
 	<div class="col-md-8">
 		<div class="panel">
 			<div class="panel-heading">
-				<h3>Suppliers</h3>
+				<h3>Manufacturers</h3>
 			</div>
-			<div class="panel-body" id="SuppliersList">
-				@{ Html.RenderPartial("_SuppliersList", Model.SuppliersList); }
+			<div class="panel-body" id="ManufacturersList">
+				@{ Html.RenderPartial("_ManufacturersList", Model.ManufacturersList); }
 			</div>
 		</div>
 	</div>
