@@ -53,8 +53,6 @@ namespace PharmAsistant.Controllers
                 AppUser newUser = new AppUser { UserName = user.Name, PhoneNumber = user.PhoneNumber.ToString(), Email = user.Email, City = user.City };
                 IdentityResult result = UserManager.Create(newUser, user.Password);
                 
-
-
                 if (result.Succeeded)
                 {
                     //users = UserManager.Users;

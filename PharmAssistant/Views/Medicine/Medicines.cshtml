@@ -1,0 +1,71 @@
+﻿@model ICollection<PharmAssistant.Models.Medicine>
+@{
+	ViewBag.Title = "Medicines";
+	Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+@{ 
+	int srNo = 1;
+}
+
+<div class="row">
+	<div class="panel">
+		<div class="panel-heading">
+			<h3>Medicines</h3>
+		</div>
+		<div class="panel-body">
+			<div class="col-md-12">
+				<div class="form-group">
+					@Html.ActionLink("New Medicine", "NewMedicine", "Medicine", null, new { @class = "btn btn-primary" })
+				</div>
+
+				@if (Model != null && Model.Count > 0)
+				{
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Sr. No.</th>
+								<th>Medicine Name</th>
+								<th>Category</th>
+								<th>Shelf</th>
+								<th>Manufacturer</th>
+								<th>Cost Price</th>
+								<th>Selling Price</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var medicine in Model)
+							{
+								<tr>
+									<td>@(srNo++)</td>
+									<td>@medicine.Name</td>
+									<td>@medicine.MedicineCategory.Name</td>
+									<td>@medicine.Shelf.ShelfName</td>
+									<td>@medicine.Manufacturer.Name</td>
+									<td>@medicine.CostPrice</td>
+									<td>@medicine.SellingPrice</td>
+									<td>
+										@Html.ActionLink("Edit", "EditMedicine", "Medicine", new { MedicineId = medicine.MedicineId }, new { @class = "label label-primary" })
+										@Html.ActionLink("Delete", "DeleteMedicine", "Medicine", new { MedicineId = medicine.MedicineId }, new { @class = "label label-danger", onclick = "return confirm(Are you sure to delete \"" + medicine.Name + "\"?);" })
+									</td>
+								</tr>
+							}
+
+						</tbody>
+					</table>
+				}
+				else
+				{
+					<br/>
+					<div class="alert alert-warning" role="alert">						
+						<i class="fa fa-warning"></i> No medicine have been added yet.
+					</div>
+				}
+			</div>
+		</div>
+	</div>	
+</div>
+
+
+

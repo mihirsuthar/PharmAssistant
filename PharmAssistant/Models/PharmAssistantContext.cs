@@ -30,7 +30,9 @@ namespace PharmAssistant.Models
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
+        public DbSet<MembershipType> MembershipTypes { get; set; }
         public DbSet<MembershipAccount> MembershipAccounts { get; set; }
+        public DbSet<MembershipDiscount> MembershipDiscounts { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
         public DbSet<MedicineCategory> MedicineCategories { get; set; }
         public DbSet<PurchaseItem> PurchaseItems { get; set; }
@@ -39,6 +41,7 @@ namespace PharmAssistant.Models
         public DbSet<SalesOrder> SalesOrders { get; set; }
         public DbSet<StockEntry> StockEntries { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<Shelf> Shelves { get; set; }
 
         public System.Data.Entity.DbSet<PharmAssistant.Models.ViewModels.LoginModel> LoginModels { get; set; }
 

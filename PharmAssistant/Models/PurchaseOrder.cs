@@ -20,20 +20,27 @@ namespace PharmAssistant.Models
 
         [Required(ErrorMessage = "Purchase Date is required.")]
         public DateTime PurchaseDate { get; set; }
+
         [Required(ErrorMessage = "Please enter amount.")]
         public double OrderCost { get; set; }
+
         [Required(ErrorMessage = "Please specify discount.")]
         public double Discount { get; set; }
+
         [Required(ErrorMessage = "Please specify tax.")]
         public double Tax { get; set; }
+
         [Required(ErrorMessage = "Grand total must not be empty.")]
         public double AmountPaid { get; set; }
+
         [StringLength(100)]
         [Column(TypeName = "char")]
         public string Remarks { get; set; }
+
         [StringLength(25)]
         [Column(TypeName = "char")]
         public string PaymentMode { get; set; }
+
         [Required]
         public bool PaymentStatus { get; set; }
 

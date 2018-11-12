@@ -19,6 +19,9 @@ namespace PharmAssistant.Models
         [Required(ErrorMessage = "Medicine name is required.")]
         public string Name { get; set; }
 
+        [Required(ErrorMessage = "Please select supplier.")]
+        public int SupplierId { get; set; }
+
         [Required(ErrorMessage = "Please select manufacturer.")]
         public int ManufacturerId { get; set; }
 

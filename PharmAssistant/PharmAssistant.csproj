@@ -269,6 +269,10 @@
     <Compile Include="Migrations\201811111959481_databaseSchemaUpdated.Designer.cs">
       <DependentUpon>201811111959481_databaseSchemaUpdated.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811121911557_Add_SupplierId_Medicine.cs" />
+    <Compile Include="Migrations\201811121911557_Add_SupplierId_Medicine.Designer.cs">
+      <DependentUpon>201811121911557_Add_SupplierId_Medicine.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\AppUser.cs" />
@@ -315,6 +319,8 @@
     <Content Include="Views\Shared\_MedicineCategoryList.cshtml" />
     <Content Include="Views\Shared\_ManufacturersList.cshtml" />
     <Content Include="Views\Manufacturer\Index.cshtml" />
+    <Content Include="Views\Medicine\Medicines.cshtml" />
+    <Content Include="Views\Medicine\NewMedicine.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -332,6 +338,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811111959481_databaseSchemaUpdated.resx">
       <DependentUpon>201811111959481_databaseSchemaUpdated.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811121911557_Add_SupplierId_Medicine.resx">
+      <DependentUpon>201811121911557_Add_SupplierId_Medicine.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

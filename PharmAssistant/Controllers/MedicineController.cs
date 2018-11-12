@@ -12,8 +12,63 @@ namespace PharmAssistant.Controllers
 {
     public class MedicineController : Controller
     {
-        // GET: Medicine
         
+        public ActionResult Medicines()
+        {
+            return View(GetAllMedicines());
+        }
+
+        public ActionResult NewMedicine()
+        {
+            using (PharmAssistantContext db = new PharmAssistantContext())
+            {
+                ViewBag.Manufacturers = new SelectList(db.Manufacturers.ToList(), "ManufacturerId", "Name");
+                ViewBag.Categories = new SelectList(db.MedicineCategories.ToList(), "CategoryId", "Name");
+                ViewBag.Suppliers = new SelectList(db.Suppliers.ToList(), "SupplierId", "Name");
+                ViewBag.Shelves = new SelectList(db.Shelves.ToList(), "ShelfId", "ShelfName");
+            }
+
+            return View(new Medicine());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddMedicine(Medicine medicine)
+        {
+            try
+            {
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    db.Medicines.Add(medicine);
+                    db.SaveChanges();
+
+                    return RedirectToAction("Medicines");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Unable to add medicine. Try again later.";
+                return View("NewMedicine", medicine);
+                throw;
+            }                
+        }
+
+        private ICollection<Medicine> GetAllMedicines()
+        {
+            try
+            {
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    return db.Medicines.Include("MedicineCategory").Include("Shelf").Include("Manufacturer").ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
         public ActionResult MedicineCategories()
         {
             MedicineCategoryViewModel medicineData = new MedicineCategoryViewModel();
@@ -89,4 +144,7 @@ namespace PharmAssistant.Controllers
             return null;
         }
     }
+
+
+    
 }
