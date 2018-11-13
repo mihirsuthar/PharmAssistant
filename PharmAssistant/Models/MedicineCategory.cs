@@ -15,7 +15,7 @@ namespace PharmAssistant.Models
         public int CategoryId { get; set; }
 
         [StringLength(30)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         [Required(ErrorMessage = "Category Name is required.")]
         public string Name { get; set; }
 

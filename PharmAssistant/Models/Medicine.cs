@@ -15,7 +15,7 @@ namespace PharmAssistant.Models
         public int MedicineId { get; set; }
 
         [StringLength(30)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         [Required(ErrorMessage = "Medicine name is required.")]
         public string Name { get; set; }
 
@@ -38,7 +38,7 @@ namespace PharmAssistant.Models
         public float SellingPrice { get; set; }
 
         [StringLength(50)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         public string Description { get; set; }
 
 

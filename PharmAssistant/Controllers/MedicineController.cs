@@ -12,7 +12,13 @@ namespace PharmAssistant.Controllers
 {
     public class MedicineController : Controller
     {
-        
+        static PharmAssistantContext db = new PharmAssistantContext();
+
+        static SelectList Manufacturers = new SelectList(db.Manufacturers.ToList(), "ManufacturerId", "Name"),
+                            Categories = new SelectList(db.MedicineCategories.ToList(), "CategoryId", "Name"),
+                            Suppliers = new SelectList(db.Suppliers.ToList(), "SupplierId", "Name"),
+                            Shelves = new SelectList(db.Shelves.ToList(), "ShelfId", "ShelfName");
+
         public ActionResult Medicines()
         {
             return View(GetAllMedicines());
@@ -22,10 +28,10 @@ namespace PharmAssistant.Controllers
         {
             using (PharmAssistantContext db = new PharmAssistantContext())
             {
-                ViewBag.Manufacturers = new SelectList(db.Manufacturers.ToList(), "ManufacturerId", "Name");
-                ViewBag.Categories = new SelectList(db.MedicineCategories.ToList(), "CategoryId", "Name");
-                ViewBag.Suppliers = new SelectList(db.Suppliers.ToList(), "SupplierId", "Name");
-                ViewBag.Shelves = new SelectList(db.Shelves.ToList(), "ShelfId", "ShelfName");
+                ViewBag.Manufacturers = Manufacturers; // new SelectList(db.Manufacturers.ToList(), "ManufacturerId", "Name");
+                ViewBag.Categories = Categories; // new SelectList(db.MedicineCategories.ToList(), "CategoryId", "Name");
+                ViewBag.Suppliers = Suppliers; // new SelectList(db.Suppliers.ToList(), "SupplierId", "Name");
+                ViewBag.Shelves = Shelves; // new SelectList(db.Shelves.ToList(), "ShelfId", "ShelfName");
             }
 
             return View(new Medicine());
@@ -51,6 +57,58 @@ namespace PharmAssistant.Controllers
                 return View("NewMedicine", medicine);
                 throw;
             }                
+        }
+
+        public ActionResult EditMedicine(int MedicineId)
+        {
+            using (PharmAssistantContext db = new PharmAssistantContext())
+            {
+                ViewBag.Manufacturers = Manufacturers; // new SelectList(db.Manufacturers.ToList(), "ManufacturerId", "Name");
+                ViewBag.Categories = Categories; // new SelectList(db.MedicineCategories.ToList(), "CategoryId", "Name");
+                ViewBag.Suppliers = Suppliers; // new SelectList(db.Suppliers.ToList(), "SupplierId", "Name");
+                ViewBag.Shelves = Shelves; // new SelectList(db.Shelves.ToList(), "ShelfId", "ShelfName");
+
+                return View(db.Medicines.Where(m => m.MedicineId == MedicineId).FirstOrDefault());
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateMedicine(Medicine medicine)
+        {
+            if(ModelState.IsValid)
+            {
+                try
+                {
+                    using (PharmAssistantContext db = new PharmAssistantContext())
+                    {
+                        db.Medicines.Attach(medicine);
+                        db.Entry(medicine).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        return RedirectToAction("Medicines");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    ViewBag.ErrorMessage = "Unable to edit medicine.";
+                    return View("EditMedicine", medicine);
+                }
+            }
+            else
+            {
+                FillDropdowns();
+                return View("EditMedicine", medicine);
+            }
+        }
+
+        private void FillDropdowns()
+        {
+            ViewBag.Manufacturers = Manufacturers;
+            ViewBag.Categories = Categories;
+            ViewBag.Suppliers = Suppliers;
+            ViewBag.Shelves = Shelves;
         }
 
         private ICollection<Medicine> GetAllMedicines()

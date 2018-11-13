@@ -1,0 +1,99 @@
+﻿@model PharmAssistant.Models.Medicine
+
+@{
+	ViewBag.Title = "EditMedicine";
+	Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<div class="row">
+	<div class="panel">
+		<div class="panel-heading">
+			<h3>Edit Medicine</h3>
+		</div>
+
+		<div class="panel-body">
+
+			@using (Html.BeginForm("UpdateMedicine", "Medicine", FormMethod.Post, new { @class = "form-horizontal" }))
+			{
+				@Html.AntiForgeryToken()
+
+				if (ViewBag.ErrorMessage != null)
+				{
+					<div class="alert alert-danger" role="alert">
+						<i class="fa fa-times-circle"></i> @ViewBag.ErrorMessage
+					</div>
+				}
+
+				@Html.HiddenFor(m => m.MedicineId)
+
+				<div class="col-md-5">
+					<div class="form-group">
+						<label for="medicineName">Medicine Name</label>
+						@Html.TextBoxFor(m => m.Name, new { @class = "form-control", id = "medicineName", placeholder = "Enter Medicine Name" })
+						@Html.ValidationMessageFor(m => m.Name, "", new { @class = "text text-danger" })
+					</div>
+
+					<div class="form-group">
+						<label for="costPrice">Cost Price</label>
+						@Html.TextBoxFor(m => m.CostPrice, "{0:#.#}", new { @class = "form-control", id = "costPrice", placeholder = "Enter Cost Price" })
+						@Html.ValidationMessageFor(m => m.CostPrice, "", new { @class = "text text-danger" })
+					</div>
+
+					<div class="form-group">
+						<label for="sellingPrice">Selling Price</label>
+						@Html.TextBoxFor(m => m.SellingPrice, "{0:#.#}", new { @class = "form-control", id = "sellingPrice", placeholder = "Enter Selling Price" })
+						@Html.ValidationMessageFor(m => m.SellingPrice, "", new { @class = "text text-danger" })
+					</div>
+
+					<div class="form-group">
+						<label for="description">Description</label>
+						@Html.TextAreaFor(m => m.Description, new { @class = "form-control", id = "description", placeholder = "Enter Description", style = "resize: none;" })
+						@Html.ValidationMessageFor(m => m.Description, "", new { @class = "text text-danger" })
+					</div>
+				</div>
+
+				<div class="col-md-5 col-md-offset-1">
+					<div class="form-group">
+						<label for="supplierId">Supplier Id</label>
+						@Html.DropDownListFor(m => m.SupplierId, ViewBag.Suppliers as SelectList, "Select Supplier", new { @class = "form-control", id = "supplierId" })
+						@Html.ValidationMessageFor(m => m.SupplierId, "", new { @class = "text text-danger" })
+					</div>
+
+					<div class="form-group">
+						<label for="manufacturerId">Manufacturer Id</label>
+						@Html.DropDownListFor(m => m.ManufacturerId, ViewBag.Manufacturers as SelectList, "Select Manufacturer", new { @class = "form-control", id = "manufacturerId" })
+						@Html.ValidationMessageFor(m => m.ManufacturerId, "", new { @class = "text text-danger" })
+					</div>
+
+					<div class="form-group">
+						<label for="categoryId">Category Id</label>
+						@Html.DropDownListFor(m => m.CategoryId, ViewBag.Categories as SelectList, "Select Category", new { @class = "form-control", id = "categoryId" })
+						@Html.ValidationMessageFor(m => m.CategoryId, "", new { @class = "text text-danger" })
+					</div>
+
+					<div class="form-group">
+						<label for="shelfId">Shelf Id</label>
+						@Html.DropDownListFor(m => m.ShelfId, ViewBag.Shelves as SelectList, "Select Shelf", new { @class = "form-control", id = "shelfId" })
+						@Html.ValidationMessageFor(m => m.ShelfId, "", new { @class = "text text-danger" })
+					</div>
+				</div>
+
+				<div class="col-md-12">
+					<div class="form-group">
+						<input type="submit" value="Update Medicine" class="btn btn-primary" />&nbsp;&nbsp;&nbsp;
+						@Html.ActionLink("Cancel", "Medicines", "Medicine", new { @class = "btn btn-danger" })
+					</div>
+				</div>
+
+
+
+			}
+
+		</div>
+
+
+
+	</div>
+
+</div>
+

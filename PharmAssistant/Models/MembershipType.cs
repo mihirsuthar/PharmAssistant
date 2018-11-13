@@ -15,12 +15,12 @@ namespace PharmAssistant.Models
         public int MembershipTypeId { get; set; }
 
         [StringLength(30)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         [Required(ErrorMessage = "Membership type name id is required.")]
         public string MembershipTypeName { get; set; }
 
         [StringLength(50)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         public string MembershipTypeDesc { get; set; }
     }
 }

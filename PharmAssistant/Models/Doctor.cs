@@ -15,18 +15,18 @@ namespace PharmAssistant.Models
         public int DoctorId { get; set; }
 
         [StringLength(25)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         [Required(ErrorMessage = "Doctor name is required.")]
         public string Name { get; set; }
 
         [StringLength(50)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         public string Address { get; set; }
 
         public long ContactNo { get; set; }
 
         [StringLength(30)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         [Required(ErrorMessage = "Specialization is required.")]
         public string Specilization { get; set; }
 

@@ -15,7 +15,7 @@ namespace PharmAssistant.Models
         public int PurchaseOrderId { get; set; }
 
         [StringLength(32)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         public string PurchaseOrderCode { get; set; }
 
         [Required(ErrorMessage = "Purchase Date is required.")]

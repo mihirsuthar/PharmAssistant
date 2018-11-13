@@ -15,12 +15,12 @@ namespace PharmAssistant.Models
         public int SupplierId { get; set; }
 
         [StringLength(25)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         [Required(ErrorMessage = "Supplier name is required")]
         public string Name { get; set; }
 
         [StringLength(50)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         [Required(ErrorMessage = "Supplier address is required")]
         public string Address { get; set; }
 
@@ -28,12 +28,12 @@ namespace PharmAssistant.Models
         public long ContactNo { get; set; }
 
         [StringLength(30)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         [Required(ErrorMessage = "Email Id is required")]
         public string EmailId { get; set; }
 
         [StringLength(40)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         public string Description { get; set; }
 
         public virtual ICollection<Medicine> Products { get; set; }

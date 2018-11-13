@@ -15,7 +15,7 @@ namespace PharmAssistant.Models
         public int ShelfId { get; set; }
 
         [Required(ErrorMessage = "Shelf name is required.") ]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         [StringLength(30)]        
         public string ShelfName { get; set; }
 

@@ -15,19 +15,19 @@ namespace PharmAssistant.Models
         public int ManufacturerId { get; set; }
 
         [StringLength(25)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         [Required]
         public string Name { get; set; }
 
         [StringLength(50)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         public string Address { get; set; }
 
         [Required]
         public long ContactNo { get; set; }
 
         [StringLength(25)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         public string EmailId { get; set; }
 
         public virtual ICollection<Medicine> Medicines { get; set; }

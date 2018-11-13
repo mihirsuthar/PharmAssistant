@@ -17,19 +17,19 @@ namespace PharmAssistant.Models
         public int MembershipId { get; set; }
 
         [StringLength(25)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         [Required(ErrorMessage = "Customer name is required.")]
         public string Name { get; set; }
 
         [StringLength(50)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         public string Address { get; set; }
 
         [Required(ErrorMessage = "Contact number id is required.")]
         public long ContactNumber { get; set; }
 
         [StringLength(30)]
-        [Column(TypeName = "char")]
+        [Column(TypeName = "varchar")]
         public string EmailId { get; set; }
 
         public virtual MembershipAccount MembershipAccount { get; set; }
