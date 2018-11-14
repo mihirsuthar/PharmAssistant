@@ -23,8 +23,8 @@
 					<td>@manufacturer.ContactNo</td>
 					<td>@manufacturer.EmailId</td>
 					<td>
-						@Html.ActionLink("Edit", "EditManufacturer", "Manufacturer", new { ID = manufacturer.ManufacturerId }, new { @class = "label label-primary" })
-						@Html.ActionLink("Delete", "DeleteManufacturer", "Manufacturer", new { ID = manufacturer.ManufacturerId }, new { @class = "label label-danger", onclick = "return confirm('Are sure to delete record of \"" + manufacturer.Name.Trim() + "\"?');" })
+						@Html.ActionLink("Edit", "EditManufacturer", "Manufacturers", new { ID = manufacturer.ManufacturerId }, new { @class = "label label-primary" })
+						@Html.ActionLink("Delete", "DeleteManufacturer", "Manufacturers", new { ID = manufacturer.ManufacturerId }, new { @class = "label label-danger", onclick = "return confirm('Are sure to delete record of \"" + manufacturer.Name.Trim() + "\"?');" })
 					</td>
 				</tr>
 			}

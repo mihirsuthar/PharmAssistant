@@ -1,0 +1,115 @@
+﻿@model PharmAssistant.Models.ViewModels.PurchaseOrderViewModel
+
+@{
+	ViewBag.Title = "NewPurchaseOrder";
+	Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<div class="row">
+	<div class="panel">
+		<div class="panel-heading">
+			<h3>Purchase Order</h3>
+		</div>
+		<div class="panel-body">
+
+			<div class="row">
+
+				<div class="col-md-4">
+					Suplier: @Html.DropDownList("SupplierId", ViewBag.Suppliers as SelectList, "Select Supplier", new { @class = "form-control", id = "supplierId" })
+				</div>
+				<div class="col-md-4">
+					Code: @Html.TextBox("OrderCode", "", new { @class = "form-control", id = "orderId", placeholder = "Enter Order Code" })
+				</div>
+				<div class="col-md-4">
+					Order Date: <input type="date" name="OrderDate" id="orderDate" class="form-control" />
+				</div>
+
+			</div>
+			<br />
+
+			<div class="row">
+				<div class="col-md-4">
+					Category:<br />
+					@Html.DropDownList("CategoryId", ViewBag.MedicineCategories as SelectList, "Select Category", new { @class = "form-control", id = "categoryId" })<br />
+					Medicine:<br />
+					@Html.DropDownList("MedicineId", ViewBag.Medicines as SelectList, "Select Medicine", new { @class = "form-control", id = "medicineId" })<br />
+					Quantity:<br />
+					@Html.TextBox("Quantity", "", new { @class = "form-control", id = "quantity", placeholder = "Enter Quantity" })<br />
+					<input type="submit" value="Add to List" class="btn btn-warning" />
+				</div>
+				<div class="col-md-8">
+					<div class="panel panel-primary">
+						<div class="panel-heading" style="height: 40px; padding: 1px;">
+							<h4 class="text-center">Medicine List</h4>
+						</div>
+						<div class="panel-body">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Name</th>
+										<th>Unit Price</th>
+										<th>Quantity</th>
+										<th>Amount</th>
+										<th><br /></th>
+									</tr>
+								</thead>
+								<tbody id="medicineList">
+									<tr>
+										<td>1</td>
+										<td>Brufen</td>
+										<td>12.5</td>
+										<td>2</td>
+										<td>25</td>
+										<td>
+											<a href="#" class="text text-danger">x</a>
+										</td>
+									</tr>
+									<tr>
+										<td>2</td>
+										<td>Crocin</td>
+										<td>15</td>
+										<td>3</td>
+										<td>45</td>
+										<td>
+											<a href="#" class="text text-danger">x</a>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="4" class="text-right"><b>Total:</b> </td>
+										<td>70</td>
+										<td><br /></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br />
+
+			<div class="row">
+				<div class="col-md-4"><br /></div>
+				<div class="col-md-8">
+					<div class="row">
+						<div class="col-md-8">
+							Notes:<br />
+							@Html.TextArea("OrderNotes", "", new { @class = "form-control", id = "orderNotes", placeholder = "Enter Notes", rows = 5, style = "resize: none;" })
+						</div>
+						<div class="col-md-4">
+							Discount:<br />
+							@Html.TextBox("Discount", "", new { @class = "form-control", id = "discount", placeholder = "Enter Discount" })<br />
+							Grand Total:<br />
+							@Html.TextBox("GrandTotal", "", new { @class = "form-control", id = "grandTotal", placeholder = "Grand Total", @readonly = "readonly" })<br />
+
+							<input type="button" value="Place Order" class="btn btn-primary" />
+						</div>
+					</div>
+					<div class="row"></div>
+				</div>
+			</div>
+			<br/>
+		</div>
+	</div>
+</div>
+

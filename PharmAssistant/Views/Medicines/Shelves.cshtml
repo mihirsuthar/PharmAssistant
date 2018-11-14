@@ -1,0 +1,111 @@
+﻿@model PharmAssistant.Models.ViewModels.ShelvesViewModel
+
+@{
+	ViewBag.Title = "ShelvesList";
+	Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+@*<script src="~/Scripts/jquery-1.10.2.js"></script>
+	<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+	<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@
+
+<script type="text/javascript">
+
+	function validateForm() {
+		//validate Email Id
+		var name = $('#shelfName').val().trim();
+		var number = $('#shelfNumber').val().trim();
+
+		if (!number || number == '' || number == undefined) {
+			//Show Invalid category name Message
+			$('#shelfNumberErrorMessage').html('Shelf number is required.');
+			return false;
+		}
+
+		if (!name || name == '' || name == undefined) {
+			//Show Invalid category name Message
+			$('#shelfNameErrorMessage').html('Shelf name is required.');
+			return false;
+		}
+	}
+
+	function onSuccess() {
+		//alert('Success');
+		$('#formErrorMessage').html('');
+		resetFields();
+	}
+
+	function onFailure(data) {
+		alert('Failure: ' + data);
+		$('#formErrorMessage').html('Shelf already exists.');
+	}
+
+	function resetErrorMessages() {
+		$('#categoryNameErrorMessage').html("");
+	}
+
+	function resetFields() {
+		resetErrorMessages();
+		$('#shelfName').val("");
+		$('#shelfNumber').val("");
+	}
+</script>
+
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="panel">
+			<div class="panel-heading">
+				<h3 class="panel-title">Add Shelf</h3>
+			</div>
+			<div class="panel-body">
+
+				@*@using (Html.BeginForm("AddSupplier", "Supplier", FormMethod.Post))*@
+				@using (Ajax.BeginForm("AddShelf", "Medicines", new AjaxOptions
+				{
+					HttpMethod = "POST",
+					UpdateTargetId = "ShelvesList",
+					InsertionMode = InsertionMode.Replace,
+					OnSuccess = "onSuccess",
+					OnFailure = "onFailure"
+				}))
+				{
+					@Html.AntiForgeryToken()
+
+					<span id="formErrorMessage" class="text text-danger"></span> <br />
+
+					@Html.TextBox("ShelfNumber", "", new { id = "shelfNumber", @class = "form-control", placeholder = "Shelf Number" })
+					<span id="ShelfNumberErrorMessage" class="text text-danger"></span> <br />
+					<br />
+
+					@Html.TextBox("ShelfName", "", new { id = "shelfName", @class = "form-control", placeholder = "Shelf Name" })
+					<span id="ShelfNameErrorMessage" class="text text-danger"></span> <br />
+					<br />
+
+					<div class="row">
+						<div class="col-md-6">
+							<input type="submit" id="addUpdateButton" value="Add Shelf" class="btn btn-primary" onclick="return validateForm();" />
+						</div>
+						<div class="col-md-6">
+							<button type="button" class="btn btn-danger" onclick="resetFields();">Cancel</button>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-8">
+		<div class="panel">
+			<div class="panel-heading">
+				<h3>Shelves</h3>
+			</div>
+			<div class="panel-body" id="ShelvesList">
+				@{ Html.RenderPartial("_ShelvesList", Model.ShelfList); }
+			</div>
+		</div>
+	</div>
+</div>
+

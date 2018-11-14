@@ -61,10 +61,14 @@
 		}
 	}
 
+	function changePanelTitle() {
+		$('#panelTitle').val('Update Manufacturer');
+	}
+
 	function onSuccess() {
 		alert('Success');
 		$('#addUpdateButton').val('Add Manufacturer');
-		$('#panelTitle').val('Add Manufacturer');
+		$('#panelTitle').html('Add Manufacturer');
 		resetFields();
 	}
 
@@ -81,7 +85,8 @@
 
 	function resetFields() {
 		resetErrorMessages();
-
+		$('#addUpdateButton').val('Add Manufacturer');
+		$('#panelTitle').html('Add Manufacturer');
 		$('#name').val("");
 		$('#address').val("");
 		$('#contactno').val("");
@@ -94,9 +99,6 @@
 	<div class="col-md-4">
 		<div class="panel">
 			<div class="panel-heading">
-				<h3 class="panel-title" id="panelTitle">Add Manufacturer</h3>
-			</div>
-			<div class="panel-body">
 				@{
 					string action = "";
 				}
@@ -104,14 +106,17 @@
 				@if (Model.Manufacturer.Name != null)
 				{
 					action = "UpdateManufacturer";
+					<h3 class="panel-title" id="panelTitle">Update Manufacturer</h3>
 				}
 				else
 				{
 					action = "AddManufacturer";
+					<h3 class="panel-title" id="panelTitle">Add Manufacturer</h3>
 				}
-
-				@*@using (Html.BeginForm("AddSupplier", "Supplier", FormMethod.Post))*@
-				@using (Ajax.BeginForm(action, "Manufacturer", new AjaxOptions
+			</div>
+			<div class="panel-body">
+				
+				@using (Ajax.BeginForm(action, "Manufacturers", new AjaxOptions
 				{
 					HttpMethod = "POST",
 					UpdateTargetId = "ManufacturersList",
@@ -140,19 +145,20 @@
 					<br />
 
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-8">
 							@if (Model.Manufacturer.Name != null)
 							{
-								<input type="submit" id="addUpdateButton" value="Update" class="btn btn-primary btn-block" onclick="return validateForm();" />
+								<input type="submit" id="addUpdateButton" value="Update Manufacturer" class="btn btn-primary" onclick="return validateForm();" />
 							}
 							else
 							{
-								<input type="submit" id="addUpdateButton" value="Add" class="btn btn-primary btn-block" onclick="return validateForm();" />
+								<input type="submit" id="addUpdateButton" value="Add Manufacturer" class="btn btn-primary" onclick="return validateForm();" />
 							}
 
 						</div>
-						<div class="col-md-6">
-							<button type="button" class="btn btn-default btn-block" onclick="resetFields();">Cancel</button>
+						<div class="col-md-4">
+							@Html.ActionLink("Cancel", "Index", "Manufacturers", new { @class = "btn btn-danger" })
+							@*<button type="button" class="btn btn-danger" onclick="resetFields();">Cancel</button>*@
 						</div>
 					</div>
 				}

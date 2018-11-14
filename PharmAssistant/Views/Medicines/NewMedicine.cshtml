@@ -14,7 +14,7 @@
 		<div class="panel-body">
 
 
-			@using (Html.BeginForm("AddMedicine", "Medicine", FormMethod.Post, new { @class = "form-horizontal" }))
+			@using (Html.BeginForm("AddMedicine", "Medicines", FormMethod.Post, new { @class = "form-horizontal" }))
 			{
 				@Html.AntiForgeryToken()
 
@@ -80,7 +80,7 @@
 				<div class="col-md-12">
 					<div class="form-group">
 						<input type="submit" value="Add Medicine" class="btn btn-primary" />&nbsp;&nbsp;&nbsp;
-						@Html.ActionLink("Cancel", "Medicines", "Medicine", new { @class = "btn btn-danger" })
+						@Html.ActionLink("Cancel", "MedicinesList", "Medicines", new { @class = "btn btn-danger" })
 					</div>
 				</div>
 

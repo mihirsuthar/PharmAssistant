@@ -110,7 +110,7 @@
 				}
 
 				@*@using (Html.BeginForm("AddSupplier", "Supplier", FormMethod.Post))*@
-				@using (Ajax.BeginForm(action, "Supplier", new AjaxOptions
+				@using (Ajax.BeginForm(action, "Suppliers", new AjaxOptions
 				{
 					HttpMethod = "POST",
 					UpdateTargetId = "SuppliersList",

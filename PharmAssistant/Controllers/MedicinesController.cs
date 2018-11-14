@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace PharmAssistant.Controllers
 {
-    public class MedicineController : Controller
+    public class MedicinesController : Controller
     {
         static PharmAssistantContext db = new PharmAssistantContext();
 
@@ -19,7 +19,7 @@ namespace PharmAssistant.Controllers
                             Suppliers = new SelectList(db.Suppliers.ToList(), "SupplierId", "Name"),
                             Shelves = new SelectList(db.Shelves.ToList(), "ShelfId", "ShelfName");
 
-        public ActionResult Medicines()
+        public ActionResult MedicinesList()
         {
             return View(GetAllMedicines());
         }
@@ -48,7 +48,7 @@ namespace PharmAssistant.Controllers
                     db.Medicines.Add(medicine);
                     db.SaveChanges();
 
-                    return RedirectToAction("Medicines");
+                    return RedirectToAction("MedicinesList");
                 }
             }
             catch (Exception ex)
@@ -86,7 +86,7 @@ namespace PharmAssistant.Controllers
                         db.Entry(medicine).State = EntityState.Modified;
                         db.SaveChanges();
 
-                        return RedirectToAction("Medicines");
+                        return RedirectToAction("MedicinesList");
                     }
                 }
                 catch (Exception ex)
@@ -183,6 +183,62 @@ namespace PharmAssistant.Controllers
                 Console.WriteLine(ex.Message);
             }
             return RedirectToAction("MedicineCategories");
+        }
+
+        public ActionResult ShelvesList()
+        {
+            ShelvesViewModel shelvesData = new ShelvesViewModel();
+            shelvesData.Shelf = new Shelf();
+            shelvesData.ShelfList = db.Shelves.ToList();
+
+            return View("Shelves", shelvesData);
+        }
+
+        public ActionResult AddShelf(Shelf shelf)
+        {
+            try
+            {
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    var existingShelf = db.Shelves.Where(s => s.ShelfName == shelf.ShelfName && s.ShelfId == shelf.ShelfId).FirstOrDefault();
+
+                    if (existingShelf == null)
+                    {
+                        db.Shelves.Add(shelf);
+                        db.SaveChanges();
+
+                        return PartialView("_ShelvesList", db.Shelves.ToList());
+                    }
+                    else
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Shelf Already Exists.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Something went wrong. Please try again later.");
+            }
+        }
+
+        public ActionResult DeleteShelf(int id)
+        {
+            try
+            {
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    Shelf shelf = db.Shelves.Where(s => s.ShelfId == id).FirstOrDefault();
+                    
+                    db.Shelves.Remove(shelf);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return RedirectToAction("ShelvesList");
         }
 
         private ICollection<MedicineCategory> GetAllCategories()

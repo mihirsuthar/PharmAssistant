@@ -10,7 +10,7 @@ using System.Web.UI;
 
 namespace PharmAssistant.Controllers
 {
-    public class SupplierController : Controller
+    public class SuppliersController : Controller
     {
         // GET: Supplier
         [OutputCache(Duration = 20, Location = OutputCacheLocation.Server)]

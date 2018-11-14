@@ -247,10 +247,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ManufacturerController.cs" />
-    <Compile Include="Controllers\MedicineController.cs" />
+    <Compile Include="Controllers\ManufacturersController.cs" />
+    <Compile Include="Controllers\MedicinesController.cs" />
+    <Compile Include="Controllers\PurchaseOrdersController.cs" />
     <Compile Include="Controllers\RoleAdminController.cs" />
-    <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -298,7 +299,9 @@
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\ViewModels\ManufacturerViewModel.cs" />
     <Compile Include="Models\ViewModels\MedicineCategoryViewModel.cs" />
+    <Compile Include="Models\ViewModels\PurchaseOrderViewModel.cs" />
     <Compile Include="Models\ViewModels\RoleViewModel.cs" />
+    <Compile Include="Models\ViewModels\ShelvesViewModel.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
     <Compile Include="Models\ViewModels\UserViewModels.cs" />
     <Compile Include="Models\ViewModels\SupplierViewModel.cs" />
@@ -310,7 +313,7 @@
     <Content Include="Views\Shared\_MasterLayout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <None Include="Properties\PublishProfiles\LocalIISDeployment.pubxml" />
-    <Content Include="Views\Supplier\Index.cshtml" />
+    <Content Include="Views\Suppliers\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Shared\_SuppliersList.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
@@ -319,13 +322,17 @@
     <Content Include="Views\RoleAdmin\Index.cshtml" />
     <Content Include="Views\Shared\_RolesList.cshtml" />
     <Content Include="Views\RoleAdmin\EditRole.cshtml" />
-    <Content Include="Views\Medicine\MedicineCategories.cshtml" />
+    <Content Include="Views\Medicines\MedicineCategories.cshtml" />
     <Content Include="Views\Shared\_MedicineCategoryList.cshtml" />
     <Content Include="Views\Shared\_ManufacturersList.cshtml" />
-    <Content Include="Views\Manufacturer\Index.cshtml" />
-    <Content Include="Views\Medicine\Medicines.cshtml" />
-    <Content Include="Views\Medicine\NewMedicine.cshtml" />
-    <Content Include="Views\Medicine\EditMedicine.cshtml" />
+    <Content Include="Views\Manufacturers\Index.cshtml" />
+    <Content Include="Views\Medicines\MedicinesList.cshtml" />
+    <Content Include="Views\Medicines\NewMedicine.cshtml" />
+    <Content Include="Views\Medicines\EditMedicine.cshtml" />
+    <Content Include="Views\PurchaseOrders\NewPurchaseOrder.cshtml" />
+    <Content Include="Views\PurchaseOrders\PurchaseOrdersList.cshtml" />
+    <Content Include="Views\Medicines\Shelves.cshtml" />
+    <Content Include="Views\Shared\_ShelvesList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

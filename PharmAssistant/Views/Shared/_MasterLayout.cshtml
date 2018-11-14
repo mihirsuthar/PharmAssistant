@@ -85,9 +85,9 @@
 							<a href="#medicines" data-toggle="collapse" class="collapsed"><i class="lnr lnr-briefcase"></i> <span>Medicines</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
 							<div id="medicines" class="collapse ">
 								<ul class="nav">
-									<li><a href="#" class="">Shelves</a></li>
-									<li><a href="@Url.Action("MedicineCategories", "Medicine")" class="">Medicine Categories</a></li>
-									<li><a href="@Url.Action("Medicines", "Medicine")" class="">Manage Medicines</a></li>
+									<li><a href="@Url.Action("ShelvesList", "Medicines")" class="">Shelves</a></li>
+									<li><a href="@Url.Action("MedicineCategories", "Medicines")" class="">Medicine Categories</a></li>
+									<li><a href="@Url.Action("MedicinesList", "Medicines")" class="">Manage Medicines</a></li>
 								</ul>
 							</div>
 						</li>
@@ -95,9 +95,9 @@
 							<a href="#purchase" data-toggle="collapse" class="collapsed"><i class="lnr lnr-store"></i> <span>Purchase</span> <i class="icon-submenu lnr lnr-chevron-right"></i></a>
 							<div id="purchase" class="collapse ">
 								<ul class="nav">
-									<li><a href="@Url.Action("Index", "Manufacturer")" class="">Manufacturers</a></li>
-									<li><a href="@Url.Action("Index", "Supplier")" class="">Suppliers</a></li>
-									<li><a href="#" class="">Purchase Orders</a></li>
+									<li><a href="@Url.Action("Index", "Manufacturers")" class="">Manufacturers</a></li>
+									<li><a href="@Url.Action("Index", "Suppliers")" class="">Suppliers</a></li>
+									<li><a href="@Url.Action("PurchaseOrdersList", "PurchaseOrders")" class="">Purchase Orders</a></li>
 									<li><a href="#" class="">Purchase Returns</a></li>
 								</ul>
 							</div>

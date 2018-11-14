@@ -1,0 +1,18 @@
+﻿@model ICollection<PharmAssistant.Models.PurchaseOrder>
+
+@{
+    ViewBag.Title = "PurchaseOrdersList";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<div class="row">
+	<div class="panel">
+		<div class="panel-heading">
+			<h3>Purchase Orders</h3>
+		</div>
+		<div class="panel-body">
+			@Html.ActionLink("New Purchaes Order", "NewPurchaseOrder", "PurchaseOrders", new { @class = "btn btn-primary" })
+		</div>
+	</div>
+</div>
+

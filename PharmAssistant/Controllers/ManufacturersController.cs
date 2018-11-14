@@ -10,7 +10,7 @@ using System.Web.UI;
 
 namespace PharmAssistant.Controllers
 {
-    public class ManufacturerController : Controller
+    public class ManufacturersController : Controller
     {
         [OutputCache(Duration = 20, Location = OutputCacheLocation.Server)]
         public ActionResult Index()
