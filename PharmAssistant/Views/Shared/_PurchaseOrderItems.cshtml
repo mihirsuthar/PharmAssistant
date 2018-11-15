@@ -1,0 +1,59 @@
+﻿@model PharmAssistant.Models.ViewModels.PurchaseOrderViewModel
+
+@{
+	int SrNo = 1;
+	double total = 0;
+}
+
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Name</th>
+			<th>Unit Price</th>
+			<th>Quantity</th>
+			<th>Amount</th>
+			<th><br /></th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (Model.PurchaseOrderItems != null && Model.PurchaseOrderItems.Count > 0)
+		{
+			foreach (var item in Model.PurchaseOrderItems)
+			{
+				total += item.SellingPrice * item.Quantity;
+				<tr>
+					<td>@(SrNo++)</td>
+					<td>@item.MedicineName</td>
+					<td>@Math.Round(item.SellingPrice, 2)</td>
+					<td>@item.Quantity</td>
+					<td>@(Math.Round(item.SellingPrice * item.Quantity, 2))</td>
+					<td>
+						@Html.ActionLink("Delete", "DeletePurchaseOrderItem", "PurchaseOrders", new { Id = item.MedicineId }, new { @class = "label label-danger" })
+					</td>
+				</tr>
+			}
+
+			<tr>
+				<td colspan="4" class="text-right"><b>Total:</b> </td>
+				<td>@Math.Round(total,2)</td>
+				<td><br /></td>
+			</tr>
+
+		}
+		else
+		{
+			<tr>
+				<td colspan="6">
+					<span class="text text-warning">No medicine added yet.</span>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+
+
+
+
+

@@ -10,9 +10,9 @@ namespace PharmAssistant.Models
     public class PurchaseOrder
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Required]
-        public int PurchaseOrderId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Required]        
+        public long PurchaseOrderId { get; set; }
 
         [StringLength(32)]
         [Column(TypeName = "varchar")]

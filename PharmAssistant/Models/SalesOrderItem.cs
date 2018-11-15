@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PharmAssistant.Models
 {
-    public class SalesItem
+    public class SalesOrderItem
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

@@ -40,6 +40,6 @@ namespace PharmAssistant.Models
         public virtual Customer Customer { get; set; }
         public virtual Doctor Doctor { get; set; }
         public virtual AppUser User { get; set; }
-        public virtual ICollection<SalesItem> SalesItems { get; set; }
+        public virtual ICollection<SalesOrderItem> SalesOrderItems { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace PharmAssistant.Models.ViewModels
     {
         [Key]
         public PurchaseOrder PurchaseOrder { get; set; }
-        public ICollection<PurchaseItem> PurchaseItems { get; set; }
+        public PurchaseOrderItem PurchaseOrderItem { get; set; }
+        public ICollection<PurchaseOrderItem> PurchaseOrderItems { get; set; }
     }
 }
