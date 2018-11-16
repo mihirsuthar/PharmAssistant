@@ -262,27 +262,6 @@
     <Compile Include="Infrastructure\ClaimsRoles.cs" />
     <Compile Include="Infrastructure\IdentityHelpers.cs" />
     <Compile Include="Infrastructure\LocationClaimsProvider.cs" />
-    <Compile Include="Migrations\201811090653065_FirstCommit.cs" />
-    <Compile Include="Migrations\201811090653065_FirstCommit.Designer.cs">
-      <DependentUpon>201811090653065_FirstCommit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811111959481_databaseSchemaUpdated.cs" />
-    <Compile Include="Migrations\201811111959481_databaseSchemaUpdated.Designer.cs">
-      <DependentUpon>201811111959481_databaseSchemaUpdated.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811121911557_Add_SupplierId_Medicine.cs" />
-    <Compile Include="Migrations\201811121911557_Add_SupplierId_Medicine.Designer.cs">
-      <DependentUpon>201811121911557_Add_SupplierId_Medicine.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811131616271_UpdatedModelFieldTypes.cs" />
-    <Compile Include="Migrations\201811131616271_UpdatedModelFieldTypes.Designer.cs">
-      <DependentUpon>201811131616271_UpdatedModelFieldTypes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201811151756392_SchemaUpdate.cs" />
-    <Compile Include="Migrations\201811151756392_SchemaUpdate.Designer.cs">
-      <DependentUpon>201811151756392_SchemaUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\AppUser.cs" />
     <Compile Include="Models\Customer.cs" />
@@ -348,23 +327,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Diagram\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201811090653065_FirstCommit.resx">
-      <DependentUpon>201811090653065_FirstCommit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811111959481_databaseSchemaUpdated.resx">
-      <DependentUpon>201811111959481_databaseSchemaUpdated.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811121911557_Add_SupplierId_Medicine.resx">
-      <DependentUpon>201811121911557_Add_SupplierId_Medicine.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811131616271_UpdatedModelFieldTypes.resx">
-      <DependentUpon>201811131616271_UpdatedModelFieldTypes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201811151756392_SchemaUpdate.resx">
-      <DependentUpon>201811151756392_SchemaUpdate.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

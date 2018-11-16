@@ -26,6 +26,9 @@
 
 	$(function () {
 
+		
+		
+
 		$("#categoryId").prop("selectedIndex", 0);
 		$("#medicineId").prop("selectedIndex", 0);
 		$("#quantity").val('');
@@ -66,6 +69,49 @@
 					});
 			}
 		});
+
+		$('#discount').on('keyup', function (e) {
+			var orderTotal = parseFloat($('#orderTotal').text());
+			var discount = parseFloat($('#discount').val());
+			if ($('#discount').val() != '') {
+				if ((orderTotal - discount) <= 0) {
+					alert('Discount can not be greater than Grand Total.');
+					$('#discount').val('');
+					$('#grandTotal').val('');
+				}
+				else {
+					$('#grandTotal').val(orderTotal - discount);
+				}
+			}
+			else {
+				$('#grandTotal').val('');
+			}
+
+			
+		});
+
+		$('#discount').on('keypress', function (e) {
+
+			if (e.metaKey || e.which <= 0 || /[0-9]/.test(String.fromCharCode(e.which)) || e.which == '8' || e.which == '46') {
+
+
+				//if ($('#contactno').val().length > 11) {
+				//	$('#contactnoErrorMsg').html('Contact number must have maximum 12 digits.');
+				//	return false;
+				//}
+				//else {
+				//	$('#contactnoErrorMsg').html('');
+				//	return true;
+				//}
+
+				//$('#contactnoErrorMsg').html('');
+				return true;
+			}
+			else {
+				//$('#contactnoErrorMsg').html('Only numbers are allowed for contact number.');
+				return false;
+			}
+		})
 	});
 
 </script>
@@ -132,34 +178,59 @@
 
 
 			<div class="row">
-				<div class="col-md-4">
-					Suplier: <br />
-					@Html.DropDownListFor(m => m.PurchaseOrder.SupplierId, ViewBag.Suppliers as SelectList, "Select Supplier", new { @class = "form-control", id = "supplierId" })<br />
 
-					Code: <br />
-					@Html.TextBoxFor(m => m.PurchaseOrder.PurchaseOrderCode, "", new { @class = "form-control", id = "orderId", placeholder = "Enter Order Code" })<br />
+				@using (Html.BeginForm("SavePurchaseOrder", "PurchaseOrders", FormMethod.Post))
+				{
 
-					@*Order Date:<br/>
-						<input type="date" name="OrderDate" id="orderDate" class="form-control" /><br/>*@
+					@Html.Hidden("PurchaseOrder.PurchaseOrderId", Session["PurchaseOrderId"])
 
-				</div>
-				<div class="col-md-8">
-					<div class="row">
-						<div class="col-md-8">
-							Notes:<br />
-							@Html.TextAreaFor(m => m.PurchaseOrder.Remarks, new { @class = "form-control", id = "orderNotes", placeholder = "Enter Notes", rows = 5, style = "resize: none;" })
-						</div>
-						<div class="col-md-4">
-							Discount:<br />
-							@Html.TextBoxFor(m => m.PurchaseOrder.Discount, "{0:#.##}", new { @class = "form-control", id = "discount", placeholder = "Enter Discount" })<br />
-							Grand Total:<br />
-							@Html.TextBoxFor(m => m.PurchaseOrder.AmountPaid, "{0:#.##}", new { @class = "form-control", id = "grandTotal", placeholder = "Grand Total", @readonly = "readonly" })<br />
-							<br />
-							<input type="button" value="Place Order" class="btn btn-primary btn-block" />
+					<div class="col-md-4">
+						Suplier: <br />
+						@Html.DropDownListFor(m => m.PurchaseOrder.SupplierId, ViewBag.Suppliers as SelectList, "Select Supplier", new { @class = "form-control", id = "supplierId" })<br />
+
+						Code: <br />
+						@Html.TextBoxFor(m => m.PurchaseOrder.PurchaseOrderCode, "", new { @class = "form-control", id = "orderId", placeholder = "Enter Order Code" })<br />
+
+						Order Date:<br/>
+						<input type="date" name="PurchaseOrder.PurchaseDate" id="orderDate" class="form-control" /><br/>
+						@*@Html.TextBoxFor(m => m.PurchaseOrder.PurchaseDate, new { @class = "form-control", id = "purchasedate" })*@
+
+					</div>
+					<div class="col-md-8">
+						<div class="row">
+							<div class="col-md-8">
+								Notes:<br />
+								@Html.TextAreaFor(m => m.PurchaseOrder.Remarks, new { @class = "form-control", id = "orderNotes", placeholder = "Enter Notes", rows = 5, style = "resize: none;" })<br />
+
+								<div class="row">
+									<div class="col-md-6">
+										Payment Mode:<br />
+										@Html.DropDownListFor(m => m.PurchaseOrder.PaymentMode, ViewBag.PaymentModes as SelectList, "Select Payment Mode", new { @class = "form-control", id = "paymentModes" })
+									</div>
+									<div class="col-md-6">
+										Payment Status:<br />
+										@Html.CheckBoxFor(m => m.PurchaseOrder.PaymentStatus)&nbsp;&nbsp;Paid
+										@*<label class="fancy-checkbox element-left">
+			@Html.CheckBoxFor(m => m.PurchaseOrder.PaymentStatus)
+			<input type="checkbox" name="PurchaseOrder.PaymentStatus" id="paymentStatus">
+			<span>Paid</span>
+		</label>*@
+										@*@Html.CheckBoxFor(m => m.PurchaseOrder.PaymentStatus, new { })*@
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								Discount:<br />
+								@Html.TextBoxFor(m => m.PurchaseOrder.Discount, "{0:#.##}", new { @class = "form-control", id = "discount", placeholder = "Enter Discount" })<br />
+								Grand Total:<br />
+								@Html.TextBoxFor(m => m.PurchaseOrder.AmountPaid, "{0:#.##}", new { @class = "form-control", id = "grandTotal", placeholder = "Grand Total", @readonly = "readonly" })<br />
+								<br />
+								<input type="submit" value="Place Order" class="btn btn-primary btn-block" /><br />
+								@Html.ActionLink("Cancel", "CancelPurchaseOrder", "PurchaseOrders", new { }, new { @class = "btn btn-danger btn-block"})
+							</div>
 						</div>
 					</div>
-					<div class="row"></div>
-				</div>
+				}
 			</div>
 			<br />
 		</div>

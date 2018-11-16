@@ -19,6 +19,8 @@ namespace PharmAssistant.Models
         public string PurchaseOrderCode { get; set; }
 
         [Required(ErrorMessage = "Purchase Date is required.")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime PurchaseDate { get; set; }
 
         [Required(ErrorMessage = "Please enter amount.")]
