@@ -103,7 +103,7 @@
 					string action = "";
 				}
 
-				@if (Model.Manufacturer.Name != null)
+				@if (Model.Manufacturer.ManufacturerName != null)
 				{
 					action = "UpdateManufacturer";
 					<h3 class="panel-title" id="panelTitle">Update Manufacturer</h3>
@@ -129,8 +129,8 @@
 
 					@Html.HiddenFor(model => model.Manufacturer.ManufacturerId)
 
-					@Html.TextBoxFor(model => model.Manufacturer.Name, new { id = "name", @class = "form-control", placeholder = "Manufacturer Name" })
-					@Html.ValidationMessageFor(model => model.Manufacturer.Name, "", new { @class = "text-danger", id = "nameErrorMsg" })<br />
+					@Html.TextBoxFor(model => model.Manufacturer.ManufacturerName, new { id = "name", @class = "form-control", placeholder = "Manufacturer Name" })
+					@Html.ValidationMessageFor(model => model.Manufacturer.ManufacturerName, "", new { @class = "text-danger", id = "nameErrorMsg" })<br />
 
 					@Html.TextAreaFor(model => model.Manufacturer.Address, new { id = "address", @class = "form-control", placeholder = "Address", rows = "4" })
 					@Html.ValidationMessageFor(model => model.Manufacturer.Address, "", new { @class = "text-danger", id = "addressErrorMsg" })<br />
@@ -146,7 +146,7 @@
 
 					<div class="row">
 						<div class="col-md-8">
-							@if (Model.Manufacturer.Name != null)
+							@if (Model.Manufacturer.ManufacturerName != null)
 							{
 								<input type="submit" id="addUpdateButton" value="Update Manufacturer" class="btn btn-primary" onclick="return validateForm();" />
 							}

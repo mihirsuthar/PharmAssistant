@@ -39,15 +39,15 @@
 							{
 								<tr>
 									<td>@(srNo++)</td>
-									<td>@medicine.Name</td>
-									<td>@medicine.MedicineCategory.Name</td>
+									<td>@medicine.MedicineName</td>
+									<td>@medicine.MedicineCategory.MedicineCategoryName</td>
 									<td>@medicine.Shelf.ShelfName</td>
-									<td>@medicine.Manufacturer.Name</td>
+									<td>@medicine.Manufacturer.ManufacturerName</td>
 									<td>@medicine.CostPrice</td>
 									<td>@medicine.SellingPrice</td>
 									<td>
 										@Html.ActionLink("Edit", "EditMedicine", "Medicines", new { MedicineId = medicine.MedicineId }, new { @class = "label label-primary" })
-										@Html.ActionLink("Delete", "DeleteMedicine", "Medicines", new { MedicineId = medicine.MedicineId }, new { @class = "label label-danger", onclick = "return confirm(Are you sure to delete \"" + medicine.Name + "\"?);" })
+										@Html.ActionLink("Delete", "DeleteMedicine", "Medicines", new { MedicineId = medicine.MedicineId }, new { @class = "label label-danger", onclick = "return confirm(Are you sure to delete \"" + medicine.MedicineName + "\"?);" })
 									</td>
 								</tr>
 							}

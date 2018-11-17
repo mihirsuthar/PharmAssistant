@@ -17,7 +17,7 @@ namespace PharmAssistant.Models
         [StringLength(25)]
         [Column(TypeName = "varchar")]
         [Required]
-        public string Name { get; set; }
+        public string ManufacturerName { get; set; }
 
         [StringLength(50)]
         [Column(TypeName = "varchar")]

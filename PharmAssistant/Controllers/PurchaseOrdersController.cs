@@ -73,7 +73,7 @@ namespace PharmAssistant.Controllers
             {
                 var medicine = db.Medicines.Where(m => m.MedicineId == PurchaseOrderItem.MedicineId).FirstOrDefault();
                 PurchaseOrderItem.SellingPrice = medicine.SellingPrice;
-                PurchaseOrderItem.MedicineName = medicine.Name;
+                PurchaseOrderItem.MedicineName = medicine.MedicineName;
 
                 PurchaseOrderViewModel PurchaseOrderModel;
 
@@ -151,7 +151,7 @@ namespace PharmAssistant.Controllers
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    var Medicines = db.Medicines.Where(m => m.CategoryId == CategoryId).Select(m => new { MedicineId = m.MedicineId, Name = m.Name.Trim() }).ToList();
+                    var Medicines = db.Medicines.Where(m => m.CategoryId == CategoryId).Select(m => new { MedicineId = m.MedicineId, Name = m.MedicineName.Trim() }).ToList();
                     return Json(Medicines, JsonRequestBehavior.AllowGet);
                 }
             }

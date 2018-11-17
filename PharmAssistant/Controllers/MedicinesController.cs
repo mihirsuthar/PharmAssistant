@@ -53,9 +53,10 @@ namespace PharmAssistant.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 ViewBag.ErrorMessage = "Unable to add medicine. Try again later.";
                 return View("NewMedicine", medicine);
-                throw;
+
             }                
         }
 
@@ -145,7 +146,7 @@ namespace PharmAssistant.Controllers
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    var existingCategory = db.MedicineCategories.Where(c => c.Name == category.Name).FirstOrDefault();
+                    var existingCategory = db.MedicineCategories.Where(c => c.MedicineCategoryName == category.MedicineCategoryName).FirstOrDefault();
 
                     if (existingCategory == null)
                     {

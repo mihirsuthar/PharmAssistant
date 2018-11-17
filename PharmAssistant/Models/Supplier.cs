@@ -17,7 +17,7 @@ namespace PharmAssistant.Models
         [StringLength(25)]
         [Column(TypeName = "varchar")]
         [Required(ErrorMessage = "Supplier name is required")]
-        public string Name { get; set; }
+        public string SupplierName { get; set; }
 
         [StringLength(50)]
         [Column(TypeName = "varchar")]

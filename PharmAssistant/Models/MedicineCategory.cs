@@ -17,7 +17,7 @@ namespace PharmAssistant.Models
         [StringLength(30)]
         [Column(TypeName = "varchar")]
         [Required(ErrorMessage = "Category Name is required.")]
-        public string Name { get; set; }
+        public string MedicineCategoryName { get; set; }
 
         public virtual ICollection<Medicine> Medicines { get; set; }
     }

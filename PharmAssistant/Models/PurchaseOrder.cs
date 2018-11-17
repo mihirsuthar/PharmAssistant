@@ -10,7 +10,6 @@ namespace PharmAssistant.Models
     public class PurchaseOrder
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Required]        
         public long PurchaseOrderId { get; set; }
 

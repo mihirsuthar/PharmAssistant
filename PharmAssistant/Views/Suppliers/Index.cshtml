@@ -100,7 +100,7 @@
 					string action = "";
 				}
 
-				@if (Model.Supplier.Name != null)
+				@if (Model.Supplier.SupplierName != null)
 				{
 					action = "UpdateSupplier";
 				}
@@ -123,8 +123,8 @@
 
 					@Html.HiddenFor(model => model.Supplier.SupplierId)
 
-					@Html.TextBoxFor(model => model.Supplier.Name, new { id = "name", @class = "form-control", placeholder = "Supplier Name" })
-					@Html.ValidationMessageFor(model => model.Supplier.Name, "", new { @class = "text-danger", id = "nameErrorMsg" })<br />
+					@Html.TextBoxFor(model => model.Supplier.SupplierName, new { id = "name", @class = "form-control", placeholder = "Supplier Name" })
+					@Html.ValidationMessageFor(model => model.Supplier.SupplierName, "", new { @class = "text-danger", id = "nameErrorMsg" })<br />
 
 					@Html.TextAreaFor(model => model.Supplier.Address, new { id = "address", @class = "form-control", placeholder = "Address", rows = "4" })
 					@Html.ValidationMessageFor(model => model.Supplier.Address, "", new { @class = "text-danger", id = "addressErrorMsg" })<br />
@@ -140,7 +140,7 @@
 
 					<div class="row">
 						<div class="col-md-6">
-							@if (Model.Supplier.Name != null)
+							@if (Model.Supplier.SupplierName != null)
 							{
 								<input type="submit" id="addUpdateButton" value="Update" class="btn btn-primary btn-block" onclick="return validateForm();" />
 							}
