@@ -14,9 +14,9 @@ namespace PharmAssistant.Controllers
     {
         static PharmAssistantContext db = new PharmAssistantContext();
 
-        static SelectList Manufacturers = new SelectList(db.Manufacturers.ToList(), "ManufacturerId", "Name"),
-                            Categories = new SelectList(db.MedicineCategories.ToList(), "CategoryId", "Name"),
-                            Suppliers = new SelectList(db.Suppliers.ToList(), "SupplierId", "Name"),
+        static SelectList Manufacturers = new SelectList(db.Manufacturers.ToList(), "ManufacturerId", "ManufacturerName"),
+                            Categories = new SelectList(db.MedicineCategories.ToList(), "CategoryId", "MedicinecategoryName"),
+                            Suppliers = new SelectList(db.Suppliers.ToList(), "SupplierId", "SupplierName"),
                             Shelves = new SelectList(db.Shelves.ToList(), "ShelfId", "ShelfName");
 
         public ActionResult MedicinesList()
@@ -30,7 +30,7 @@ namespace PharmAssistant.Controllers
             {
                 ViewBag.Manufacturers = Manufacturers; // new SelectList(db.Manufacturers.ToList(), "ManufacturerId", "Name");
                 ViewBag.Categories = Categories; // new SelectList(db.MedicineCategories.ToList(), "CategoryId", "Name");
-                ViewBag.Suppliers = Suppliers; // new SelectList(db.Suppliers.ToList(), "SupplierId", "Name");
+                //ViewBag.Suppliers = Suppliers; // new SelectList(db.Suppliers.ToList(), "SupplierId", "Name");
                 ViewBag.Shelves = Shelves; // new SelectList(db.Shelves.ToList(), "ShelfId", "ShelfName");
             }
 
@@ -39,13 +39,13 @@ namespace PharmAssistant.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddMedicine(Medicine medicine)
+        public ActionResult AddMedicine(Medicine Medicine)
         {
             try
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    db.Medicines.Add(medicine);
+                    db.Medicines.Add(Medicine);
                     db.SaveChanges();
 
                     return RedirectToAction("MedicinesList");
@@ -55,8 +55,7 @@ namespace PharmAssistant.Controllers
             {
                 Console.WriteLine(ex.Message);
                 ViewBag.ErrorMessage = "Unable to add medicine. Try again later.";
-                return View("NewMedicine", medicine);
-
+                return View("NewMedicine", Medicine);
             }                
         }
 
@@ -64,27 +63,28 @@ namespace PharmAssistant.Controllers
         {
             using (PharmAssistantContext db = new PharmAssistantContext())
             {
-                ViewBag.Manufacturers = Manufacturers; // new SelectList(db.Manufacturers.ToList(), "ManufacturerId", "Name");
-                ViewBag.Categories = Categories; // new SelectList(db.MedicineCategories.ToList(), "CategoryId", "Name");
-                ViewBag.Suppliers = Suppliers; // new SelectList(db.Suppliers.ToList(), "SupplierId", "Name");
-                ViewBag.Shelves = Shelves; // new SelectList(db.Shelves.ToList(), "ShelfId", "ShelfName");
+                ViewBag.Manufacturers = Manufacturers;
+                ViewBag.Categories = Categories;
+                ViewBag.Shelves = Shelves;
 
-                return View(db.Medicines.Where(m => m.MedicineId == MedicineId).FirstOrDefault());
+                Medicine Medicine = db.Medicines.Where(m => m.MedicineId == MedicineId).FirstOrDefault();
+
+                return View(Medicine);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateMedicine(Medicine medicine)
+        public ActionResult UpdateMedicine(Medicine Medicine)
         {
             if(ModelState.IsValid)
             {
                 try
-                {
+                {                    
                     using (PharmAssistantContext db = new PharmAssistantContext())
                     {
-                        db.Medicines.Attach(medicine);
-                        db.Entry(medicine).State = EntityState.Modified;
+                        db.Medicines.Attach(Medicine);
+                        db.Entry(Medicine).State = EntityState.Modified;
                         db.SaveChanges();
 
                         return RedirectToAction("MedicinesList");
@@ -94,13 +94,13 @@ namespace PharmAssistant.Controllers
                 {
                     Console.WriteLine(ex.Message);
                     ViewBag.ErrorMessage = "Unable to edit medicine.";
-                    return View("EditMedicine", medicine);
+                    return View("EditMedicine", Medicine);
                 }
             }
             else
             {
                 FillDropdowns();
-                return View("EditMedicine", medicine);
+                return View("EditMedicine", Medicine);
             }
         }
 
@@ -118,7 +118,9 @@ namespace PharmAssistant.Controllers
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    return db.Medicines.Include("MedicineCategory").Include("Shelf").Include("Manufacturer").ToList();
+                    var Medicines = db.Medicines.Include("MedicineCategory").Include("Shelf").Include("Manufacturer").ToList();
+
+                    return Medicines;
                 }
             }
             catch (Exception ex)
@@ -140,17 +142,17 @@ namespace PharmAssistant.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddCategory(MedicineCategory category)
+        public ActionResult AddCategory(MedicineCategory Category)
         {
             try
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    var existingCategory = db.MedicineCategories.Where(c => c.MedicineCategoryName == category.MedicineCategoryName).FirstOrDefault();
+                    var existingCategory = db.MedicineCategories.Where(c => c.MedicineCategoryName == Category.MedicineCategoryName).FirstOrDefault();
 
                     if (existingCategory == null)
                     {
-                        db.MedicineCategories.Add(category);
+                        db.MedicineCategories.Add(Category);
                         db.SaveChanges();
 
                         return PartialView("_MedicineCategoryList", GetAllCategories());
@@ -168,13 +170,13 @@ namespace PharmAssistant.Controllers
             }
         }
 
-        public ActionResult DeleteCategory(long id)
+        public ActionResult DeleteCategory(long Id)
         {
             try
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    MedicineCategory existingCategory = db.MedicineCategories.Where(c => c.CategoryId == id).FirstOrDefault();
+                    MedicineCategory existingCategory = db.MedicineCategories.Where(c => c.CategoryId == Id).FirstOrDefault();
                     db.MedicineCategories.Remove(existingCategory);
                     db.SaveChanges();
                 }
@@ -195,17 +197,17 @@ namespace PharmAssistant.Controllers
             return View("Shelves", shelvesData);
         }
 
-        public ActionResult AddShelf(Shelf shelf)
+        public ActionResult AddShelf(Shelf Shelf)
         {
             try
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    var existingShelf = db.Shelves.Where(s => s.ShelfName == shelf.ShelfName && s.ShelfId == shelf.ShelfId).FirstOrDefault();
+                    var existingShelf = db.Shelves.Where(s => s.ShelfName == Shelf.ShelfName && s.ShelfId == Shelf.ShelfId).FirstOrDefault();
 
                     if (existingShelf == null)
                     {
-                        db.Shelves.Add(shelf);
+                        db.Shelves.Add(Shelf);
                         db.SaveChanges();
 
                         return PartialView("_ShelvesList", db.Shelves.ToList());
@@ -223,13 +225,13 @@ namespace PharmAssistant.Controllers
             }
         }
 
-        public ActionResult DeleteShelf(int id)
+        public ActionResult DeleteShelf(int Id)
         {
             try
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    Shelf shelf = db.Shelves.Where(s => s.ShelfId == id).FirstOrDefault();
+                    Shelf shelf = db.Shelves.Where(s => s.ShelfId == Id).FirstOrDefault();
                     
                     db.Shelves.Remove(shelf);
                     db.SaveChanges();
@@ -259,7 +261,4 @@ namespace PharmAssistant.Controllers
             return null;
         }
     }
-
-
-    
 }

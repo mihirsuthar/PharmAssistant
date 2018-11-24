@@ -14,8 +14,8 @@ namespace PharmAssistant.Models
         [Required(ErrorMessage = "Please select Membership Id.")]
         public int MembershipId { get; set; }
 
-        [Required(ErrorMessage = "Please select Date.")]
-        public DateTime DiscountRedeemedDate { get; set; }
+        [Column(TypeName = "datetime2")]
+        public DateTime? DiscountRedeemedDate { get; set; }
 
         [Required(ErrorMessage = "Please enter bonus points.")]
         public int BonusPoints { get; set; }

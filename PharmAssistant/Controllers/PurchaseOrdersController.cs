@@ -20,9 +20,9 @@ namespace PharmAssistant.Controllers
                                                     new PaymentMode{ ModeId = "NEFT", ModeName = "NEFT" }};
 
 
-        static SelectList Medicines = new SelectList(db.Medicines.ToList(), "MedicineId", "Name"),
-                            MedicineCategories = new SelectList(db.MedicineCategories.ToList(), "CategoryId", "Name"),
-                            Suppliers = new SelectList(db.Suppliers.ToList(), "SupplierId", "Name"),
+        static SelectList Medicines = new SelectList(db.Medicines.ToList(), "MedicineId", "MedicineName"),
+                            MedicineCategories = new SelectList(db.MedicineCategories.ToList(), "CategoryId", "MedicineCategoryName"),
+                            Suppliers = new SelectList(db.Suppliers.ToList(), "SupplierId", "SupplierName"),
                             PaymentModes = new SelectList(PaymentModeList, "ModeId", "ModeName");
 
         // GET: PurchaseOrders
@@ -153,6 +153,7 @@ namespace PharmAssistant.Controllers
                 {
                     var Medicines = db.Medicines.Where(m => m.CategoryId == CategoryId).Select(m => new { MedicineId = m.MedicineId, Name = m.MedicineName.Trim() }).ToList();
                     return Json(Medicines, JsonRequestBehavior.AllowGet);
+                    //return Json(new { }, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)
@@ -161,6 +162,26 @@ namespace PharmAssistant.Controllers
                 return Json(new { }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        
+        //[HttpPost]
+        //public JsonResult GetMedicineCategories(int SupplierId)
+        //{
+        //    try
+        //    {
+        //        using (PharmAssistantContext db = new PharmAssistantContext())
+        //        {
+        //            var MedicineCategories = db.MedicineCategories.Where(m => m.Supp == CategoryId).Select(m => new { MedicineId = m.MedicineId, Name = m.MedicineName.Trim() }).ToList();
+        //            return Json(Medicines, JsonRequestBehavior.AllowGet);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //        return Json(new { }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
+
 
         public ActionResult DeletePurchaseOrderItem(int id)
         {

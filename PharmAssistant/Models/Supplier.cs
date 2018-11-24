@@ -36,7 +36,8 @@ namespace PharmAssistant.Models
         [Column(TypeName = "varchar")]
         public string Description { get; set; }
 
-        public virtual ICollection<Medicine> Products { get; set; }
-        public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
+        public virtual ICollection<Medicine> Medicines { get; set; }
+        public virtual ICollection<MedicineCategory> MedicineCategories { get; set; }
+        public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }        
     }
 }

@@ -23,7 +23,8 @@ namespace PharmAssistant.Models
         public float CostPrice { get; set; }
         public float SellingPrice { get; set; }
 
-        public DateTime ExpiryDate { get; set; }
+        [Column(TypeName = "datetime2")]
+        public DateTime? ExpiryDate { get; set; }
 
         public virtual Medicine Medicine { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }

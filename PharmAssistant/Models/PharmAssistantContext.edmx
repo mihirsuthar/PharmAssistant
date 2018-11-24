@@ -1,0 +1,1746 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Edmx Version="3.0" xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <Runtime>
+    <ConceptualModels>
+      <Schema Namespace="PharmAssistant.Models" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Customer" customannotation:ClrType="PharmAssistant.Models.Customer, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MembershipId" Type="Int32" Nullable="false" />
+          <Property Name="CustomerName" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ContactNumber" Type="Int64" Nullable="false" />
+          <Property Name="EmailId" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MembershipAccount" Relationship="Self.MembershipAccount_Customers" FromRole="MembershipAccount_Customers_Target" ToRole="MembershipAccount_Customers_Source" />
+        </EntityType>
+        <EntityType Name="MembershipAccount" customannotation:ClrType="PharmAssistant.Models.MembershipAccount, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="MembershipId" />
+          </Key>
+          <Property Name="MembershipId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MembershipTypeId" Type="Int32" Nullable="false" />
+          <Property Name="JoiningDate" Type="DateTime" />
+          <Property Name="TotalPurchaseAmount" Type="Double" Nullable="false" />
+          <Property Name="BonusPoints" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Customers" Relationship="Self.MembershipAccount_Customers" FromRole="MembershipAccount_Customers_Source" ToRole="MembershipAccount_Customers_Target" />
+          <NavigationProperty Name="MembershipType" Relationship="Self.MembershipAccount_MembershipType" FromRole="MembershipAccount_MembershipType_Source" ToRole="MembershipAccount_MembershipType_Target" />
+        </EntityType>
+        <EntityType Name="MembershipType" customannotation:ClrType="PharmAssistant.Models.MembershipType, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="MembershipTypeId" />
+          </Key>
+          <Property Name="MembershipTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MembershipTypeName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MembershipTypeDesc" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Doctor" customannotation:ClrType="PharmAssistant.Models.Doctor, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="DoctorId" />
+          </Key>
+          <Property Name="DoctorId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DoctorName" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ContactNo" Type="Int64" Nullable="false" />
+          <Property Name="Specilization" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="SalesOrders" Relationship="Self.SalesOrder_Doctor" FromRole="SalesOrder_Doctor_Target" ToRole="SalesOrder_Doctor_Source" />
+        </EntityType>
+        <EntityType Name="SalesOrder" customannotation:ClrType="PharmAssistant.Models.SalesOrder, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="SalesOrderId" />
+          </Key>
+          <Property Name="SalesOrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" />
+          <Property Name="Amount" Type="Double" Nullable="false" />
+          <Property Name="Discount" Type="Double" Nullable="false" />
+          <Property Name="Tax" Type="Double" Nullable="false" />
+          <Property Name="GrandTotal" Type="Double" Nullable="false" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="DoctorId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="Self.SalesOrder_Customer" FromRole="SalesOrder_Customer_Source" ToRole="SalesOrder_Customer_Target" />
+          <NavigationProperty Name="Doctor" Relationship="Self.SalesOrder_Doctor" FromRole="SalesOrder_Doctor_Source" ToRole="SalesOrder_Doctor_Target" />
+          <NavigationProperty Name="SalesOrderItems" Relationship="Self.SalesOrderItem_SalesOrder" FromRole="SalesOrderItem_SalesOrder_Target" ToRole="SalesOrderItem_SalesOrder_Source" />
+          <NavigationProperty Name="User" Relationship="Self.SalesOrder_User" FromRole="SalesOrder_User_Source" ToRole="SalesOrder_User_Target" />
+        </EntityType>
+        <EntityType Name="SalesOrderItem" customannotation:ClrType="PharmAssistant.Models.SalesOrderItem, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="SalesOrderId" />
+            <PropertyRef Name="MedicineId" />
+          </Key>
+          <Property Name="SalesOrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="MedicineId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="BatchNumber" Type="Int64" Nullable="false" />
+          <Property Name="SellingPrice" Type="Single" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="OrderItemTotal" Type="Single" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Self.SalesOrderItem_Product" FromRole="SalesOrderItem_Product_Source" ToRole="SalesOrderItem_Product_Target" />
+          <NavigationProperty Name="SalesOrder" Relationship="Self.SalesOrderItem_SalesOrder" FromRole="SalesOrderItem_SalesOrder_Source" ToRole="SalesOrderItem_SalesOrder_Target" />
+        </EntityType>
+        <EntityType Name="Medicine" customannotation:ClrType="PharmAssistant.Models.Medicine, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="MedicineId" />
+          </Key>
+          <Property Name="MedicineId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MedicineName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SupplierId" Type="Int32" Nullable="false" />
+          <Property Name="ManufacturerId" Type="Int32" Nullable="false" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="ShelfId" Type="Int32" Nullable="false" />
+          <Property Name="CostPrice" Type="Single" Nullable="false" />
+          <Property Name="SellingPrice" Type="Single" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Manufacturer" Relationship="Self.Manufacturer_Medicines" FromRole="Manufacturer_Medicines_Target" ToRole="Manufacturer_Medicines_Source" />
+          <NavigationProperty Name="MedicineCategory" Relationship="Self.MedicineCategory_Medicines" FromRole="MedicineCategory_Medicines_Target" ToRole="MedicineCategory_Medicines_Source" />
+          <NavigationProperty Name="Shelf" Relationship="Self.Medicine_Shelf" FromRole="Medicine_Shelf_Source" ToRole="Medicine_Shelf_Target" />
+          <NavigationProperty Name="Suppliers" Relationship="Self.Supplier_Products" FromRole="Supplier_Products_Target" ToRole="Supplier_Products_Source" />
+        </EntityType>
+        <EntityType Name="Manufacturer" customannotation:ClrType="PharmAssistant.Models.Manufacturer, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ManufacturerId" />
+          </Key>
+          <Property Name="ManufacturerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ManufacturerName" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ContactNo" Type="Int64" Nullable="false" />
+          <Property Name="EmailId" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Medicines" Relationship="Self.Manufacturer_Medicines" FromRole="Manufacturer_Medicines_Source" ToRole="Manufacturer_Medicines_Target" />
+        </EntityType>
+        <EntityType Name="MedicineCategory" customannotation:ClrType="PharmAssistant.Models.MedicineCategory, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MedicineCategoryName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Medicines" Relationship="Self.MedicineCategory_Medicines" FromRole="MedicineCategory_Medicines_Source" ToRole="MedicineCategory_Medicines_Target" />
+          <NavigationProperty Name="Suppliers" Relationship="Self.Supplier_MedicineCategories" FromRole="Supplier_MedicineCategories_Target" ToRole="Supplier_MedicineCategories_Source" />
+        </EntityType>
+        <EntityType Name="Supplier" customannotation:ClrType="PharmAssistant.Models.Supplier, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="SupplierId" />
+          </Key>
+          <Property Name="SupplierId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SupplierName" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ContactNo" Type="Int64" Nullable="false" />
+          <Property Name="EmailId" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MedicineCategories" Relationship="Self.Supplier_MedicineCategories" FromRole="Supplier_MedicineCategories_Source" ToRole="Supplier_MedicineCategories_Target" />
+          <NavigationProperty Name="Products" Relationship="Self.Supplier_Products" FromRole="Supplier_Products_Source" ToRole="Supplier_Products_Target" />
+          <NavigationProperty Name="PurchaseOrders" Relationship="Self.PurchaseOrder_Supplier" FromRole="PurchaseOrder_Supplier_Target" ToRole="PurchaseOrder_Supplier_Source" />
+        </EntityType>
+        <EntityType Name="PurchaseOrder" customannotation:ClrType="PharmAssistant.Models.PurchaseOrder, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="PurchaseOrderId" />
+          </Key>
+          <Property Name="PurchaseOrderId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="PurchaseOrderCode" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="PurchaseDate" Type="DateTime" />
+          <Property Name="OrderCost" Type="Double" Nullable="false" />
+          <Property Name="Discount" Type="Double" Nullable="false" />
+          <Property Name="Tax" Type="Double" Nullable="false" />
+          <Property Name="AmountPaid" Type="Double" Nullable="false" />
+          <Property Name="Remarks" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentMode" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentStatus" Type="Boolean" Nullable="false" />
+          <Property Name="SupplierId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Supplier" Relationship="Self.PurchaseOrder_Supplier" FromRole="PurchaseOrder_Supplier_Source" ToRole="PurchaseOrder_Supplier_Target" />
+        </EntityType>
+        <EntityType Name="Shelf" customannotation:ClrType="PharmAssistant.Models.Shelf, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="ShelfId" />
+          </Key>
+          <Property Name="ShelfId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ShelfName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ShelfNumber" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AppUser" customannotation:ClrType="PharmAssistant.Models.AppUser, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" BaseType="Self.IdentityUser">
+          <Property Name="City" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="IdentityUserClaim" customannotation:ClrType="Microsoft.AspNet.Identity.EntityFramework.IdentityUserClaim, Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="IdentityUserLogin" customannotation:ClrType="Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin, Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IdentityUserRole" customannotation:ClrType="Microsoft.AspNet.Identity.EntityFramework.IdentityUserRole, Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RoleId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LoginModel" customannotation:ClrType="PharmAssistant.Models.ViewModels.LoginModel, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MembershipDiscount" customannotation:ClrType="PharmAssistant.Models.MembershipDiscount, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="MembershipId" />
+          </Key>
+          <Property Name="MembershipId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DiscountRedeemedDate" Type="DateTime" />
+          <Property Name="BonusPoints" Type="Int32" Nullable="false" />
+          <Property Name="DiscountPercentage" Type="Int32" Nullable="false" />
+          <Property Name="DiscountAmount" Type="Single" Nullable="false" />
+          <NavigationProperty Name="MembershipAccount" Relationship="Self.MembershipDiscount_MembershipAccount" FromRole="MembershipDiscount_MembershipAccount_Source" ToRole="MembershipDiscount_MembershipAccount_Target" />
+        </EntityType>
+        <EntityType Name="PurchaseOrderItem" customannotation:ClrType="PharmAssistant.Models.PurchaseOrderItem, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="PurchaseOrderId" />
+            <PropertyRef Name="MedicineId" />
+          </Key>
+          <Property Name="PurchaseOrderId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="MedicineId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="MedicineName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="BatchNumber" Type="Int64" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="CostPrice" Type="Double" Nullable="false" />
+          <Property Name="SellingPrice" Type="Double" Nullable="false" />
+          <Property Name="ExpiryDate" Type="DateTime" />
+          <NavigationProperty Name="Medicine" Relationship="Self.PurchaseOrderItem_Medicine" FromRole="PurchaseOrderItem_Medicine_Source" ToRole="PurchaseOrderItem_Medicine_Target" />
+          <NavigationProperty Name="PurchaseOrder" Relationship="Self.PurchaseOrderItem_PurchaseOrder" FromRole="PurchaseOrderItem_PurchaseOrder_Source" ToRole="PurchaseOrderItem_PurchaseOrder_Target" />
+        </EntityType>
+        <EntityType Name="RoleModificationModel" customannotation:ClrType="PharmAssistant.Models.ViewModels.RoleModificationModel, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="RoleName" />
+          </Key>
+          <Property Name="RoleName" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IdentityRole" customannotation:ClrType="Microsoft.AspNet.Identity.EntityFramework.IdentityRole, Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.IdentityRole_Users" FromRole="IdentityRole_Users_Source" ToRole="IdentityRole_Users_Target" />
+        </EntityType>
+        <EntityType Name="AppRole" customannotation:ClrType="PharmAssistant.Models.AppRole, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" BaseType="Self.IdentityRole" />
+        <EntityType Name="StockEntry" customannotation:ClrType="PharmAssistant.Models.StockEntry, PharmAssistant, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="StockId" />
+          </Key>
+          <Property Name="StockId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MedicineId" Type="Int32" Nullable="false" />
+          <Property Name="PurchaseOrderId" Type="Int32" Nullable="false" />
+          <Property Name="BatchNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="CostPrice" Type="Single" Nullable="false" />
+          <Property Name="SellingPrice" Type="Single" Nullable="false" />
+          <Property Name="ExpiryDate" Type="DateTime" />
+          <NavigationProperty Name="Medicine" Relationship="Self.StockEntry_Medicine" FromRole="StockEntry_Medicine_Source" ToRole="StockEntry_Medicine_Target" />
+          <NavigationProperty Name="PurchaseOrder" Relationship="Self.StockEntry_PurchaseOrder" FromRole="StockEntry_PurchaseOrder_Source" ToRole="StockEntry_PurchaseOrder_Target" />
+        </EntityType>
+        <EntityType Name="IdentityUser" customannotation:ClrType="Microsoft.AspNet.Identity.EntityFramework.IdentityUser, Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Claims" Relationship="Self.IdentityUser_Claims" FromRole="IdentityUser_Claims_Source" ToRole="IdentityUser_Claims_Target" />
+          <NavigationProperty Name="Logins" Relationship="Self.IdentityUser_Logins" FromRole="IdentityUser_Logins_Source" ToRole="IdentityUser_Logins_Target" />
+          <NavigationProperty Name="Roles" Relationship="Self.IdentityUser_Roles" FromRole="IdentityUser_Roles_Source" ToRole="IdentityUser_Roles_Target" />
+        </EntityType>
+        <Association Name="MembershipAccount_Customers">
+          <End Role="MembershipAccount_Customers_Source" Type="Self.MembershipAccount" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MembershipAccount_Customers_Target" Type="Self.Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MembershipAccount_Customers_Source">
+              <PropertyRef Name="MembershipId" />
+            </Principal>
+            <Dependent Role="MembershipAccount_Customers_Target">
+              <PropertyRef Name="MembershipId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MembershipAccount_MembershipType">
+          <End Role="MembershipAccount_MembershipType_Source" Type="Self.MembershipAccount" Multiplicity="*" />
+          <End Role="MembershipAccount_MembershipType_Target" Type="Self.MembershipType" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="MembershipAccount_MembershipType_Target">
+              <PropertyRef Name="MembershipTypeId" />
+            </Principal>
+            <Dependent Role="MembershipAccount_MembershipType_Source">
+              <PropertyRef Name="MembershipTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SalesOrder_Customer">
+          <End Role="SalesOrder_Customer_Source" Type="Self.SalesOrder" Multiplicity="*" />
+          <End Role="SalesOrder_Customer_Target" Type="Self.Customer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="SalesOrder_Customer_Target">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="SalesOrder_Customer_Source">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SalesOrder_Doctor">
+          <End Role="SalesOrder_Doctor_Source" Type="Self.SalesOrder" Multiplicity="*" />
+          <End Role="SalesOrder_Doctor_Target" Type="Self.Doctor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="SalesOrder_Doctor_Target">
+              <PropertyRef Name="DoctorId" />
+            </Principal>
+            <Dependent Role="SalesOrder_Doctor_Source">
+              <PropertyRef Name="DoctorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Manufacturer_Medicines">
+          <End Role="Manufacturer_Medicines_Source" Type="Self.Manufacturer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Manufacturer_Medicines_Target" Type="Self.Medicine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Manufacturer_Medicines_Source">
+              <PropertyRef Name="ManufacturerId" />
+            </Principal>
+            <Dependent Role="Manufacturer_Medicines_Target">
+              <PropertyRef Name="ManufacturerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MedicineCategory_Medicines">
+          <End Role="MedicineCategory_Medicines_Source" Type="Self.MedicineCategory" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MedicineCategory_Medicines_Target" Type="Self.Medicine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MedicineCategory_Medicines_Source">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="MedicineCategory_Medicines_Target">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Supplier_MedicineCategories">
+          <End Role="Supplier_MedicineCategories_Source" Type="Self.Supplier" Multiplicity="*" />
+          <End Role="Supplier_MedicineCategories_Target" Type="Self.MedicineCategory" Multiplicity="*" />
+        </Association>
+        <Association Name="Supplier_Products">
+          <End Role="Supplier_Products_Source" Type="Self.Supplier" Multiplicity="*" />
+          <End Role="Supplier_Products_Target" Type="Self.Medicine" Multiplicity="*" />
+        </Association>
+        <Association Name="PurchaseOrder_Supplier">
+          <End Role="PurchaseOrder_Supplier_Source" Type="Self.PurchaseOrder" Multiplicity="*" />
+          <End Role="PurchaseOrder_Supplier_Target" Type="Self.Supplier" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="PurchaseOrder_Supplier_Target">
+              <PropertyRef Name="SupplierId" />
+            </Principal>
+            <Dependent Role="PurchaseOrder_Supplier_Source">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Medicine_Shelf">
+          <End Role="Medicine_Shelf_Source" Type="Self.Medicine" Multiplicity="*" />
+          <End Role="Medicine_Shelf_Target" Type="Self.Shelf" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="Medicine_Shelf_Target">
+              <PropertyRef Name="ShelfId" />
+            </Principal>
+            <Dependent Role="Medicine_Shelf_Source">
+              <PropertyRef Name="ShelfId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SalesOrderItem_Product">
+          <End Role="SalesOrderItem_Product_Source" Type="Self.SalesOrderItem" Multiplicity="*" />
+          <End Role="SalesOrderItem_Product_Target" Type="Self.Medicine" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="SalesOrderItem_Product_Target">
+              <PropertyRef Name="MedicineId" />
+            </Principal>
+            <Dependent Role="SalesOrderItem_Product_Source">
+              <PropertyRef Name="MedicineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SalesOrderItem_SalesOrder">
+          <End Role="SalesOrderItem_SalesOrder_Source" Type="Self.SalesOrderItem" Multiplicity="*" />
+          <End Role="SalesOrderItem_SalesOrder_Target" Type="Self.SalesOrder" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="SalesOrderItem_SalesOrder_Target">
+              <PropertyRef Name="SalesOrderId" />
+            </Principal>
+            <Dependent Role="SalesOrderItem_SalesOrder_Source">
+              <PropertyRef Name="SalesOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SalesOrder_User">
+          <End Role="SalesOrder_User_Source" Type="Self.SalesOrder" Multiplicity="*" />
+          <End Role="SalesOrder_User_Target" Type="Self.AppUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="SalesOrder_User_Target">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SalesOrder_User_Source">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MembershipDiscount_MembershipAccount">
+          <End Role="MembershipDiscount_MembershipAccount_Source" Type="Self.MembershipDiscount" Multiplicity="*" />
+          <End Role="MembershipDiscount_MembershipAccount_Target" Type="Self.MembershipAccount" Multiplicity="0..1" />
+        </Association>
+        <Association Name="PurchaseOrderItem_Medicine">
+          <End Role="PurchaseOrderItem_Medicine_Source" Type="Self.PurchaseOrderItem" Multiplicity="*" />
+          <End Role="PurchaseOrderItem_Medicine_Target" Type="Self.Medicine" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="PurchaseOrderItem_Medicine_Target">
+              <PropertyRef Name="MedicineId" />
+            </Principal>
+            <Dependent Role="PurchaseOrderItem_Medicine_Source">
+              <PropertyRef Name="MedicineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PurchaseOrderItem_PurchaseOrder">
+          <End Role="PurchaseOrderItem_PurchaseOrder_Source" Type="Self.PurchaseOrderItem" Multiplicity="*" />
+          <End Role="PurchaseOrderItem_PurchaseOrder_Target" Type="Self.PurchaseOrder" Multiplicity="0..1" />
+        </Association>
+        <Association Name="IdentityRole_Users">
+          <End Role="IdentityRole_Users_Source" Type="Self.IdentityRole" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityRole_Users_Target" Type="Self.IdentityUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentityRole_Users_Source">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityRole_Users_Target">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="StockEntry_Medicine">
+          <End Role="StockEntry_Medicine_Source" Type="Self.StockEntry" Multiplicity="*" />
+          <End Role="StockEntry_Medicine_Target" Type="Self.Medicine" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="StockEntry_Medicine_Target">
+              <PropertyRef Name="MedicineId" />
+            </Principal>
+            <Dependent Role="StockEntry_Medicine_Source">
+              <PropertyRef Name="MedicineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="StockEntry_PurchaseOrder">
+          <End Role="StockEntry_PurchaseOrder_Source" Type="Self.StockEntry" Multiplicity="*" />
+          <End Role="StockEntry_PurchaseOrder_Target" Type="Self.PurchaseOrder" Multiplicity="0..1" />
+        </Association>
+        <Association Name="IdentityUser_Claims">
+          <End Role="IdentityUser_Claims_Source" Type="Self.IdentityUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityUser_Claims_Target" Type="Self.IdentityUserClaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentityUser_Claims_Source">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityUser_Claims_Target">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="IdentityUser_Logins">
+          <End Role="IdentityUser_Logins_Source" Type="Self.IdentityUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityUser_Logins_Target" Type="Self.IdentityUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentityUser_Logins_Source">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityUser_Logins_Target">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="IdentityUser_Roles">
+          <End Role="IdentityUser_Roles_Source" Type="Self.IdentityUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityUser_Roles_Target" Type="Self.IdentityUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentityUser_Roles_Source">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityUser_Roles_Target">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PharmAssistantContext" customannotation:UseClrTypes="true">
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="MembershipAccounts" EntityType="Self.MembershipAccount" />
+          <EntitySet Name="MembershipTypes" EntityType="Self.MembershipType" />
+          <EntitySet Name="Doctors" EntityType="Self.Doctor" />
+          <EntitySet Name="SalesOrders" EntityType="Self.SalesOrder" />
+          <EntitySet Name="SalesOrderItems" EntityType="Self.SalesOrderItem" />
+          <EntitySet Name="Medicines" EntityType="Self.Medicine" />
+          <EntitySet Name="Manufacturers" EntityType="Self.Manufacturer" />
+          <EntitySet Name="MedicineCategories" EntityType="Self.MedicineCategory" />
+          <EntitySet Name="Suppliers" EntityType="Self.Supplier" />
+          <EntitySet Name="PurchaseOrders" EntityType="Self.PurchaseOrder" />
+          <EntitySet Name="Shelves" EntityType="Self.Shelf" />
+          <EntitySet Name="IdentityUserClaims" EntityType="Self.IdentityUserClaim" />
+          <EntitySet Name="IdentityUserLogins" EntityType="Self.IdentityUserLogin" />
+          <EntitySet Name="IdentityUserRoles" EntityType="Self.IdentityUserRole" />
+          <EntitySet Name="LoginModels" EntityType="Self.LoginModel" />
+          <EntitySet Name="MembershipDiscounts" EntityType="Self.MembershipDiscount" />
+          <EntitySet Name="PurchaseOrderItems" EntityType="Self.PurchaseOrderItem" />
+          <EntitySet Name="RoleModificationModels" EntityType="Self.RoleModificationModel" />
+          <EntitySet Name="Roles" EntityType="Self.IdentityRole" />
+          <EntitySet Name="StockEntries" EntityType="Self.StockEntry" />
+          <EntitySet Name="Users" EntityType="Self.IdentityUser" />
+          <AssociationSet Name="MembershipAccount_Customers" Association="Self.MembershipAccount_Customers">
+            <End Role="MembershipAccount_Customers_Source" EntitySet="MembershipAccounts" />
+            <End Role="MembershipAccount_Customers_Target" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="MembershipAccount_MembershipType" Association="Self.MembershipAccount_MembershipType">
+            <End Role="MembershipAccount_MembershipType_Source" EntitySet="MembershipAccounts" />
+            <End Role="MembershipAccount_MembershipType_Target" EntitySet="MembershipTypes" />
+          </AssociationSet>
+          <AssociationSet Name="SalesOrder_Customer" Association="Self.SalesOrder_Customer">
+            <End Role="SalesOrder_Customer_Source" EntitySet="SalesOrders" />
+            <End Role="SalesOrder_Customer_Target" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="SalesOrder_Doctor" Association="Self.SalesOrder_Doctor">
+            <End Role="SalesOrder_Doctor_Source" EntitySet="SalesOrders" />
+            <End Role="SalesOrder_Doctor_Target" EntitySet="Doctors" />
+          </AssociationSet>
+          <AssociationSet Name="Manufacturer_Medicines" Association="Self.Manufacturer_Medicines">
+            <End Role="Manufacturer_Medicines_Source" EntitySet="Manufacturers" />
+            <End Role="Manufacturer_Medicines_Target" EntitySet="Medicines" />
+          </AssociationSet>
+          <AssociationSet Name="MedicineCategory_Medicines" Association="Self.MedicineCategory_Medicines">
+            <End Role="MedicineCategory_Medicines_Source" EntitySet="MedicineCategories" />
+            <End Role="MedicineCategory_Medicines_Target" EntitySet="Medicines" />
+          </AssociationSet>
+          <AssociationSet Name="Supplier_MedicineCategories" Association="Self.Supplier_MedicineCategories">
+            <End Role="Supplier_MedicineCategories_Source" EntitySet="Suppliers" />
+            <End Role="Supplier_MedicineCategories_Target" EntitySet="MedicineCategories" />
+          </AssociationSet>
+          <AssociationSet Name="Supplier_Products" Association="Self.Supplier_Products">
+            <End Role="Supplier_Products_Source" EntitySet="Suppliers" />
+            <End Role="Supplier_Products_Target" EntitySet="Medicines" />
+          </AssociationSet>
+          <AssociationSet Name="PurchaseOrder_Supplier" Association="Self.PurchaseOrder_Supplier">
+            <End Role="PurchaseOrder_Supplier_Source" EntitySet="PurchaseOrders" />
+            <End Role="PurchaseOrder_Supplier_Target" EntitySet="Suppliers" />
+          </AssociationSet>
+          <AssociationSet Name="Medicine_Shelf" Association="Self.Medicine_Shelf">
+            <End Role="Medicine_Shelf_Source" EntitySet="Medicines" />
+            <End Role="Medicine_Shelf_Target" EntitySet="Shelves" />
+          </AssociationSet>
+          <AssociationSet Name="SalesOrderItem_Product" Association="Self.SalesOrderItem_Product">
+            <End Role="SalesOrderItem_Product_Source" EntitySet="SalesOrderItems" />
+            <End Role="SalesOrderItem_Product_Target" EntitySet="Medicines" />
+          </AssociationSet>
+          <AssociationSet Name="SalesOrderItem_SalesOrder" Association="Self.SalesOrderItem_SalesOrder">
+            <End Role="SalesOrderItem_SalesOrder_Source" EntitySet="SalesOrderItems" />
+            <End Role="SalesOrderItem_SalesOrder_Target" EntitySet="SalesOrders" />
+          </AssociationSet>
+          <AssociationSet Name="SalesOrder_User" Association="Self.SalesOrder_User">
+            <End Role="SalesOrder_User_Source" EntitySet="SalesOrders" />
+            <End Role="SalesOrder_User_Target" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="MembershipDiscount_MembershipAccount" Association="Self.MembershipDiscount_MembershipAccount">
+            <End Role="MembershipDiscount_MembershipAccount_Source" EntitySet="MembershipDiscounts" />
+            <End Role="MembershipDiscount_MembershipAccount_Target" EntitySet="MembershipAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="PurchaseOrderItem_Medicine" Association="Self.PurchaseOrderItem_Medicine">
+            <End Role="PurchaseOrderItem_Medicine_Source" EntitySet="PurchaseOrderItems" />
+            <End Role="PurchaseOrderItem_Medicine_Target" EntitySet="Medicines" />
+          </AssociationSet>
+          <AssociationSet Name="PurchaseOrderItem_PurchaseOrder" Association="Self.PurchaseOrderItem_PurchaseOrder">
+            <End Role="PurchaseOrderItem_PurchaseOrder_Source" EntitySet="PurchaseOrderItems" />
+            <End Role="PurchaseOrderItem_PurchaseOrder_Target" EntitySet="PurchaseOrders" />
+          </AssociationSet>
+          <AssociationSet Name="IdentityRole_Users" Association="Self.IdentityRole_Users">
+            <End Role="IdentityRole_Users_Source" EntitySet="Roles" />
+            <End Role="IdentityRole_Users_Target" EntitySet="IdentityUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="StockEntry_Medicine" Association="Self.StockEntry_Medicine">
+            <End Role="StockEntry_Medicine_Source" EntitySet="StockEntries" />
+            <End Role="StockEntry_Medicine_Target" EntitySet="Medicines" />
+          </AssociationSet>
+          <AssociationSet Name="StockEntry_PurchaseOrder" Association="Self.StockEntry_PurchaseOrder">
+            <End Role="StockEntry_PurchaseOrder_Source" EntitySet="StockEntries" />
+            <End Role="StockEntry_PurchaseOrder_Target" EntitySet="PurchaseOrders" />
+          </AssociationSet>
+          <AssociationSet Name="IdentityUser_Claims" Association="Self.IdentityUser_Claims">
+            <End Role="IdentityUser_Claims_Source" EntitySet="Users" />
+            <End Role="IdentityUser_Claims_Target" EntitySet="IdentityUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="IdentityUser_Logins" Association="Self.IdentityUser_Logins">
+            <End Role="IdentityUser_Logins_Source" EntitySet="Users" />
+            <End Role="IdentityUser_Logins_Target" EntitySet="IdentityUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="IdentityUser_Roles" Association="Self.IdentityUser_Roles">
+            <End Role="IdentityUser_Roles_Source" EntitySet="Users" />
+            <End Role="IdentityUser_Roles_Target" EntitySet="IdentityUserRoles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </ConceptualModels>
+    <Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CodeFirstDatabase" CdmEntityContainer="PharmAssistantContext">
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="MembershipId" ColumnName="MembershipId" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MembershipAccounts">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.MembershipAccount">
+              <MappingFragment StoreEntitySet="MembershipAccount">
+                <ScalarProperty Name="MembershipId" ColumnName="MembershipId" />
+                <ScalarProperty Name="MembershipTypeId" ColumnName="MembershipTypeId" />
+                <ScalarProperty Name="JoiningDate" ColumnName="JoiningDate" />
+                <ScalarProperty Name="TotalPurchaseAmount" ColumnName="TotalPurchaseAmount" />
+                <ScalarProperty Name="BonusPoints" ColumnName="BonusPoints" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MembershipTypes">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.MembershipType">
+              <MappingFragment StoreEntitySet="MembershipType">
+                <ScalarProperty Name="MembershipTypeId" ColumnName="MembershipTypeId" />
+                <ScalarProperty Name="MembershipTypeName" ColumnName="MembershipTypeName" />
+                <ScalarProperty Name="MembershipTypeDesc" ColumnName="MembershipTypeDesc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Doctors">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.Doctor">
+              <MappingFragment StoreEntitySet="Doctor">
+                <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+                <ScalarProperty Name="DoctorName" ColumnName="DoctorName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="ContactNo" ColumnName="ContactNo" />
+                <ScalarProperty Name="Specilization" ColumnName="Specilization" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SalesOrders">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.SalesOrder">
+              <MappingFragment StoreEntitySet="SalesOrder">
+                <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="Tax" ColumnName="Tax" />
+                <ScalarProperty Name="GrandTotal" ColumnName="GrandTotal" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="DoctorId" ColumnName="DoctorId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SalesOrderItems">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.SalesOrderItem">
+              <MappingFragment StoreEntitySet="SalesOrderItem">
+                <ScalarProperty Name="SalesOrderId" ColumnName="SalesOrderId" />
+                <ScalarProperty Name="MedicineId" ColumnName="MedicineId" />
+                <ScalarProperty Name="BatchNumber" ColumnName="BatchNumber" />
+                <ScalarProperty Name="SellingPrice" ColumnName="SellingPrice" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OrderItemTotal" ColumnName="OrderItemTotal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Medicines">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.Medicine">
+              <MappingFragment StoreEntitySet="Medicine">
+                <ScalarProperty Name="MedicineId" ColumnName="MedicineId" />
+                <ScalarProperty Name="MedicineName" ColumnName="MedicineName" />
+                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
+                <ScalarProperty Name="ManufacturerId" ColumnName="ManufacturerId" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="ShelfId" ColumnName="ShelfId" />
+                <ScalarProperty Name="CostPrice" ColumnName="CostPrice" />
+                <ScalarProperty Name="SellingPrice" ColumnName="SellingPrice" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Manufacturers">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.Manufacturer">
+              <MappingFragment StoreEntitySet="Manufacturer">
+                <ScalarProperty Name="ManufacturerId" ColumnName="ManufacturerId" />
+                <ScalarProperty Name="ManufacturerName" ColumnName="ManufacturerName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="ContactNo" ColumnName="ContactNo" />
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MedicineCategories">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.MedicineCategory">
+              <MappingFragment StoreEntitySet="MedicineCategory">
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="MedicineCategoryName" ColumnName="MedicineCategoryName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Suppliers">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.Supplier">
+              <MappingFragment StoreEntitySet="Supplier">
+                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="ContactNo" ColumnName="ContactNo" />
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseOrders">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.PurchaseOrder">
+              <MappingFragment StoreEntitySet="PurchaseOrder">
+                <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
+                <ScalarProperty Name="PurchaseOrderCode" ColumnName="PurchaseOrderCode" />
+                <ScalarProperty Name="PurchaseDate" ColumnName="PurchaseDate" />
+                <ScalarProperty Name="OrderCost" ColumnName="OrderCost" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="Tax" ColumnName="Tax" />
+                <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="PaymentMode" ColumnName="PaymentMode" />
+                <ScalarProperty Name="PaymentStatus" ColumnName="PaymentStatus" />
+                <ScalarProperty Name="SupplierId" ColumnName="SupplierId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shelves">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.Shelf">
+              <MappingFragment StoreEntitySet="Shelf">
+                <ScalarProperty Name="ShelfId" ColumnName="ShelfId" />
+                <ScalarProperty Name="ShelfName" ColumnName="ShelfName" />
+                <ScalarProperty Name="ShelfNumber" ColumnName="ShelfNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.AppUser">
+              <MappingFragment StoreEntitySet="IdentityUser">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <Condition Value="AppUser" ColumnName="Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="IsTypeOf(PharmAssistant.Models.IdentityUser)">
+              <MappingFragment StoreEntitySet="IdentityUser">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="PharmAssistant.Models.IdentityUser">
+              <MappingFragment StoreEntitySet="IdentityUser">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <Condition Value="IdentityUser" ColumnName="Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IdentityUserClaims">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.IdentityUserClaim">
+              <MappingFragment StoreEntitySet="IdentityUserClaim">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IdentityUserLogins">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.IdentityUserLogin">
+              <MappingFragment StoreEntitySet="IdentityUserLogin">
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IdentityUserRoles">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.IdentityUserRole">
+              <MappingFragment StoreEntitySet="IdentityUserRole">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LoginModels">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.LoginModel">
+              <MappingFragment StoreEntitySet="LoginModel">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MembershipDiscounts">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.MembershipDiscount">
+              <MappingFragment StoreEntitySet="MembershipDiscount">
+                <ScalarProperty Name="MembershipId" ColumnName="MembershipId" />
+                <ScalarProperty Name="DiscountRedeemedDate" ColumnName="DiscountRedeemedDate" />
+                <ScalarProperty Name="BonusPoints" ColumnName="BonusPoints" />
+                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
+                <ScalarProperty Name="DiscountAmount" ColumnName="DiscountAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseOrderItems">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.PurchaseOrderItem">
+              <MappingFragment StoreEntitySet="PurchaseOrderItem">
+                <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
+                <ScalarProperty Name="MedicineId" ColumnName="MedicineId" />
+                <ScalarProperty Name="MedicineName" ColumnName="MedicineName" />
+                <ScalarProperty Name="BatchNumber" ColumnName="BatchNumber" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="CostPrice" ColumnName="CostPrice" />
+                <ScalarProperty Name="SellingPrice" ColumnName="SellingPrice" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoleModificationModels">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.RoleModificationModel">
+              <MappingFragment StoreEntitySet="RoleModificationModel">
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="IsTypeOf(PharmAssistant.Models.IdentityRole)">
+              <MappingFragment StoreEntitySet="IdentityRole">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="PharmAssistant.Models.AppRole">
+              <MappingFragment StoreEntitySet="IdentityRole">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <Condition Value="AppRole" ColumnName="Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="PharmAssistant.Models.IdentityRole">
+              <MappingFragment StoreEntitySet="IdentityRole">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <Condition Value="IdentityRole" ColumnName="Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StockEntries">
+            <EntityTypeMapping TypeName="PharmAssistant.Models.StockEntry">
+              <MappingFragment StoreEntitySet="StockEntry">
+                <ScalarProperty Name="StockId" ColumnName="StockId" />
+                <ScalarProperty Name="MedicineId" ColumnName="MedicineId" />
+                <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
+                <ScalarProperty Name="BatchNumber" ColumnName="BatchNumber" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="CostPrice" ColumnName="CostPrice" />
+                <ScalarProperty Name="SellingPrice" ColumnName="SellingPrice" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Supplier_MedicineCategories" TypeName="PharmAssistant.Models.Supplier_MedicineCategories" StoreEntitySet="SupplierMedicineCategory">
+            <EndProperty Name="Supplier_MedicineCategories_Source">
+              <ScalarProperty Name="SupplierId" ColumnName="Supplier_SupplierId" />
+            </EndProperty>
+            <EndProperty Name="Supplier_MedicineCategories_Target">
+              <ScalarProperty Name="CategoryId" ColumnName="MedicineCategory_CategoryId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Supplier_Products" TypeName="PharmAssistant.Models.Supplier_Products" StoreEntitySet="SupplierMedicine">
+            <EndProperty Name="Supplier_Products_Source">
+              <ScalarProperty Name="SupplierId" ColumnName="Supplier_SupplierId" />
+            </EndProperty>
+            <EndProperty Name="Supplier_Products_Target">
+              <ScalarProperty Name="MedicineId" ColumnName="Medicine_MedicineId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="MembershipDiscount_MembershipAccount" TypeName="PharmAssistant.Models.MembershipDiscount_MembershipAccount" StoreEntitySet="MembershipDiscount">
+            <EndProperty Name="MembershipDiscount_MembershipAccount_Target">
+              <ScalarProperty Name="MembershipId" ColumnName="MembershipAccount_MembershipId" />
+            </EndProperty>
+            <EndProperty Name="MembershipDiscount_MembershipAccount_Source">
+              <ScalarProperty Name="MembershipId" ColumnName="MembershipId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="MembershipAccount_MembershipId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="PurchaseOrderItem_PurchaseOrder" TypeName="PharmAssistant.Models.PurchaseOrderItem_PurchaseOrder" StoreEntitySet="PurchaseOrderItem">
+            <EndProperty Name="PurchaseOrderItem_PurchaseOrder_Target">
+              <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrder_PurchaseOrderId" />
+            </EndProperty>
+            <EndProperty Name="PurchaseOrderItem_PurchaseOrder_Source">
+              <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrderId" />
+              <ScalarProperty Name="MedicineId" ColumnName="MedicineId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="PurchaseOrder_PurchaseOrderId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="StockEntry_PurchaseOrder" TypeName="PharmAssistant.Models.StockEntry_PurchaseOrder" StoreEntitySet="StockEntry">
+            <EndProperty Name="StockEntry_PurchaseOrder_Target">
+              <ScalarProperty Name="PurchaseOrderId" ColumnName="PurchaseOrder_PurchaseOrderId" />
+            </EndProperty>
+            <EndProperty Name="StockEntry_PurchaseOrder_Source">
+              <ScalarProperty Name="StockId" ColumnName="StockId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="PurchaseOrder_PurchaseOrderId" />
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </Mappings>
+    <StorageModels>
+      <Schema Namespace="CodeFirstDatabaseSchema" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MembershipId" Type="int" customannotation:Index="{ Name: IX_MembershipId, Order: 0 }" Nullable="false" />
+          <Property Name="CustomerName" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="50" Nullable="true" />
+          <Property Name="ContactNumber" Type="bigint" Nullable="false" />
+          <Property Name="EmailId" Type="varchar" MaxLength="30" Nullable="true" />
+        </EntityType>
+        <EntityType Name="MembershipAccount">
+          <Key>
+            <PropertyRef Name="MembershipId" />
+          </Key>
+          <Property Name="MembershipId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MembershipTypeId" Type="int" customannotation:Index="{ Name: IX_MembershipTypeId, Order: 0 }" Nullable="false" />
+          <Property Name="JoiningDate" Type="datetime2" Precision="7" Nullable="true" />
+          <Property Name="TotalPurchaseAmount" Type="float" Nullable="false" />
+          <Property Name="BonusPoints" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MembershipType">
+          <Key>
+            <PropertyRef Name="MembershipTypeId" />
+          </Key>
+          <Property Name="MembershipTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MembershipTypeName" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="MembershipTypeDesc" Type="varchar" MaxLength="50" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Doctor">
+          <Key>
+            <PropertyRef Name="DoctorId" />
+          </Key>
+          <Property Name="DoctorId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DoctorName" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="50" Nullable="true" />
+          <Property Name="ContactNo" Type="bigint" Nullable="false" />
+          <Property Name="Specilization" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SalesOrder">
+          <Key>
+            <PropertyRef Name="SalesOrderId" />
+          </Key>
+          <Property Name="SalesOrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="true" />
+          <Property Name="Amount" Type="float" Nullable="false" />
+          <Property Name="Discount" Type="float" Nullable="false" />
+          <Property Name="Tax" Type="float" Nullable="false" />
+          <Property Name="GrandTotal" Type="float" Nullable="false" />
+          <Property Name="CustomerId" Type="int" customannotation:Index="{ Name: IX_CustomerId, Order: 0 }" Nullable="false" />
+          <Property Name="DoctorId" Type="int" customannotation:Index="{ Name: IX_DoctorId, Order: 0 }" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" customannotation:Index="{ Name: IX_UserId, Order: 0 }" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SalesOrderItem">
+          <Key>
+            <PropertyRef Name="SalesOrderId" />
+            <PropertyRef Name="MedicineId" />
+          </Key>
+          <Property Name="SalesOrderId" Type="int" customannotation:Index="{ Name: IX_SalesOrderId, Order: 0 }" Nullable="false" />
+          <Property Name="MedicineId" Type="int" customannotation:Index="{ Name: IX_MedicineId, Order: 0 }" Nullable="false" />
+          <Property Name="BatchNumber" Type="bigint" Nullable="false" />
+          <Property Name="SellingPrice" Type="real" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="OrderItemTotal" Type="real" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Medicine">
+          <Key>
+            <PropertyRef Name="MedicineId" />
+          </Key>
+          <Property Name="MedicineId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MedicineName" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="SupplierId" Type="int" Nullable="false" />
+          <Property Name="ManufacturerId" Type="int" customannotation:Index="{ Name: IX_ManufacturerId, Order: 0 }" Nullable="false" />
+          <Property Name="CategoryId" Type="int" customannotation:Index="{ Name: IX_CategoryId, Order: 0 }" Nullable="false" />
+          <Property Name="ShelfId" Type="int" customannotation:Index="{ Name: IX_ShelfId, Order: 0 }" Nullable="false" />
+          <Property Name="CostPrice" Type="real" Nullable="false" />
+          <Property Name="SellingPrice" Type="real" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Manufacturer">
+          <Key>
+            <PropertyRef Name="ManufacturerId" />
+          </Key>
+          <Property Name="ManufacturerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ManufacturerName" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="50" Nullable="true" />
+          <Property Name="ContactNo" Type="bigint" Nullable="false" />
+          <Property Name="EmailId" Type="varchar" MaxLength="25" Nullable="true" />
+        </EntityType>
+        <EntityType Name="MedicineCategory">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MedicineCategoryName" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="SupplierId" />
+          </Key>
+          <Property Name="SupplierId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SupplierName" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ContactNo" Type="bigint" Nullable="false" />
+          <Property Name="EmailId" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="40" Nullable="true" />
+        </EntityType>
+        <EntityType Name="PurchaseOrder">
+          <Key>
+            <PropertyRef Name="PurchaseOrderId" />
+          </Key>
+          <Property Name="PurchaseOrderId" Type="bigint" Nullable="false" />
+          <Property Name="PurchaseOrderCode" Type="varchar" MaxLength="32" Nullable="true" />
+          <Property Name="PurchaseDate" Type="datetime2" Precision="7" Nullable="true" />
+          <Property Name="OrderCost" Type="float" Nullable="false" />
+          <Property Name="Discount" Type="float" Nullable="false" />
+          <Property Name="Tax" Type="float" Nullable="false" />
+          <Property Name="AmountPaid" Type="float" Nullable="false" />
+          <Property Name="Remarks" Type="char" MaxLength="100" Nullable="true" />
+          <Property Name="PaymentMode" Type="char" MaxLength="25" Nullable="true" />
+          <Property Name="PaymentStatus" Type="bit" Nullable="false" />
+          <Property Name="SupplierId" Type="int" customannotation:Index="{ Name: IX_SupplierId, Order: 0 }" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Shelf">
+          <Key>
+            <PropertyRef Name="ShelfId" />
+          </Key>
+          <Property Name="ShelfId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShelfName" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="ShelfNumber" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IdentityUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" Nullable="true" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" Nullable="true" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" customannotation:Index="{ Name: UserNameIndex, IsUnique: True }" MaxLength="256" Nullable="false" />
+          <Property Name="City" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Discriminator" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IdentityUserClaim">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" customannotation:Index="{ Name: IX_UserId, Order: 0 }" MaxLength="128" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" Nullable="true" />
+        </EntityType>
+        <EntityType Name="IdentityUserLogin" customannotation:Index="{ }">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" customannotation:Index="{ Name: IX_UserId, Order: 0 }" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IdentityUserRole" customannotation:Index="{ }">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" customannotation:Index="{ Name: IX_UserId, Order: 0 }" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" customannotation:Index="{ Name: IX_RoleId, Order: 0 }" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LoginModel">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MembershipDiscount">
+          <Key>
+            <PropertyRef Name="MembershipId" />
+          </Key>
+          <Property Name="MembershipId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DiscountRedeemedDate" Type="datetime2" Precision="7" Nullable="true" />
+          <Property Name="BonusPoints" Type="int" Nullable="false" />
+          <Property Name="DiscountPercentage" Type="int" Nullable="false" />
+          <Property Name="DiscountAmount" Type="real" Nullable="false" />
+          <Property Name="MembershipAccount_MembershipId" Type="int" customannotation:Index="{ Name: IX_MembershipAccount_MembershipId, Order: 0 }" Nullable="true" />
+        </EntityType>
+        <EntityType Name="PurchaseOrderItem">
+          <Key>
+            <PropertyRef Name="PurchaseOrderId" />
+            <PropertyRef Name="MedicineId" />
+          </Key>
+          <Property Name="PurchaseOrderId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="MedicineId" Type="int" customannotation:Index="{ Name: IX_MedicineId, Order: 0 }" Nullable="false" />
+          <Property Name="MedicineName" Type="varchar" MaxLength="30" Nullable="true" />
+          <Property Name="BatchNumber" Type="bigint" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="CostPrice" Type="float" Nullable="false" />
+          <Property Name="SellingPrice" Type="float" Nullable="false" />
+          <Property Name="ExpiryDate" Type="datetime2" Precision="7" Nullable="true" />
+          <Property Name="PurchaseOrder_PurchaseOrderId" Type="bigint" customannotation:Index="{ Name: IX_PurchaseOrder_PurchaseOrderId, Order: 0 }" Nullable="true" />
+        </EntityType>
+        <EntityType Name="RoleModificationModel">
+          <Key>
+            <PropertyRef Name="RoleName" />
+          </Key>
+          <Property Name="RoleName" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IdentityRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" customannotation:Index="{ Name: RoleNameIndex, IsUnique: True }" MaxLength="256" Nullable="false" />
+          <Property Name="Discriminator" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StockEntry">
+          <Key>
+            <PropertyRef Name="StockId" />
+          </Key>
+          <Property Name="StockId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MedicineId" Type="int" customannotation:Index="{ Name: IX_MedicineId, Order: 0 }" Nullable="false" />
+          <Property Name="PurchaseOrderId" Type="int" Nullable="false" />
+          <Property Name="BatchNumber" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="CostPrice" Type="real" Nullable="false" />
+          <Property Name="SellingPrice" Type="real" Nullable="false" />
+          <Property Name="ExpiryDate" Type="datetime2" Precision="7" Nullable="true" />
+          <Property Name="PurchaseOrder_PurchaseOrderId" Type="bigint" customannotation:Index="{ Name: IX_PurchaseOrder_PurchaseOrderId, Order: 0 }" Nullable="true" />
+        </EntityType>
+        <EntityType Name="SupplierMedicineCategory">
+          <Key>
+            <PropertyRef Name="Supplier_SupplierId" />
+            <PropertyRef Name="MedicineCategory_CategoryId" />
+          </Key>
+          <Property Name="Supplier_SupplierId" Type="int" customannotation:Index="{ Name: IX_Supplier_SupplierId, Order: 0 }" Nullable="false" />
+          <Property Name="MedicineCategory_CategoryId" Type="int" customannotation:Index="{ Name: IX_MedicineCategory_CategoryId, Order: 0 }" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SupplierMedicine">
+          <Key>
+            <PropertyRef Name="Supplier_SupplierId" />
+            <PropertyRef Name="Medicine_MedicineId" />
+          </Key>
+          <Property Name="Supplier_SupplierId" Type="int" customannotation:Index="{ Name: IX_Supplier_SupplierId, Order: 0 }" Nullable="false" />
+          <Property Name="Medicine_MedicineId" Type="int" customannotation:Index="{ Name: IX_Medicine_MedicineId, Order: 0 }" Nullable="false" />
+        </EntityType>
+        <Association Name="MembershipAccount_Customers">
+          <End Role="MembershipAccount" Type="Self.MembershipAccount" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MembershipAccount">
+              <PropertyRef Name="MembershipId" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="MembershipId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MembershipAccount_MembershipType">
+          <End Role="MembershipType" Type="Self.MembershipType" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MembershipAccount" Type="Self.MembershipAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MembershipType">
+              <PropertyRef Name="MembershipTypeId" />
+            </Principal>
+            <Dependent Role="MembershipAccount">
+              <PropertyRef Name="MembershipTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SalesOrder_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="SalesOrder">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SalesOrder_Doctor">
+          <End Role="Doctor" Type="Self.Doctor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="DoctorId" />
+            </Principal>
+            <Dependent Role="SalesOrder">
+              <PropertyRef Name="DoctorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Manufacturer_Medicines">
+          <End Role="Manufacturer" Type="Self.Manufacturer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Medicine" Type="Self.Medicine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Manufacturer">
+              <PropertyRef Name="ManufacturerId" />
+            </Principal>
+            <Dependent Role="Medicine">
+              <PropertyRef Name="ManufacturerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MedicineCategory_Medicines">
+          <End Role="MedicineCategory" Type="Self.MedicineCategory" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Medicine" Type="Self.Medicine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MedicineCategory">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="Medicine">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Supplier_MedicineCategories_Source">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="SupplierMedicineCategory" Type="Self.SupplierMedicineCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierId" />
+            </Principal>
+            <Dependent Role="SupplierMedicineCategory">
+              <PropertyRef Name="Supplier_SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Supplier_MedicineCategories_Target">
+          <End Role="MedicineCategory" Type="Self.MedicineCategory" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="SupplierMedicineCategory" Type="Self.SupplierMedicineCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MedicineCategory">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="SupplierMedicineCategory">
+              <PropertyRef Name="MedicineCategory_CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Supplier_Products_Source">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="SupplierMedicine" Type="Self.SupplierMedicine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierId" />
+            </Principal>
+            <Dependent Role="SupplierMedicine">
+              <PropertyRef Name="Supplier_SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Supplier_Products_Target">
+          <End Role="Medicine" Type="Self.Medicine" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="SupplierMedicine" Type="Self.SupplierMedicine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Medicine">
+              <PropertyRef Name="MedicineId" />
+            </Principal>
+            <Dependent Role="SupplierMedicine">
+              <PropertyRef Name="Medicine_MedicineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PurchaseOrder_Supplier">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="SupplierId" />
+            </Principal>
+            <Dependent Role="PurchaseOrder">
+              <PropertyRef Name="SupplierId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Medicine_Shelf">
+          <End Role="Shelf" Type="Self.Shelf" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Medicine" Type="Self.Medicine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shelf">
+              <PropertyRef Name="ShelfId" />
+            </Principal>
+            <Dependent Role="Medicine">
+              <PropertyRef Name="ShelfId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SalesOrderItem_Product">
+          <End Role="Medicine" Type="Self.Medicine" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="SalesOrderItem" Type="Self.SalesOrderItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Medicine">
+              <PropertyRef Name="MedicineId" />
+            </Principal>
+            <Dependent Role="SalesOrderItem">
+              <PropertyRef Name="MedicineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SalesOrderItem_SalesOrder">
+          <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="SalesOrderItem" Type="Self.SalesOrderItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SalesOrder">
+              <PropertyRef Name="SalesOrderId" />
+            </Principal>
+            <Dependent Role="SalesOrderItem">
+              <PropertyRef Name="SalesOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SalesOrder_User">
+          <End Role="IdentityUser" Type="Self.IdentityUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="SalesOrder" Type="Self.SalesOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentityUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SalesOrder">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MembershipDiscount_MembershipAccount">
+          <End Role="MembershipAccount" Type="Self.MembershipAccount" Multiplicity="0..1" />
+          <End Role="MembershipDiscount" Type="Self.MembershipDiscount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MembershipAccount">
+              <PropertyRef Name="MembershipId" />
+            </Principal>
+            <Dependent Role="MembershipDiscount">
+              <PropertyRef Name="MembershipAccount_MembershipId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PurchaseOrderItem_Medicine">
+          <End Role="Medicine" Type="Self.Medicine" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PurchaseOrderItem" Type="Self.PurchaseOrderItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Medicine">
+              <PropertyRef Name="MedicineId" />
+            </Principal>
+            <Dependent Role="PurchaseOrderItem">
+              <PropertyRef Name="MedicineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PurchaseOrderItem_PurchaseOrder">
+          <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="0..1" />
+          <End Role="PurchaseOrderItem" Type="Self.PurchaseOrderItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PurchaseOrder">
+              <PropertyRef Name="PurchaseOrderId" />
+            </Principal>
+            <Dependent Role="PurchaseOrderItem">
+              <PropertyRef Name="PurchaseOrder_PurchaseOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="IdentityRole_Users">
+          <End Role="IdentityRole" Type="Self.IdentityRole" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityUserRole" Type="Self.IdentityUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentityRole">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityUserRole">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="StockEntry_Medicine">
+          <End Role="Medicine" Type="Self.Medicine" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="StockEntry" Type="Self.StockEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Medicine">
+              <PropertyRef Name="MedicineId" />
+            </Principal>
+            <Dependent Role="StockEntry">
+              <PropertyRef Name="MedicineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="StockEntry_PurchaseOrder">
+          <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="0..1" />
+          <End Role="StockEntry" Type="Self.StockEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PurchaseOrder">
+              <PropertyRef Name="PurchaseOrderId" />
+            </Principal>
+            <Dependent Role="StockEntry">
+              <PropertyRef Name="PurchaseOrder_PurchaseOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="IdentityUser_Claims">
+          <End Role="IdentityUser" Type="Self.IdentityUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityUserClaim" Type="Self.IdentityUserClaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentityUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityUserClaim">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="IdentityUser_Logins">
+          <End Role="IdentityUser" Type="Self.IdentityUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityUserLogin" Type="Self.IdentityUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentityUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityUserLogin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="IdentityUser_Roles">
+          <End Role="IdentityUser" Type="Self.IdentityUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IdentityUserRole" Type="Self.IdentityUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IdentityUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IdentityUserRole">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CodeFirstDatabase">
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" Table="Customers" />
+          <EntitySet Name="MembershipAccount" EntityType="Self.MembershipAccount" Schema="dbo" Table="MembershipAccounts" />
+          <EntitySet Name="MembershipType" EntityType="Self.MembershipType" Schema="dbo" Table="MembershipTypes" />
+          <EntitySet Name="Doctor" EntityType="Self.Doctor" Schema="dbo" Table="Doctors" />
+          <EntitySet Name="SalesOrder" EntityType="Self.SalesOrder" Schema="dbo" Table="SalesOrders" />
+          <EntitySet Name="SalesOrderItem" EntityType="Self.SalesOrderItem" Schema="dbo" Table="SalesOrderItems" />
+          <EntitySet Name="Medicine" EntityType="Self.Medicine" Schema="dbo" Table="Medicines" />
+          <EntitySet Name="Manufacturer" EntityType="Self.Manufacturer" Schema="dbo" Table="Manufacturers" />
+          <EntitySet Name="MedicineCategory" EntityType="Self.MedicineCategory" Schema="dbo" Table="MedicineCategories" />
+          <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" Table="Suppliers" />
+          <EntitySet Name="PurchaseOrder" EntityType="Self.PurchaseOrder" Schema="dbo" Table="PurchaseOrders" />
+          <EntitySet Name="Shelf" EntityType="Self.Shelf" Schema="dbo" Table="Shelves" />
+          <EntitySet Name="IdentityUser" EntityType="Self.IdentityUser" Schema="dbo" Table="AspNetUsers" />
+          <EntitySet Name="IdentityUserClaim" EntityType="Self.IdentityUserClaim" Schema="dbo" Table="AspNetUserClaims" />
+          <EntitySet Name="IdentityUserLogin" EntityType="Self.IdentityUserLogin" Schema="dbo" Table="AspNetUserLogins" />
+          <EntitySet Name="IdentityUserRole" EntityType="Self.IdentityUserRole" Schema="dbo" Table="AspNetUserRoles" />
+          <EntitySet Name="LoginModel" EntityType="Self.LoginModel" Schema="dbo" Table="LoginModels" />
+          <EntitySet Name="MembershipDiscount" EntityType="Self.MembershipDiscount" Schema="dbo" Table="MembershipDiscounts" />
+          <EntitySet Name="PurchaseOrderItem" EntityType="Self.PurchaseOrderItem" Schema="dbo" Table="PurchaseOrderItems" />
+          <EntitySet Name="RoleModificationModel" EntityType="Self.RoleModificationModel" Schema="dbo" Table="RoleModificationModels" />
+          <EntitySet Name="IdentityRole" EntityType="Self.IdentityRole" Schema="dbo" Table="AspNetRoles" />
+          <EntitySet Name="StockEntry" EntityType="Self.StockEntry" Schema="dbo" Table="StockEntries" />
+          <EntitySet Name="SupplierMedicineCategory" EntityType="Self.SupplierMedicineCategory" Schema="dbo" Table="SupplierMedicineCategories" />
+          <EntitySet Name="SupplierMedicine" EntityType="Self.SupplierMedicine" Schema="dbo" Table="SupplierMedicines" />
+          <AssociationSet Name="MembershipAccount_Customers" Association="Self.MembershipAccount_Customers">
+            <End Role="MembershipAccount" EntitySet="MembershipAccount" />
+            <End Role="Customer" EntitySet="Customer" />
+          </AssociationSet>
+          <AssociationSet Name="MembershipAccount_MembershipType" Association="Self.MembershipAccount_MembershipType">
+            <End Role="MembershipType" EntitySet="MembershipType" />
+            <End Role="MembershipAccount" EntitySet="MembershipAccount" />
+          </AssociationSet>
+          <AssociationSet Name="SalesOrder_Customer" Association="Self.SalesOrder_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="SalesOrder" EntitySet="SalesOrder" />
+          </AssociationSet>
+          <AssociationSet Name="SalesOrder_Doctor" Association="Self.SalesOrder_Doctor">
+            <End Role="Doctor" EntitySet="Doctor" />
+            <End Role="SalesOrder" EntitySet="SalesOrder" />
+          </AssociationSet>
+          <AssociationSet Name="Manufacturer_Medicines" Association="Self.Manufacturer_Medicines">
+            <End Role="Manufacturer" EntitySet="Manufacturer" />
+            <End Role="Medicine" EntitySet="Medicine" />
+          </AssociationSet>
+          <AssociationSet Name="MedicineCategory_Medicines" Association="Self.MedicineCategory_Medicines">
+            <End Role="MedicineCategory" EntitySet="MedicineCategory" />
+            <End Role="Medicine" EntitySet="Medicine" />
+          </AssociationSet>
+          <AssociationSet Name="Supplier_MedicineCategories_Source" Association="Self.Supplier_MedicineCategories_Source">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="SupplierMedicineCategory" EntitySet="SupplierMedicineCategory" />
+          </AssociationSet>
+          <AssociationSet Name="Supplier_MedicineCategories_Target" Association="Self.Supplier_MedicineCategories_Target">
+            <End Role="MedicineCategory" EntitySet="MedicineCategory" />
+            <End Role="SupplierMedicineCategory" EntitySet="SupplierMedicineCategory" />
+          </AssociationSet>
+          <AssociationSet Name="Supplier_Products_Source" Association="Self.Supplier_Products_Source">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="SupplierMedicine" EntitySet="SupplierMedicine" />
+          </AssociationSet>
+          <AssociationSet Name="Supplier_Products_Target" Association="Self.Supplier_Products_Target">
+            <End Role="Medicine" EntitySet="Medicine" />
+            <End Role="SupplierMedicine" EntitySet="SupplierMedicine" />
+          </AssociationSet>
+          <AssociationSet Name="PurchaseOrder_Supplier" Association="Self.PurchaseOrder_Supplier">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
+          </AssociationSet>
+          <AssociationSet Name="Medicine_Shelf" Association="Self.Medicine_Shelf">
+            <End Role="Shelf" EntitySet="Shelf" />
+            <End Role="Medicine" EntitySet="Medicine" />
+          </AssociationSet>
+          <AssociationSet Name="SalesOrderItem_Product" Association="Self.SalesOrderItem_Product">
+            <End Role="Medicine" EntitySet="Medicine" />
+            <End Role="SalesOrderItem" EntitySet="SalesOrderItem" />
+          </AssociationSet>
+          <AssociationSet Name="SalesOrderItem_SalesOrder" Association="Self.SalesOrderItem_SalesOrder">
+            <End Role="SalesOrder" EntitySet="SalesOrder" />
+            <End Role="SalesOrderItem" EntitySet="SalesOrderItem" />
+          </AssociationSet>
+          <AssociationSet Name="SalesOrder_User" Association="Self.SalesOrder_User">
+            <End Role="IdentityUser" EntitySet="IdentityUser" />
+            <End Role="SalesOrder" EntitySet="SalesOrder" />
+          </AssociationSet>
+          <AssociationSet Name="MembershipDiscount_MembershipAccount" Association="Self.MembershipDiscount_MembershipAccount">
+            <End Role="MembershipAccount" EntitySet="MembershipAccount" />
+            <End Role="MembershipDiscount" EntitySet="MembershipDiscount" />
+          </AssociationSet>
+          <AssociationSet Name="PurchaseOrderItem_Medicine" Association="Self.PurchaseOrderItem_Medicine">
+            <End Role="Medicine" EntitySet="Medicine" />
+            <End Role="PurchaseOrderItem" EntitySet="PurchaseOrderItem" />
+          </AssociationSet>
+          <AssociationSet Name="PurchaseOrderItem_PurchaseOrder" Association="Self.PurchaseOrderItem_PurchaseOrder">
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
+            <End Role="PurchaseOrderItem" EntitySet="PurchaseOrderItem" />
+          </AssociationSet>
+          <AssociationSet Name="IdentityRole_Users" Association="Self.IdentityRole_Users">
+            <End Role="IdentityRole" EntitySet="IdentityRole" />
+            <End Role="IdentityUserRole" EntitySet="IdentityUserRole" />
+          </AssociationSet>
+          <AssociationSet Name="StockEntry_Medicine" Association="Self.StockEntry_Medicine">
+            <End Role="Medicine" EntitySet="Medicine" />
+            <End Role="StockEntry" EntitySet="StockEntry" />
+          </AssociationSet>
+          <AssociationSet Name="StockEntry_PurchaseOrder" Association="Self.StockEntry_PurchaseOrder">
+            <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
+            <End Role="StockEntry" EntitySet="StockEntry" />
+          </AssociationSet>
+          <AssociationSet Name="IdentityUser_Claims" Association="Self.IdentityUser_Claims">
+            <End Role="IdentityUser" EntitySet="IdentityUser" />
+            <End Role="IdentityUserClaim" EntitySet="IdentityUserClaim" />
+          </AssociationSet>
+          <AssociationSet Name="IdentityUser_Logins" Association="Self.IdentityUser_Logins">
+            <End Role="IdentityUser" EntitySet="IdentityUser" />
+            <End Role="IdentityUserLogin" EntitySet="IdentityUserLogin" />
+          </AssociationSet>
+          <AssociationSet Name="IdentityUser_Roles" Association="Self.IdentityUser_Roles">
+            <End Role="IdentityUser" EntitySet="IdentityUser" />
+            <End Role="IdentityUserRole" EntitySet="IdentityUserRole" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </StorageModels>
+  </Runtime>
+  <Designer>
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="ProcessDependentTemplatesOnSave" Value="False" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <Diagrams >
+      <Diagram DiagramId="79fcd1f26b7c4cc6a8db8c2a8e3089b6" Name="Diagram1">
+        <EntityTypeShape EntityType="PharmAssistant.Models.Customer" Width="1.5" PointX="5.25" PointY="12.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.MembershipAccount" Width="1.5" PointX="3" PointY="16.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.MembershipType" Width="1.5" PointX="5.25" PointY="19.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.Doctor" Width="1.5" PointX="5.25" PointY="16.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.SalesOrder" Width="1.5" PointX="3" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.SalesOrderItem" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.Medicine" Width="1.5" PointX="3" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.Manufacturer" Width="1.5" PointX="0.75" PointY="12.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.MedicineCategory" Width="1.5" PointX="10.5" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.Supplier" Width="1.75" PointX="8.25" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.PurchaseOrder" Width="1.5" PointX="6" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.Shelf" Width="1.5" PointX="5.25" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.AppUser" Width="1.5" PointX="5.875" PointY="34.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.IdentityUserClaim" Width="1.5" PointX="8.625" PointY="35.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.IdentityUserLogin" Width="1.5" PointX="8.625" PointY="38.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.IdentityUserRole" Width="1.5" PointX="20.625" PointY="34.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.LoginModel" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.MembershipDiscount" Width="1.5" PointX="0.75" PointY="17" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.PurchaseOrderItem" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.RoleModificationModel" Width="1.5" PointX="5.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.IdentityRole" Width="1.5" PointX="7.875" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.AppRole" Width="1.5" PointX="7.875" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.StockEntry" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PharmAssistant.Models.IdentityUser" Width="1.5" PointX="14.625" PointY="30.125" IsExpanded="true" />
+        <InheritanceConnector EntityType="PharmAssistant.Models.AppUser" ManuallyRouted="false" />
+        <InheritanceConnector EntityType="PharmAssistant.Models.AppRole" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.MembershipAccount_Customers" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.MembershipAccount_MembershipType" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.SalesOrder_Customer" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.SalesOrder_Doctor" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.Manufacturer_Medicines" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.MedicineCategory_Medicines" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.Supplier_MedicineCategories" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.Supplier_Products" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.PurchaseOrder_Supplier" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.Medicine_Shelf" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.SalesOrderItem_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.SalesOrderItem_SalesOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.SalesOrder_User" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.MembershipDiscount_MembershipAccount" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.PurchaseOrderItem_Medicine" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.PurchaseOrderItem_PurchaseOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.IdentityRole_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.StockEntry_Medicine" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.StockEntry_PurchaseOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.IdentityUser_Claims" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.IdentityUser_Logins" ManuallyRouted="false" />
+        <AssociationConnector Association="PharmAssistant.Models.IdentityUser_Roles" ManuallyRouted="false" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</Edmx>

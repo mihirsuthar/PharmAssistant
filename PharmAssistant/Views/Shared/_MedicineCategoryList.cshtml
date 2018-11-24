@@ -21,7 +21,7 @@
 					<td>@(SrNo++)</td>
 					<td>@category.MedicineCategoryName</td>
 					<td>
-						@Html.ActionLink("Delete", "DeleteCategory", "Medicines", new { id = category.CategoryId }, new { @class = "label label-danger", onclick = "return confirm('Are you sure to delete record of \"" + category.Name.Trim() + "\" category?')" })
+						@Html.ActionLink("Delete", "DeleteCategory", "Medicines", new { id = category.CategoryId }, new { @class = "label label-danger", onclick = "return confirm('Are you sure to delete record of \"" + category.MedicineCategoryName.Trim() + "\" category?')" })
 					</td>
 				</tr>
 			}

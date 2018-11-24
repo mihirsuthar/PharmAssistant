@@ -9,6 +9,11 @@ namespace PharmAssistant.Models
 {
     public class Medicine
     {
+        public Medicine()
+        {
+            this.Suppliers = new HashSet<Supplier>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
@@ -19,8 +24,8 @@ namespace PharmAssistant.Models
         [Required(ErrorMessage = "Medicine name is required.")]
         public string MedicineName { get; set; }
 
-        [Required(ErrorMessage = "Please select supplier.")]
-        public int SupplierId { get; set; }
+        //[Required(ErrorMessage = "Please select supplier.")]
+        //public int SupplierId { get; set; }
 
         [Required(ErrorMessage = "Please select manufacturer.")]
         public int ManufacturerId { get; set; }
@@ -40,10 +45,10 @@ namespace PharmAssistant.Models
         [StringLength(50)]
         [Column(TypeName = "varchar")]
         public string Description { get; set; }
-
-
+        
         public virtual ICollection<Supplier> Suppliers { get; set; }
         public virtual Manufacturer Manufacturer { get; set; }
+        //public virtual Supplier Supplier { get; set; }
         public virtual MedicineCategory MedicineCategory { get; set; }
         public virtual Shelf Shelf { get; set; }
     }

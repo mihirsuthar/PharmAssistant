@@ -10,17 +10,15 @@ namespace PharmAssistant.Models
     public class PurchaseOrder
     {
         [Key]
-        [Required]        
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long PurchaseOrderId { get; set; }
 
         [StringLength(32)]
         [Column(TypeName = "varchar")]
         public string PurchaseOrderCode { get; set; }
 
-        [Required(ErrorMessage = "Purchase Date is required.")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime PurchaseDate { get; set; }
+        [Column(TypeName = "datetime2")]
+        public DateTime? PurchaseDate { get; set; }
 
         [Required(ErrorMessage = "Please enter amount.")]
         public double OrderCost { get; set; }

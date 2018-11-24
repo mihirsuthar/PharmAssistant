@@ -17,8 +17,8 @@ namespace PharmAssistant.Models
         [Required(ErrorMessage = "Please select membership type.")]
         public int MembershipTypeId { get; set; }
 
-        [Required(ErrorMessage = "Please select joining date.")]
-        public DateTime JoiningDate { get; set; }        
+        [Column(TypeName = "datetime2")]
+        public DateTime? JoiningDate { get; set; }        
         
         public double TotalPurchaseAmount { get; set; }
         public int BonusPoints { get; set; }

@@ -33,6 +33,43 @@
 		$("#medicineId").prop("selectedIndex", 0);
 		$("#quantity").val('');
 
+		//$('#supplierId').on('change', function () {
+		//	var supplierId = $('#supplierId').val();
+
+		//	if (supplierId != '') {
+		//		//alert('Category: ' + categoryId);
+		//		var data = { SupplierId: supplierId };
+
+		//		AjaxCall('/PurchaseOrders/GetMedicineCategories', JSON.stringify(data), 'POST')
+		//			.done(function (response) {
+
+		//				//alert("Medicines Received...");
+
+		//				if (response.length > 0) {
+		//					$('#categoryId').html('');
+		//					var options = '';
+		//					options += '<option value="Select">Select Medicine Category</option>';
+
+		//					for (var i = 0; i < response.length; i++) {
+		//						options += '<option value = "' + response[i]['CategoryId'] + '">' + response[i]['MedicineCategotyName'] + '</option>';
+		//					}
+
+		//					$('#categoryId').append(options);
+		//				}
+		//				else {
+		//					$('#categoryId').html('');
+		//					var options = '';
+		//					options += '<option value="Select">Select Medicine Category</option>';
+
+		//					$('#categoryId').append(options);
+		//				}
+		//			})
+		//			.fail(function (error) {
+		//				alert('Error Receiving Medicine Categories: ' + error.StatusText);
+		//			});
+		//	}
+		//});
+
 		$('#categoryId').on('change', function () {
 			var categoryId = $('#categoryId').val();
 

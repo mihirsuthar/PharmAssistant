@@ -53,11 +53,6 @@
 				</div>
 
 				<div class="col-md-5 col-md-offset-1">
-					<div class="form-group">
-						<label for="supplierId">Supplier Id</label>
-						@Html.DropDownListFor(m => m.SupplierId, ViewBag.Suppliers as SelectList, "Select Supplier", new { @class = "form-control", id = "supplierId" })
-						@Html.ValidationMessageFor(m => m.SupplierId, "", new { @class = "text text-danger" })
-					</div>
 
 					<div class="form-group">
 						<label for="manufacturerId">Manufacturer Id</label>

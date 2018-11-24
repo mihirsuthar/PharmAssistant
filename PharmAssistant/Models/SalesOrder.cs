@@ -14,8 +14,8 @@ namespace PharmAssistant.Models
         [Required]
         public int SalesOrderId { get; set; }
 
-        [Required(ErrorMessage = "Please enter date.")]
-        public DateTime Date { get; set; }
+        [Column(TypeName = "datetime2")]
+        public DateTime? Date { get; set; }
 
         [Required(ErrorMessage = "Please enter amount.")]
         public double Amount { get; set; }

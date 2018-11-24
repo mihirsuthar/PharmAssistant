@@ -9,6 +9,13 @@ namespace PharmAssistant.Models
 {
     public class MedicineCategory
     {
+        public MedicineCategory()
+        {
+            this.Suppliers = new HashSet<Supplier>();
+            this.Medicines = new HashSet<Medicine>();
+        }
+
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
@@ -20,5 +27,6 @@ namespace PharmAssistant.Models
         public string MedicineCategoryName { get; set; }
 
         public virtual ICollection<Medicine> Medicines { get; set; }
+        public virtual ICollection<Supplier> Suppliers { get; set; }
     }
 }
