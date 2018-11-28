@@ -29,25 +29,25 @@
 					<div class="form-group">
 						<label for="medicineName">Medicine Name</label>
 						@Html.TextBoxFor(m => m.MedicineName, new { @class = "form-control", id = "medicineName", placeholder = "Enter Medicine Name" })
-						@Html.ValidationMessageFor(m => m.Medicine.MedicineName, "", new { @class = "text text-danger" })
+						@Html.ValidationMessageFor(m => m.MedicineName, "", new { @class = "text text-danger" })
 					</div>
 
 					<div class="form-group">
 						<label for="costPrice">Cost Price</label>
 						@Html.TextBoxFor(m => m.CostPrice, "{0:#.#}", new { @class = "form-control", id = "costPrice", placeholder = "Enter Cost Price" })
-						@Html.ValidationMessageFor(m => m.Medicine.CostPrice, "", new { @class = "text text-danger" })
+						@Html.ValidationMessageFor(m => m.CostPrice, "", new { @class = "text text-danger" })
 					</div>
 
 					<div class="form-group">
 						<label for="sellingPrice">Selling Price</label>
 						@Html.TextBoxFor(m => m.SellingPrice, "{0:#.#}", new { @class = "form-control", id = "sellingPrice", placeholder = "Enter Selling Price" })
-						@Html.ValidationMessageFor(m => m.Medicine.SellingPrice, "", new { @class = "text text-danger" })
+						@Html.ValidationMessageFor(m => m.SellingPrice, "", new { @class = "text text-danger" })
 					</div>
 
 					<div class="form-group">
 						<label for="description">Description</label>
 						@Html.TextAreaFor(m => m.Description, new { @class = "form-control", id = "description", placeholder = "Enter Description", style = "resize: none;" })
-						@Html.ValidationMessageFor(m => m.Medicine.Description, "", new { @class = "text text-danger" })
+						@Html.ValidationMessageFor(m => m.Description, "", new { @class = "text text-danger" })
 					</div>
 				</div>
 
@@ -55,19 +55,19 @@
 					<div class="form-group">
 						<label for="manufacturerId">Manufacturer Id</label>
 						@Html.DropDownListFor(m => m.ManufacturerId, ViewBag.Manufacturers as SelectList, "Select Manufacturer", new { @class = "form-control", id = "manufacturerId" })
-						@Html.ValidationMessageFor(m => m.Medicine.ManufacturerId, "", new { @class = "text text-danger" })
+						@Html.ValidationMessageFor(m => m.ManufacturerId, "", new { @class = "text text-danger" })
 					</div>
 
 					<div class="form-group">
 						<label for="categoryId">Category Id</label>
 						@Html.DropDownListFor(m => m.CategoryId, ViewBag.Categories as SelectList, "Select Category", new { @class = "form-control", id = "categoryId" })
-						@Html.ValidationMessageFor(m => m.Medicine.CategoryId, "", new { @class = "text text-danger" })
+						@Html.ValidationMessageFor(m => m.CategoryId, "", new { @class = "text text-danger" })
 					</div>
 
 					<div class="form-group">
 						<label for="shelfId">Shelf Id</label>
 						@Html.DropDownListFor(m => m.ShelfId, ViewBag.Shelves as SelectList, "Select Shelf", new { @class = "form-control", id = "shelfId" })
-						@Html.ValidationMessageFor(m => m.Medicine.ShelfId, "", new { @class = "text text-danger" })
+						@Html.ValidationMessageFor(m => m.ShelfId, "", new { @class = "text text-danger" })
 					</div>
 				</div>
 
@@ -78,6 +78,7 @@
 					</div>
 				</div>
 
+				
 
 
 			}

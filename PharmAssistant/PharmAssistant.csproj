@@ -299,6 +299,7 @@
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Models\ViewModels\ManufacturerViewModel.cs" />
     <Compile Include="Models\ViewModels\MedicineCategoryViewModel.cs" />
+    <Compile Include="Models\ViewModels\MedicineSupplierViewModel.cs" />
     <Compile Include="Models\ViewModels\MedicineViewModel.cs" />
     <Compile Include="Models\ViewModels\PurchaseOrderViewModel.cs" />
     <Compile Include="Models\ViewModels\RoleViewModel.cs" />
@@ -335,6 +336,7 @@
     <Content Include="Views\Medicines\Shelves.cshtml" />
     <Content Include="Views\Shared\_ShelvesList.cshtml" />
     <Content Include="Views\Shared\_PurchaseOrderItems.cshtml" />
+    <Content Include="Views\Medicines\ManageSuppliers.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

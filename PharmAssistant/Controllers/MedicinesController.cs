@@ -260,5 +260,126 @@ namespace PharmAssistant.Controllers
 
             return null;
         }
+
+
+        public ActionResult ManageSuppliers()
+        {
+            FillDropdowns();
+
+            MedicineSupplierViewModel MedicineSupplierData = new MedicineSupplierViewModel();
+
+            using (PharmAssistantContext db = new PharmAssistantContext())
+            {
+                MedicineSupplierData.MedicineCategories = db.MedicineCategories.ToList();
+                MedicineSupplierData.Medicines = db.Medicines.ToList();
+                MedicineSupplierData.Suppliers = db.Suppliers.ToList();
+                //MedicineSupplierData.SelectedSuppliersForCategory = new List<int>();
+                //MedicineSupplierData.SelectedSuppliersForMedicine = new List<int>();
+
+                
+
+
+            }
+
+            return View(MedicineSupplierData);
+        }
+
+        public ActionResult AssociateSuppliersToCategory(MedicineSupplierViewModel MedicineSupplierData)
+        {
+            return View();
+        }
+
+        public ActionResult AssociateSuppliersToMedicine(MedicineSupplierViewModel MedicineSupplierData)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult GetMedicines(int CategoryId)
+        {
+            try
+            {
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    var Medicines = db.Medicines.Where(m => m.CategoryId == CategoryId).Select(m => new { MedicineId = m.MedicineId, Name = m.MedicineName.Trim() }).ToList();
+                    return Json(Medicines, JsonRequestBehavior.AllowGet);
+                    //return Json(new { }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Json(new { }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult GetSuppliersOfCategories(int CategoryId)
+        {
+            try
+            {
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    var AllSuppliers = new List<Object>();
+
+                    //var AllSuppliers = db.Suppliers.ToList();
+                    var Suppliers = db.MedicineCategories.Where(m => m.CategoryId == CategoryId).FirstOrDefault().Suppliers.ToList();
+
+                    foreach(var supplier in db.Suppliers.ToList())
+                    {
+                        if (Suppliers.Contains(supplier))
+                        {
+                            AllSuppliers.Add(new { SupplierId = supplier.SupplierId, SupplierName = supplier.SupplierName, Select = 1 });
+                        }
+                        else
+                        {
+                            AllSuppliers.Add(new { SupplierId = supplier.SupplierId, SupplierName = supplier.SupplierName, Select = 0 });
+                        }
+                    }
+
+
+                    //var Suppliers = db.Suppliers.Where(s => s.MedicineCategories.Contains(db.MedicineCategories.Where(c => c.CategoryId == CategoryId).FirstOrDefault())).Select(s => new { SuplierId = s.SupplierId, SupplierName = s.SupplierName }).ToList();
+                    return Json(AllSuppliers, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Json(new { }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult GetSuppliersOfMedicines(int MedicineId)
+        {
+            try
+            {
+                var AllSuppliers = new List<Object>();
+
+                //var AllSuppliers = db.Suppliers.ToList();
+                var Suppliers = db.Medicines.Where(m => m.MedicineId == MedicineId).FirstOrDefault().Suppliers.ToList();
+
+                foreach (var supplier in db.Suppliers.ToList())
+                {
+                    if (Suppliers.Contains(supplier))
+                    {
+                        AllSuppliers.Add(new { SupplierId = supplier.SupplierId, SupplierName = supplier.SupplierName, Select = 1 });
+                    }
+                    else
+                    {
+                        AllSuppliers.Add(new { SupplierId = supplier.SupplierId, SupplierName = supplier.SupplierName, Select = 0 });
+                    }
+                }
+
+
+                //var Suppliers = db.Suppliers.Where(s => s.MedicineCategories.Contains(db.MedicineCategories.Where(c => c.CategoryId == CategoryId).FirstOrDefault())).Select(s => new { SuplierId = s.SupplierId, SupplierName = s.SupplierName }).ToList();
+                return Json(AllSuppliers, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Json(new { }, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }
