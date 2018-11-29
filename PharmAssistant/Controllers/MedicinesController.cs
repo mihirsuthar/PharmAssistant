@@ -260,37 +260,83 @@ namespace PharmAssistant.Controllers
 
             return null;
         }
-
-
+        
         public ActionResult ManageSuppliers()
         {
-            FillDropdowns();
-
-            //MedicineSupplierViewModel MedicineSupplierData = new MedicineSupplierViewModel();
-
-            using (PharmAssistantContext db = new PharmAssistantContext())
-            {
-                //MedicineSupplierData.MedicineCategories = db.MedicineCategories.ToList();
-                //MedicineSupplierData.Medicines = db.Medicines.ToList();
-                //MedicineSupplierData.Suppliers = db.Suppliers.ToList();
-                //MedicineSupplierData.SelectedSuppliersForCategory = new List<int>();
-                //MedicineSupplierData.SelectedSuppliersForMedicine = new List<int>();
-
-            }
-
+            FillDropdowns();            
             return View();
         }
 
         public ActionResult AssociateSuppliersToCategory(MedicineSupplierViewModel MedicineSupplierData)
         {
             Console.WriteLine(MedicineSupplierData);
-            return View();
+
+            using (PharmAssistantContext db = new PharmAssistantContext())
+            {
+                try
+                {
+                    MedicineCategory category = db.MedicineCategories.Where(c => c.CategoryId == MedicineSupplierData.CategoryId).FirstOrDefault();
+                    var suppliers = db.Suppliers;
+
+                    foreach (var supplier in suppliers)
+                    {
+                        if (MedicineSupplierData.SelectedSuppliersForCategory.Contains(supplier.SupplierId) &&
+                            !category.Suppliers.Contains(supplier))
+                        {
+                            category.Suppliers.Add(supplier);                            
+                        }
+                        else if (!MedicineSupplierData.SelectedSuppliersForCategory.Contains(supplier.SupplierId) &&
+                            category.Suppliers.Contains(supplier))
+                        {
+                            category.Suppliers.Remove(supplier);                            
+                        }
+                    }
+                    
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }                
+            }
+
+            return RedirectToAction("ManageSuppliers");
         }
 
         public ActionResult AssociateSuppliersToMedicine(MedicineSupplierViewModel MedicineSupplierData)
         {
             Console.WriteLine(MedicineSupplierData);
-            return View();
+            
+            using (PharmAssistantContext db = new PharmAssistantContext())
+            {
+                try
+                {   
+                    Medicine medicine = db.Medicines.Where(m => m.MedicineId == MedicineSupplierData.MedicineId).FirstOrDefault();
+                    var suppliers = db.Suppliers;
+
+                    foreach (var supplier in suppliers)
+                    {
+                        if (MedicineSupplierData.SelectedSuppliersForMedicine.Contains(supplier.SupplierId) &&
+                            !medicine.Suppliers.Contains(supplier))
+                        {
+                            medicine.Suppliers.Add(supplier);
+                        }
+                        else if (!MedicineSupplierData.SelectedSuppliersForMedicine.Contains(supplier.SupplierId) &&
+                            medicine.Suppliers.Contains(supplier))
+                        {
+                            medicine.Suppliers.Remove(supplier);
+                        }
+                    }
+
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            return RedirectToAction("ManageSuppliers");
         }
 
         [HttpPost]
@@ -335,8 +381,7 @@ namespace PharmAssistant.Controllers
                             AllSuppliers.Add(new { SupplierId = supplier.SupplierId, SupplierName = supplier.SupplierName, Select = 0 });
                         }
                     }
-
-
+                    
                     //var Suppliers = db.Suppliers.Where(s => s.MedicineCategories.Contains(db.MedicineCategories.Where(c => c.CategoryId == CategoryId).FirstOrDefault())).Select(s => new { SuplierId = s.SupplierId, SupplierName = s.SupplierName }).ToList();
                     return Json(AllSuppliers, JsonRequestBehavior.AllowGet);
                 }
@@ -357,6 +402,9 @@ namespace PharmAssistant.Controllers
 
                 //var AllSuppliers = db.Suppliers.ToList();
                 var Suppliers = db.Medicines.Where(m => m.MedicineId == MedicineId).FirstOrDefault().Suppliers.ToList();
+
+
+                db.Medicines.Where(m => m.MedicineId == MedicineId).FirstOrDefault().Suppliers.ToList();
 
                 foreach (var supplier in db.Suppliers.ToList())
                 {

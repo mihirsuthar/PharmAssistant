@@ -101,6 +101,7 @@
 					})
 					.fail(function (error) {
 						alert('Error Receiving Countries: ' + error.StatusText);
+						$('#medicineId').html('');
 					});
 			}
 		});
@@ -144,6 +145,7 @@
 					})
 					.fail(function (error) {
 						alert('Error Receiving Suppliers: ' + error.StatusText);
+						$('#suppliersOfMedicineCategory').html('');
 					});
 			}
 		});
@@ -187,6 +189,7 @@
 					})
 					.fail(function (error) {
 						alert('Error Receiving Suppliers: ' + error.StatusText);
+						$('#suppliersOfMedicine').html('');
 					});
 			}
 		});
