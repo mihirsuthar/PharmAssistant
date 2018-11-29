@@ -204,17 +204,22 @@
 			</div>
 			<div class="panel-body">
 				<div class="col-md-12">
-					Category:<br />
-					@Html.DropDownList("CategoryId", ViewBag.Categories as SelectList, "Select Category", new { @class = "form-control", id = "categoryId" })<br />
-					<div id="suppliersOfMedicineCategory"></div>
+                    @using (Html.BeginForm("AssociateSuppliersToCategory", "Medicines", FormMethod.Post))
+                    {
+                        <label for="categoryId">Category:</label> <br />
+                        @Html.DropDownList("CategoryId", ViewBag.Categories as SelectList, "Select Category", new { @class = "form-control", id = "categoryId" })<br />
+                        <div id="suppliersOfMedicineCategory"></div><br/><br />
 
-					@*@foreach(var supplier in Model.Suppliers)
-					{
-						<input id="supplier@(supplier.SupplierId)" type="checkbox"
-							   name="SelectedSuppliers" value="@supplier.SupplierId"
-							   @(Model.SelectedSuppliersForCategory.Contains(supplier.SupplierId) ? "checked" : "") />
-						<label for="supplier@(supplier.SupplierId)">@supplier.SupplierName</label>
-					}*@
+                        <input type="submit" value="Associate Suppliers" class="btn btn-primary" />
+                        @*@foreach(var supplier in Model.Suppliers)
+                            {
+                                <input id="supplier@(supplier.SupplierId)" type="checkbox"
+                                       name="SelectedSuppliers" value="@supplier.SupplierId"
+                                       @(Model.SelectedSuppliersForCategory.Contains(supplier.SupplierId) ? "checked" : "") />
+                                <label for="supplier@(supplier.SupplierId)">@supplier.SupplierName</label>
+                            }*@
+                    }
+                
 				</div>
 			</div>
 		</div>
@@ -227,15 +232,20 @@
 			</div>
 			<div class="panel-body">
 				<div class="col-md-12">
-					Category:<br />
-					@Html.DropDownList("CategoryId", ViewBag.Categories as SelectList, "Select Category", new { @class = "form-control", id = "medicineCategoryId" })<br />
+                    @using (Html.BeginForm("AssociateSuppliersToMedicine", "Medicines", FormMethod.Post))
+                    {
+                        <label for="medicineCategoryId">Category:</label> <br />
+					    @Html.DropDownList("CategoryId", ViewBag.Categories as SelectList, "Select Category", new { @class = "form-control", id = "medicineCategoryId" })<br />
 
-					Medicine:<br />
-					<select id="medicineId" name="MedicineId" class="form-control">
-						<option>Select Medicine</option>
-					</select><br />
+                        <label for="medicineId"> Medicine: </label><br />
+					    <select id="medicineId" name="MedicineId" class="form-control">
+						    <option>Select Medicine</option>
+					    </select><br />
 
-					<div id="suppliersOfMedicine"></div>
+					    <div id="suppliersOfMedicine"></div><br /><br />
+
+                        <input type="submit" value="Associate Suppliers" class="btn btn-primary" />
+                    }
 				</div>
 			</div>
 		</div>

@@ -266,31 +266,30 @@ namespace PharmAssistant.Controllers
         {
             FillDropdowns();
 
-            MedicineSupplierViewModel MedicineSupplierData = new MedicineSupplierViewModel();
+            //MedicineSupplierViewModel MedicineSupplierData = new MedicineSupplierViewModel();
 
             using (PharmAssistantContext db = new PharmAssistantContext())
             {
-                MedicineSupplierData.MedicineCategories = db.MedicineCategories.ToList();
-                MedicineSupplierData.Medicines = db.Medicines.ToList();
-                MedicineSupplierData.Suppliers = db.Suppliers.ToList();
+                //MedicineSupplierData.MedicineCategories = db.MedicineCategories.ToList();
+                //MedicineSupplierData.Medicines = db.Medicines.ToList();
+                //MedicineSupplierData.Suppliers = db.Suppliers.ToList();
                 //MedicineSupplierData.SelectedSuppliersForCategory = new List<int>();
                 //MedicineSupplierData.SelectedSuppliersForMedicine = new List<int>();
 
-                
-
-
             }
 
-            return View(MedicineSupplierData);
+            return View();
         }
 
         public ActionResult AssociateSuppliersToCategory(MedicineSupplierViewModel MedicineSupplierData)
         {
+            Console.WriteLine(MedicineSupplierData);
             return View();
         }
 
         public ActionResult AssociateSuppliersToMedicine(MedicineSupplierViewModel MedicineSupplierData)
         {
+            Console.WriteLine(MedicineSupplierData);
             return View();
         }
 
