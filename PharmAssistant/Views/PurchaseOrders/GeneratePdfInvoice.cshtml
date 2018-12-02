@@ -1,0 +1,226 @@
+﻿@model PharmAssistant.Models.ViewModels.PurchaseOrderViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>Invoice</title>
+	<!-- Bootstrap core CSS -->
+	<link href="~/assets/css/bootstrap4.min.css" rel="stylesheet" />
+	<style type="text/css">
+		body{
+			padding-top: 30px;
+			padding-bottom: 30px;
+		}
+
+		.borderless td  {
+			border: none;
+			padding: 0px;
+		}
+	</style>
+</head>
+<body>
+	@{ int counter = 1; }
+	<!-- Page Content -->
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="row">
+					<h2>PharmAssistant</h2>
+				</div>
+				<br/>
+
+				<div class="row">
+
+					<table class="table borderless">
+						<tr>
+							<td>
+								<table>
+									<tr>
+										<td style="padding-right: 5px;">Company Phone</td>
+										<td>: 995-345-2343</td>
+									</tr>
+									<tr>
+										<td>Website</td>
+										<td>: www.pharmassistant.com</td>
+									</tr>
+									<tr>
+										<td>Email</td>
+										<td>: info@pharmassistant.com</td>
+									</tr>
+									<tr>
+										<td colspan="2">Vadodara, Gujarat - 390005.</td>
+									</tr>
+								</table>
+							</td>
+							<td>
+								<table align="right">
+									<tr>
+										<td colspan="2"><h3>Purchase Order</h3></td>
+									</tr>
+									<tr>
+										<td>Date</td>
+										<td>: @(Model.PurchaseOrder.PurchaseDate != null ? Model.PurchaseOrder.PurchaseDate.Value.ToString("dd-MM-yyyy") : "n/a")</td>
+									</tr>
+									<tr>
+										<td style="padding-right: 5px;">Purchase Order #</td>
+										<td>: @Model.PurchaseOrder.PurchaseOrderId</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+
+
+					@*<div class="col-md-6">
+						<table>
+							<tr>
+								<td style="padding-right: 5px;">Company Phone</td>
+								<td>: 995-345-2343</td>
+							</tr>
+							<tr>
+								<td>Website</td>
+								<td>: www.pharmassistant.com</td>
+							</tr>
+							<tr>
+								<td>Email</td>
+								<td>: info@pharmassistant.com</td>
+							</tr>
+							<tr>
+								<td colspan="2">Vadodara, Gujarat - 390005.</td>
+							</tr>
+						</table>												
+					</div>
+					<div class="col-md-5">						
+						<table align="right">
+							<tr>
+								<td colspan="2"><h3>Purchase Order</h3></td>
+							</tr>
+							<tr>
+								<td>Date</td>
+								<td>: @(Model.PurchaseOrder.PurchaseDate != null ? Model.PurchaseOrder.PurchaseDate.Value.ToString("dd-MM-yyyy") : "n/a")</td>
+							</tr>
+							<tr>
+								<td style="padding-right: 5px;">Purchase Order #</td>
+								<td>: @Model.PurchaseOrder.PurchaseOrderId</td>
+							</tr>
+						</table>
+					</div>*@
+				</div>
+				<hr style="height: 2px; background-color: #000;" />
+				<div class="row">
+					<div class="col-md-12">
+						<h4>About Supplier: </h4>
+						<table>
+							<tr>
+								<td style="padding-right: 5px;">Supplier Name</td>
+								<td>: @Model.PurchaseOrder.Supplier.SupplierName</td>
+							</tr>
+							<tr>
+								<td>Address</td>
+								<td>: @Model.PurchaseOrder.Supplier.Address</td>
+							</tr>
+							<tr>
+								<td>Contact No.</td>
+								<td>: @Model.PurchaseOrder.Supplier.ContactNo</td>
+							</tr>
+							<tr>
+								<td>Email Id</td>
+								<td>: @Model.PurchaseOrder.Supplier.EmailId</td>
+							</tr>
+						</table>
+					</div>					
+				</div>
+				<br/>
+
+				@*<div class="row">
+					<div class="col-md-4">
+						Order Id: @Model.PurchaseOrder.PurchaseOrderId<br />
+						Order Code: @Model.PurchaseOrder.PurchaseOrderCode<br />
+						Supplier: @Model.PurchaseOrder.Supplier.SupplierName<br />						
+					</div>
+					<div class="col-md-4">
+						Order Date: @(Model.PurchaseOrder.PurchaseDate != null ? Model.PurchaseOrder.PurchaseDate.Value.ToString("dd-MM-yyyy") : "n/a")<br />
+						Payment Mode: @Model.PurchaseOrder.PaymentMode<br />
+						Payment Status: @Model.PurchaseOrder.OrderStatus<br />
+					</div>
+					<div class="col-md-4">
+						Order Cost: @(Math.Round(Model.PurchaseOrder.OrderCost, 2))<br />
+						Discount: @(Math.Round(Model.PurchaseOrder.Discount, 2))<br />
+						Amount Paid: @(Math.Round(Model.PurchaseOrder.AmountPaid, 2))<br />
+					</div>
+					<br />
+				</div>*@
+				
+				<div class="row">
+					<div class="col-md-12">
+						<input type="hidden" name="OrderId" value="@Model.PurchaseOrder.PurchaseOrderId" />
+						<table class="table table-bordered table-condensed">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Name</th>
+									<th>Unit Price</th>
+									<th>Quantity</th>
+									<th>Batch No.</th>
+									<th>Expiry Date</th>
+									<th>Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var OrderItem in Model.PurchaseOrderItems)
+								{
+									<tr>
+										<td>@(counter++)</td>
+										<td>@OrderItem.MedicineName</td>
+										<td>@Math.Round(OrderItem.SellingPrice, 2)</td>
+										<td>@OrderItem.Quantity</td>
+										<td>@OrderItem.BatchNumber</td>
+										<td>@(OrderItem.ExpiryDate != null ? OrderItem.ExpiryDate.Value.ToString("dd-MM-yyyy") : "n/a")</td>
+										<td>@(Math.Round(OrderItem.SellingPrice * OrderItem.Quantity, 2))</td>
+									</tr>
+								}
+								<tr>
+									<td colspan="6" align="right"><b>Subtotal:</b> </td>
+									<td>@Math.Round(Model.PurchaseOrder.OrderCost, 2)</td>
+								</tr>
+								<tr>
+									<td colspan="6" align="right"><b>Tax:</b> </td>
+									<td>@Math.Round(Model.PurchaseOrder.Tax, 2)</td>
+								</tr>
+								<tr>
+									<td colspan="6" align="right"><b>Discount:</b> </td>
+									<td>@Math.Round(Model.PurchaseOrder.Discount, 2)</td>
+								</tr>
+								<tr>
+									<td colspan="6" align="right"><b>Total:</b> </td>
+									<td>@Math.Round(Model.PurchaseOrder.OrderCost - Model.PurchaseOrder.Discount + Model.PurchaseOrder.Tax, 2)</td>
+								</tr>
+							</tbody>
+						</table>
+						<b>Addional Notes:</b> <br/>
+						@Model.PurchaseOrder.Remarks
+					</div>
+				</div>
+
+				<div class="row text-right">
+					<div class="col-md-12 text-right">
+						<br /><br /><br />
+						____________________________<br />
+						(Authorized Signature)
+					</div>
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- Bootstrap core JavaScript -->
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

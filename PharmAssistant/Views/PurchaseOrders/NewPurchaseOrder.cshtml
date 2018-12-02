@@ -211,22 +211,7 @@
 
 			<br />
 
-			@*<div class="row">
-
-					<div class="col-md-4">
-						Suplier: @Html.DropDownList("SupplierId", ViewBag.Suppliers as SelectList, "Select Supplier", new { @class = "form-control", id = "supplierId" })
-					</div>
-					<div class="col-md-4">
-						Code: @Html.TextBox("OrderCode", "", new { @class = "form-control", id = "orderId", placeholder = "Enter Order Code" })
-					</div>
-					<div class="col-md-4">
-						Order Date: <input type="date" name="OrderDate" id="orderDate" class="form-control" />
-					</div>
-
-				</div>
-				<br />*@
-
-
+			
 			<div class="row">
 
 				@using (Html.BeginForm("SavePurchaseOrder", "PurchaseOrders", FormMethod.Post))
@@ -259,12 +244,6 @@
 									<div class="col-md-6">
 										Payment Status:<br />
 										@Html.CheckBoxFor(m => m.PurchaseOrder.PaymentStatus)&nbsp;&nbsp;Paid
-										@*<label class="fancy-checkbox element-left">
-			@Html.CheckBoxFor(m => m.PurchaseOrder.PaymentStatus)
-			<input type="checkbox" name="PurchaseOrder.PaymentStatus" id="paymentStatus">
-			<span>Paid</span>
-		</label>*@
-										@*@Html.CheckBoxFor(m => m.PurchaseOrder.PaymentStatus, new { })*@
 									</div>
 								</div>
 							</div>

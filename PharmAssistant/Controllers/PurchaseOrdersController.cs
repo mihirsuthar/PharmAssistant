@@ -1,7 +1,9 @@
 ﻿using PharmAssistant.Models;
 using PharmAssistant.Models.ViewModels;
+using Rotativa.MVC;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -204,6 +206,114 @@ namespace PharmAssistant.Controllers
             }
 
             return RedirectToAction("PurchaseOrdersList");
+        }
+
+        public ActionResult ReceiveOrder(string OrderId)
+        {
+            try
+            {
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    PurchaseOrderViewModel PurchaseOrderModel = new PurchaseOrderViewModel();
+                    PurchaseOrderModel.PurchaseOrder = db.PurchaseOrders.Include("Supplier").Where(po => po.PurchaseOrderId == OrderId).FirstOrDefault();
+                    PurchaseOrderModel.PurchaseOrderItems = db.PurchaseOrderItems.Where(i => i.PurchaseOrderId == OrderId).ToList();
+
+                    return View(PurchaseOrderModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ReceiveOrder(string OrderId, ICollection<long> BatchNumbers, ICollection<DateTime> ExpiryDates)
+        {
+            using (PharmAssistantContext db = new PharmAssistantContext())
+            {
+                try
+                {
+                    db.Database.BeginTransaction();
+
+                    PurchaseOrder order = db.PurchaseOrders.Where(o => o.PurchaseOrderId == OrderId).FirstOrDefault();
+                    ICollection<PurchaseOrderItem> OrderItems = db.PurchaseOrderItems.Where(i => i.PurchaseOrderId == OrderId).ToList();
+
+                    order.OrderStatus = true;
+
+                    long[] batchNumbers = BatchNumbers.ToArray();
+                    DateTime[] expiryDates = ExpiryDates.ToArray();
+                    int counter = 0;
+
+                    foreach (var OrderItem in OrderItems)
+                    {
+                        OrderItem.BatchNumber = batchNumbers[counter];
+                        OrderItem.ExpiryDate = expiryDates[counter++];
+
+                        db.PurchaseOrderItems.Attach(OrderItem);
+                        db.Entry(OrderItem).State = EntityState.Modified;
+                    }
+
+                    db.SaveChanges();
+
+                    db.PurchaseOrders.Attach(order);
+                    db.Entry(order).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    db.Database.CurrentTransaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    db.Database.CurrentTransaction.Rollback();
+                }
+            }
+            return RedirectToAction("PurchaseOrdersList");
+        }
+
+        public ActionResult GenerateInvoice(string OrderId)
+        {
+            //string FilePath = Server.MapPath("~/Invoices/") + OrderId + DateTime.Now.ToString("ddMMyyyyhhmmss") + ".pdf";
+            //IronPdf.Installation.TempFolderPath = Server.MapPath("~/Invoices/");
+
+            //IronPdf.Installation.TempFolderPath = @"F:\Projects\PharmAssistant\Invoices\";
+            //string FilePath = @"F:\Projects\PharmAssistant\Invoices\" + OrderId + DateTime.Now.ToString("ddMMyyyyhhmmss") + ".pdf";
+
+            //try
+            //{   
+            //    //var Renderer = new IronPdf.HtmlToPdf();
+
+            //    //UriBuilder builder = new UriBuilder();
+            //    //builder.Path = Url.Action("GeneratePdfInvoice", new { OrderId = OrderId });
+            //    //IronPdf.PdfDocument document = Renderer.RenderUrlAsPdf(builder.Uri);//.SaveAs(FilePath);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
+
+
+            return new ActionAsPdf("GeneratePdfInvoice", new { OrderId = OrderId });
+            //return File(FilePath, "application/pdf", OrderId + DateTime.Now.ToString("ddMMyyyyhhmmss") + ".pdf");
+        }
+
+        public ActionResult GeneratePdfInvoice(string OrderId)
+        {
+            PurchaseOrderViewModel PurchaseOrderData = new PurchaseOrderViewModel();
+            using (PharmAssistantContext db = new PharmAssistantContext())
+            {
+                try
+                {   
+                    PurchaseOrderData.PurchaseOrder = db.PurchaseOrders.Include("Supplier").Where(o => o.PurchaseOrderId == OrderId).FirstOrDefault();
+                    PurchaseOrderData.PurchaseOrderItems = db.PurchaseOrderItems.Where(i => i.PurchaseOrderId == OrderId).ToList();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            return View(PurchaseOrderData);
         }
 
         [HttpPost]

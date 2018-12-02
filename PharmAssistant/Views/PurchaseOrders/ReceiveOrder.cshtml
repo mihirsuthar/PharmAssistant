@@ -1,0 +1,96 @@
+﻿@model PharmAssistant.Models.ViewModels.PurchaseOrderViewModel
+@{
+	ViewBag.Title = "ReceiveOrder";
+	Layout = "~/Views/Shared/_MasterLayout.cshtml";
+
+	int counter = 1;
+}
+<div class="row">
+	<div class="panel">
+		<div class="panel-heading">
+			<h3>Receive Order</h3>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-4">
+					Order Id:<br />
+					@Html.TextBoxFor(m => m.PurchaseOrder.PurchaseOrderId, new { @class = "form-control", disabled = "disabled" })<br />
+
+					Order Code:<br />
+					@Html.TextBoxFor(m => m.PurchaseOrder.PurchaseOrderCode, new { @class = "form-control", disabled = "disabled" })<br />
+
+					Supplier:<br />
+					@Html.TextBoxFor(m => m.PurchaseOrder.Supplier.SupplierName, new { @class = "form-control", disabled = "disabled" })<br />
+				</div>
+				<div class="col-md-4">
+					Order Date:<br />
+					<input type="text" value="@(Model.PurchaseOrder.PurchaseDate != null ? Model.PurchaseOrder.PurchaseDate.Value.ToString("dd-MM-yyyy") : "n/a")" class="form-control" disabled="disabled" /><br />
+
+					Payment Mode:<br />
+					@Html.TextBoxFor(m => m.PurchaseOrder.PaymentMode, new { @class = "form-control", disabled = "disabled" })<br />
+
+					Payment Status:<br />
+					<input type="text" value="@(Model.PurchaseOrder.PaymentStatus == true ? "Paid" : "Pending")" class="form-control" disabled="disabled" /><br />
+				</div>
+				<div class="col-md-4">
+					Order Cost:<br />
+					@Html.TextBoxFor(m => m.PurchaseOrder.OrderCost, new { @class = "form-control", disabled = "disabled" })<br />
+
+					Discount:<br />
+					@Html.TextBoxFor(m => m.PurchaseOrder.Discount, new { @class = "form-control", disabled = "disabled" })<br />
+
+					Amount Paid:<br />
+					@Html.TextBoxFor(m => m.PurchaseOrder.AmountPaid, new { @class = "form-control", disabled = "disabled" })<br />
+				</div>
+				<br />
+				<div class="col-md-12">
+					Remarks:<br />
+					@Html.TextBoxFor(m => m.PurchaseOrder.Remarks, new { @class = "form-control", disabled = "disabled" })<br />
+				</div>
+				
+			</div>
+			@using (Html.BeginForm("ReceiveOrder", "PurchaseOrders", FormMethod.Post))
+			{
+				@Html.AntiForgeryToken()
+
+				<div class="row">
+					<input type="hidden" name="OrderId" value="@Model.PurchaseOrder.PurchaseOrderId" />
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Name</th>
+								<th>Unit Price</th>
+								<th>Quantity</th>
+								<th>Batch No.</th>
+								<th>Expiry Date</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var OrderItem in Model.PurchaseOrderItems)
+							{
+								<tr>
+									<td>@(counter++)</td>
+									<td>@OrderItem.MedicineName</td>
+									<td>@Math.Round(OrderItem.SellingPrice, 2)</td>
+									<td>@OrderItem.Quantity</td>
+									<td><input type="text" name="BatchNumbers" class="form-control" placeholder="Batch number" />  </td>
+									<td><input type="date" name="ExpiryDates" id="orderDate" style="border: 1px solid #ccc; border-radius: 4px; height: 34px; color: #555; background-color: #fff; background-image: none; padding: 5px 12px;" /></td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+
+				<div class="row">
+					<div class="col-md-4 col-lg-offset-8">
+						@Html.ActionLink("Cancel", "PurchaseOrdersList", "PurchaseOrder", new { @class = "btn btn-danger", style = "float: right;" })
+						<input type="submit" value="Receive Order" class="btn btn-primary" style="float: right; margin-right: 15px;" />
+						<br/>
+					</div>
+				</div>
+			}
+
+		</div>
+	</div>
+</div>

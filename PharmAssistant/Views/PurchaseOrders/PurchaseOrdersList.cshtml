@@ -39,11 +39,13 @@
 								<td>@(PurchaseOrder.PaymentStatus == true ? "Paid" : "Pending")</td>
 								<td>@(PurchaseOrder.OrderStatus == true ? "Received" : "Pending")</td>
 								<td>
-									<a href="@Url.Action("ReceiveOrder", "PurchaseOrders", new { OrderId = PurchaseOrder.PurchaseOrderId })" title="Receive Order"><i class="lnr lnr-arrow-down"></i></a>&nbsp;&nbsp;
+									@if (PurchaseOrder.OrderStatus == false)
+									{
+										<a href="@Url.Action("ReceiveOrder", "PurchaseOrders", new { OrderId = PurchaseOrder.PurchaseOrderId })" title="Receive Order"><i class="lnr lnr-arrow-down"></i></a>@:&nbsp;&nbsp;
+									}
 									<a href="@Url.Action("EditOrder", "PurchaseOrders", new { OrderId = PurchaseOrder.PurchaseOrderId })" title="Edit Order"><i class="lnr lnr-pencil"></i></a>&nbsp;&nbsp;
 									<a href="@Url.Action("GenerateInvoice", "PurchaseOrders", new { OrderId = PurchaseOrder.PurchaseOrderId })" title="Generate Invoice"><i class="lnr lnr-file-add"></i></a>&nbsp;&nbsp;
 									<a href="@Url.Action("DeleteOrder", "PurchaseOrders", new { OrderId = PurchaseOrder.PurchaseOrderId })" title="Delete Order" onclick="return confirm('Are you sure to delete order @PurchaseOrder.PurchaseOrderId ?')"><i class="lnr lnr-trash"></i></a>
-
 								</td>
 							</tr>
 						}
