@@ -12,6 +12,48 @@
 		</div>
 		<div class="panel-body">
 			@Html.ActionLink("New Purchaes Order", "NewPurchaseOrder", "PurchaseOrders", new { @class = "btn btn-primary" })
+			<br /><br />
+
+			@if (Model != null && Model.Count > 0)
+			{
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Order Id</th>
+							<th>Supplier</th>
+							<th>Amount Paid</th>
+							<th>Order Date</th>
+							<th>Payment Status</th>
+							<th>Order Status</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var PurchaseOrder in Model)
+						{
+							<tr>
+								<td>@PurchaseOrder.PurchaseOrderId</td>
+								<td>@PurchaseOrder.Supplier.SupplierName</td>
+								<td>@PurchaseOrder.AmountPaid</td>
+								<td>@(PurchaseOrder.PurchaseDate != null ? PurchaseOrder.PurchaseDate.Value.ToString("dd-MM-yyyy") : "n/a")</td>
+								<td>@(PurchaseOrder.PaymentStatus == true ? "Paid" : "Pending")</td>
+								<td>@(PurchaseOrder.OrderStatus == true ? "Received" : "Pending")</td>
+								<td>
+									<a href="@Url.Action("ReceiveOrder", "PurchaseOrders", new { OrderId = PurchaseOrder.PurchaseOrderId })" title="Receive Order"><i class="lnr lnr-arrow-down"></i></a>&nbsp;&nbsp;
+									<a href="@Url.Action("EditOrder", "PurchaseOrders", new { OrderId = PurchaseOrder.PurchaseOrderId })" title="Edit Order"><i class="lnr lnr-pencil"></i></a>&nbsp;&nbsp;
+									<a href="@Url.Action("GenerateInvoice", "PurchaseOrders", new { OrderId = PurchaseOrder.PurchaseOrderId })" title="Generate Invoice"><i class="lnr lnr-file-add"></i></a>&nbsp;&nbsp;
+									<a href="@Url.Action("DeleteOrder", "PurchaseOrders", new { OrderId = PurchaseOrder.PurchaseOrderId })" title="Delete Order" onclick="return confirm('Are you sure to delete order @PurchaseOrder.PurchaseOrderId ?')"><i class="lnr lnr-trash"></i></a>
+
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+			else
+			{
+				<span class="alert alert-warning col-md-12 text-center">No purchase order available.</span>  
+			}
 		</div>
 	</div>
 </div>

@@ -156,7 +156,7 @@ namespace PharmAssistant.Migrations
                 "dbo.PurchaseOrders",
                 c => new
                     {
-                        PurchaseOrderId = c.Long(nullable: false),
+                        PurchaseOrderId = c.String(nullable: false, maxLength: 20, unicode: false),
                         PurchaseOrderCode = c.String(maxLength: 32, unicode: false),
                         PurchaseDate = c.DateTime(precision: 7, storeType: "datetime2"),
                         OrderCost = c.Double(nullable: false),
@@ -166,6 +166,7 @@ namespace PharmAssistant.Migrations
                         Remarks = c.String(maxLength: 100, fixedLength: true, unicode: false),
                         PaymentMode = c.String(maxLength: 25, fixedLength: true, unicode: false),
                         PaymentStatus = c.Boolean(nullable: false),
+                        OrderStatus = c.Boolean(nullable: false),
                         SupplierId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.PurchaseOrderId)
@@ -270,7 +271,7 @@ namespace PharmAssistant.Migrations
                 "dbo.PurchaseOrderItems",
                 c => new
                     {
-                        PurchaseOrderId = c.String(nullable: false, maxLength: 128),
+                        PurchaseOrderId = c.String(nullable: false, maxLength: 20, unicode: false),
                         MedicineId = c.Int(nullable: false),
                         MedicineName = c.String(maxLength: 30, unicode: false),
                         BatchNumber = c.Long(nullable: false),
@@ -278,13 +279,12 @@ namespace PharmAssistant.Migrations
                         CostPrice = c.Double(nullable: false),
                         SellingPrice = c.Double(nullable: false),
                         ExpiryDate = c.DateTime(precision: 7, storeType: "datetime2"),
-                        PurchaseOrder_PurchaseOrderId = c.Long(),
                     })
                 .PrimaryKey(t => new { t.PurchaseOrderId, t.MedicineId })
                 .ForeignKey("dbo.Medicines", t => t.MedicineId, cascadeDelete: true)
-                .ForeignKey("dbo.PurchaseOrders", t => t.PurchaseOrder_PurchaseOrderId)
-                .Index(t => t.MedicineId)
-                .Index(t => t.PurchaseOrder_PurchaseOrderId);
+                .ForeignKey("dbo.PurchaseOrders", t => t.PurchaseOrderId, cascadeDelete: true)
+                .Index(t => t.PurchaseOrderId)
+                .Index(t => t.MedicineId);
             
             CreateTable(
                 "dbo.RoleModificationModels",
@@ -317,7 +317,7 @@ namespace PharmAssistant.Migrations
                         CostPrice = c.Single(nullable: false),
                         SellingPrice = c.Single(nullable: false),
                         ExpiryDate = c.DateTime(precision: 7, storeType: "datetime2"),
-                        PurchaseOrder_PurchaseOrderId = c.Long(),
+                        PurchaseOrder_PurchaseOrderId = c.String(maxLength: 20, unicode: false),
                     })
                 .PrimaryKey(t => t.StockId)
                 .ForeignKey("dbo.Medicines", t => t.MedicineId, cascadeDelete: true)
@@ -361,7 +361,7 @@ namespace PharmAssistant.Migrations
             DropForeignKey("dbo.StockEntries", "PurchaseOrder_PurchaseOrderId", "dbo.PurchaseOrders");
             DropForeignKey("dbo.StockEntries", "MedicineId", "dbo.Medicines");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.PurchaseOrderItems", "PurchaseOrder_PurchaseOrderId", "dbo.PurchaseOrders");
+            DropForeignKey("dbo.PurchaseOrderItems", "PurchaseOrderId", "dbo.PurchaseOrders");
             DropForeignKey("dbo.PurchaseOrderItems", "MedicineId", "dbo.Medicines");
             DropForeignKey("dbo.MembershipDiscounts", "MembershipAccount_MembershipId", "dbo.MembershipAccounts");
             DropForeignKey("dbo.SalesOrders", "UserId", "dbo.AspNetUsers");
@@ -386,8 +386,8 @@ namespace PharmAssistant.Migrations
             DropIndex("dbo.StockEntries", new[] { "PurchaseOrder_PurchaseOrderId" });
             DropIndex("dbo.StockEntries", new[] { "MedicineId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
-            DropIndex("dbo.PurchaseOrderItems", new[] { "PurchaseOrder_PurchaseOrderId" });
             DropIndex("dbo.PurchaseOrderItems", new[] { "MedicineId" });
+            DropIndex("dbo.PurchaseOrderItems", new[] { "PurchaseOrderId" });
             DropIndex("dbo.MembershipDiscounts", new[] { "MembershipAccount_MembershipId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });

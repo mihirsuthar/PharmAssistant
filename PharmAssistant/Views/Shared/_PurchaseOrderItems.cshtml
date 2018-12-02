@@ -29,7 +29,7 @@
 					<td>@item.Quantity</td>
 					<td>@(Math.Round(item.SellingPrice * item.Quantity, 2))</td>
 					<td>
-						@Html.ActionLink("Delete", "DeletePurchaseOrderItem", "PurchaseOrders", new { Id = item.MedicineId }, new { @class = "label label-danger" })
+						@Html.ActionLink("Delete", "DeletePurchaseOrderItem", "PurchaseOrders", new { Id = item.MedicineId }, new { @class = "label label-danger", onclick = "return confirm('Are you sure to delete " + item.MedicineName + " from order?')" })
 					</td>
 				</tr>
 			}

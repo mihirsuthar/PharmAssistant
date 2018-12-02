@@ -47,7 +47,7 @@
 									<td>@medicine.SellingPrice</td>
 									<td>
 										@Html.ActionLink("Edit", "EditMedicine", "Medicines", new { MedicineId = medicine.MedicineId }, new { @class = "label label-primary" })
-										@Html.ActionLink("Delete", "DeleteMedicine", "Medicines", new { MedicineId = medicine.MedicineId }, new { @class = "label label-danger", onclick = "return confirm(Are you sure to delete \"" + medicine.MedicineName + "\"?);" })
+										@Html.ActionLink("Delete", "DeleteMedicine", "Medicines", new { MedicineId = medicine.MedicineId }, new { @class = "label label-danger", onclick = "return confirm('Are you sure to delete \"" + medicine.MedicineName + "\"?');" })
 									</td>
 								</tr>
 							}

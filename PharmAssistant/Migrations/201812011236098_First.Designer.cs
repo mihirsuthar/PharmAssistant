@@ -13,7 +13,7 @@ namespace PharmAssistant.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201811211717579_First"; }
+            get { return "201812011236098_First"; }
         }
         
         string IMigrationMetadata.Source

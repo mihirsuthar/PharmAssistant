@@ -3,6 +3,7 @@ using PharmAssistant.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -32,7 +33,22 @@ namespace PharmAssistant.Controllers
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    return View(db.PurchaseOrders.ToList());
+                    //ICollection<PurchaseOrderViewModel> PurchaseOrdersList = new List<PurchaseOrderViewModel>();
+                    ICollection<PurchaseOrder> PurchaseOrders = db.PurchaseOrders.Include("Supplier").ToList();
+                    //ICollection<PurchaseOrderItem> PurchaseOrderItems = db.PurchaseOrderItems.ToList();
+                    //PurchaseOrderViewModel order;
+
+                    //foreach (var purchaseOrder in PurchaseOrders)
+                    //{
+                    //    order = new PurchaseOrderViewModel();
+
+                    //    order.PurchaseOrder = purchaseOrder;
+                    //    order.PurchaseOrderItems = PurchaseOrderItems.Where(i => i.PurchaseOrderId == purchaseOrder.PurchaseOrderId).ToList();
+
+                    //    PurchaseOrdersList.Add(order);
+                    //}
+
+                    return View(PurchaseOrders);
                 }
             }
             catch (Exception ex)
@@ -71,24 +87,48 @@ namespace PharmAssistant.Controllers
         {
             using (PharmAssistantContext db = new PharmAssistantContext())
             {
-                var medicine = db.Medicines.Where(m => m.MedicineId == PurchaseOrderItem.MedicineId).FirstOrDefault();
-                PurchaseOrderItem.SellingPrice = medicine.SellingPrice;
-                PurchaseOrderItem.MedicineName = medicine.MedicineName;
-
                 PurchaseOrderViewModel PurchaseOrderModel;
 
-                if (Session["PurchaseOrderModel"] == null)
+                try
                 {
-                    PurchaseOrderModel = new PurchaseOrderViewModel();
-                    PurchaseOrderModel.PurchaseOrderItems = new List<PurchaseOrderItem>();
-                    PurchaseOrderModel.PurchaseOrderItems.Add(PurchaseOrderItem);
-                    Session["PurchaseOrderModel"] = PurchaseOrderModel;
+                    var medicine = db.Medicines.Where(m => m.MedicineId == PurchaseOrderItem.MedicineId).FirstOrDefault();
+                    PurchaseOrderItem.SellingPrice = medicine.SellingPrice;
+                    PurchaseOrderItem.MedicineName = medicine.MedicineName;
+
+                    
+
+                    if (Session["PurchaseOrderModel"] == null)
+                    {
+                        PurchaseOrderModel = new PurchaseOrderViewModel();
+                        PurchaseOrderModel.PurchaseOrderItems = new List<PurchaseOrderItem>();
+                        PurchaseOrderModel.PurchaseOrderItems.Add(PurchaseOrderItem);
+                        Session["PurchaseOrderModel"] = PurchaseOrderModel;
+                    }
+                    else
+                    {
+                        PurchaseOrderModel = (PurchaseOrderViewModel)Session["PurchaseOrderModel"];
+                        if (PurchaseOrderModel.PurchaseOrderItems.Where(i => i.MedicineId == PurchaseOrderItem.MedicineId).Count() > 0)
+                        {
+                            throw new Exception(PurchaseOrderItem.MedicineName + " already exists in order.");
+                        }
+
+                        PurchaseOrderModel.PurchaseOrderItems.Add(PurchaseOrderItem);
+                        Session["PurchaseOrderModel"] = PurchaseOrderModel;
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    PurchaseOrderModel = (PurchaseOrderViewModel)Session["PurchaseOrderModel"];
-                    PurchaseOrderModel.PurchaseOrderItems.Add(PurchaseOrderItem);
-                    Session["PurchaseOrderModel"] = PurchaseOrderModel;
+                    if(ex.Message.Contains(" already exists in order."))
+                    {
+                        Response.StatusCode = (int)HttpStatusCode.BadRequest;  // Or another code
+                        return Json(new { message = ex.Message });
+                    }
+                    else
+                    {
+                        //return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Something went wrong. Try again later.");
+                        Response.StatusCode = (int)HttpStatusCode.BadRequest;  // Or another code
+                        return Json(new { message = "Something went wrong. Please try again." });
+                    }
                 }   
 
                 return PartialView("_PurchaseOrderItems", PurchaseOrderModel);
@@ -143,6 +183,29 @@ namespace PharmAssistant.Controllers
             return RedirectToAction("PurchaseOrdersList");
         }
 
+        public ActionResult DeleteOrder(string OrderId)
+        {
+            using (PharmAssistantContext db = new PharmAssistantContext())
+            {
+                try
+                {
+                    db.Database.BeginTransaction();
+                    db.PurchaseOrderItems.RemoveRange(db.PurchaseOrderItems.Where(i => i.PurchaseOrderId == OrderId));
+                    db.PurchaseOrders.RemoveRange(db.PurchaseOrders.Where(o => o.PurchaseOrderId == OrderId));
+                    db.SaveChanges();
+                    db.Database.CurrentTransaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    db.Database.CurrentTransaction.Rollback();
+                    throw;
+                }
+            }
+
+            return RedirectToAction("PurchaseOrdersList");
+        }
+
         [HttpPost]
         public JsonResult GetMedicines(int CategoryId)
         {
@@ -161,25 +224,24 @@ namespace PharmAssistant.Controllers
                 return Json(new { }, JsonRequestBehavior.AllowGet);
             }
         }
-
         
-        //[HttpPost]
-        //public JsonResult GetMedicineCategories(int SupplierId)
-        //{
-        //    try
-        //    {
-        //        using (PharmAssistantContext db = new PharmAssistantContext())
-        //        {
-        //            var MedicineCategories = db.MedicineCategories.Where(m => m.Supp == CategoryId).Select(m => new { MedicineId = m.MedicineId, Name = m.MedicineName.Trim() }).ToList();
-        //            return Json(Medicines, JsonRequestBehavior.AllowGet);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //        return Json(new { }, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
+        [HttpPost]
+        public JsonResult GetMedicineCategories(int SupplierId)
+        {
+            try
+            {
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    var MedicineCategories = db.MedicineCategories.Where(m => m.Suppliers.Contains(db.Suppliers.Where(s => s.SupplierId == SupplierId).FirstOrDefault())).Select(m => new { CategoryId = m.CategoryId, MedicineCategotyName = m.MedicineCategoryName.Trim() }).ToList();
+                    return Json(MedicineCategories, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Json(new { }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
 
         public ActionResult DeletePurchaseOrderItem(int id)

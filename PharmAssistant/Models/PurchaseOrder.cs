@@ -11,7 +11,9 @@ namespace PharmAssistant.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long PurchaseOrderId { get; set; }
+        [StringLength(20)]
+        [Column(TypeName = "varchar")]
+        public string PurchaseOrderId { get; set; }
 
         [StringLength(32)]
         [Column(TypeName = "varchar")]
@@ -42,6 +44,8 @@ namespace PharmAssistant.Models
 
         [Required]
         public bool PaymentStatus { get; set; }
+
+        public bool OrderStatus { get; set; }
 
         public int SupplierId { get; set; }
 

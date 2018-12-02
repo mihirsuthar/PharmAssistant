@@ -269,9 +269,9 @@
     <Compile Include="Infrastructure\DbSeedingData.cs" />
     <Compile Include="Infrastructure\IdentityHelpers.cs" />
     <Compile Include="Infrastructure\LocationClaimsProvider.cs" />
-    <Compile Include="Migrations\201811211717579_First.cs" />
-    <Compile Include="Migrations\201811211717579_First.Designer.cs">
-      <DependentUpon>201811211717579_First.cs</DependentUpon>
+    <Compile Include="Migrations\201812011236098_First.cs" />
+    <Compile Include="Migrations\201812011236098_First.Designer.cs">
+      <DependentUpon>201812011236098_First.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
@@ -352,8 +352,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201811211717579_First.resx">
-      <DependentUpon>201811211717579_First.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201812011236098_First.resx">
+      <DependentUpon>201812011236098_First.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

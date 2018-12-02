@@ -24,51 +24,58 @@
 		$("#quantity").val('');
 	}
 
+	function onFailure(error) {
+		var obj = $.parseJSON(error.responseText);
+		alert(obj.message);
+	}
+
 	$(function () {
 
-		
-		
+		//$('#orderDate').datepicker({ format: 'dd/mm/yyyy' });
 
 		$("#categoryId").prop("selectedIndex", 0);
 		$("#medicineId").prop("selectedIndex", 0);
 		$("#quantity").val('');
 
-		//$('#supplierId').on('change', function () {
-		//	var supplierId = $('#supplierId').val();
+		$('#supplierId').on('change', function () {
+			var supplierId = $('#supplierId').val();
+			$('#hiddenSupplierId').val(supplierId);
 
-		//	if (supplierId != '') {
-		//		//alert('Category: ' + categoryId);
-		//		var data = { SupplierId: supplierId };
+			if (supplierId != '') {
+				//alert('Category: ' + categoryId);
+				var data = { SupplierId: supplierId };
 
-		//		AjaxCall('/PurchaseOrders/GetMedicineCategories', JSON.stringify(data), 'POST')
-		//			.done(function (response) {
+				AjaxCall('/PurchaseOrders/GetMedicineCategories', JSON.stringify(data), 'POST')
+					.done(function (response) {
 
-		//				//alert("Medicines Received...");
+						//alert("Medicines Received...");
 
-		//				if (response.length > 0) {
-		//					$('#categoryId').html('');
-		//					var options = '';
-		//					options += '<option value="Select">Select Medicine Category</option>';
+						if (response.length > 0) {
+							$('#categoryId').html('');
+							var options = '';
+							options += '<option value="Select">Select Medicine Category</option>';
 
-		//					for (var i = 0; i < response.length; i++) {
-		//						options += '<option value = "' + response[i]['CategoryId'] + '">' + response[i]['MedicineCategotyName'] + '</option>';
-		//					}
+							for (var i = 0; i < response.length; i++) {
+								options += '<option value = "' + response[i]['CategoryId'] + '">' + response[i]['MedicineCategotyName'] + '</option>';
+							}
 
-		//					$('#categoryId').append(options);
-		//				}
-		//				else {
-		//					$('#categoryId').html('');
-		//					var options = '';
-		//					options += '<option value="Select">Select Medicine Category</option>';
+							$('#categoryId').append(options);
+						}
+						else {
+							$('#categoryId').html('');
+							var options = '';
+							options += '<option value="Select">Select Medicine Category</option>';
 
-		//					$('#categoryId').append(options);
-		//				}
-		//			})
-		//			.fail(function (error) {
-		//				alert('Error Receiving Medicine Categories: ' + error.StatusText);
-		//			});
-		//	}
-		//});
+							$('#categoryId').append(options);
+						}
+
+						
+					})
+					.fail(function (error) {
+						alert('Error Receiving Medicine Categories: ' + error.StatusText);
+					});
+			}
+		});
 
 		$('#categoryId').on('change', function () {
 			var categoryId = $('#categoryId').val();
@@ -100,6 +107,8 @@
 
 							$('#medicineId').append(options);
 						}
+
+						$('#supplierId').attr("disabled", "disabled");
 					})
 					.fail(function (error) {
 						alert('Error Receiving Countries: ' + error.StatusText);
@@ -166,13 +175,17 @@
 				HttpMethod = "POST",
 				UpdateTargetId = "medicineList",
 				InsertionMode = InsertionMode.Replace,
-				OnSuccess = "onSuccess"
+				OnSuccess = "onSuccess",
+				OnFailure = "onFailure"
 			}))
 			{
 				<div class="row">
 					<div class="col-md-4">
 						Category:<br />
-						@Html.DropDownList("CategoryId", ViewBag.MedicineCategories as SelectList, "Select Category", new { @class = "form-control", id = "categoryId" })<br />
+						@*@Html.DropDownList("CategoryId", ViewBag.MedicineCategories as SelectList, "Select Medicine Category", new { @class = "form-control", id = "categoryId" })<br />*@
+						<select id="categoryId" name="CategoryId" class="form-control">
+							<option>Select Medicine Category</option>
+						</select><br />
 
 						Medicine:<br />
 						<select id="medicineId" name="MedicineId" class="form-control">
@@ -218,18 +231,17 @@
 
 				@using (Html.BeginForm("SavePurchaseOrder", "PurchaseOrders", FormMethod.Post))
 				{
-
 					@Html.Hidden("PurchaseOrder.PurchaseOrderId", Session["PurchaseOrderId"])
 
 					<div class="col-md-4">
 						Suplier: <br />
-						@Html.DropDownListFor(m => m.PurchaseOrder.SupplierId, ViewBag.Suppliers as SelectList, "Select Supplier", new { @class = "form-control", id = "supplierId" })<br />
-
+						@Html.DropDownList("TempSupplierId", ViewBag.Suppliers as SelectList, "Select Supplier", new { @class = "form-control", id = "supplierId" })<br />
+						@Html.HiddenFor(m => m.PurchaseOrder.SupplierId, new { id = "hiddenSupplierId" })
 						Code: <br />
 						@Html.TextBoxFor(m => m.PurchaseOrder.PurchaseOrderCode, "", new { @class = "form-control", id = "orderId", placeholder = "Enter Order Code" })<br />
 
 						Order Date:<br/>
-						<input type="date" name="PurchaseOrder.PurchaseDate" id="orderDate" class="form-control" /><br/>
+						<input type="date" name="PurchaseOrder.PurchaseDate" id="orderDate" style="border: 1px solid #ccc; border-radius: 4px; height: 34px; color: #555; background-color: #fff; background-image: none; padding: 5px 12px;" /><br/>
 						@*@Html.TextBoxFor(m => m.PurchaseOrder.PurchaseDate, new { @class = "form-control", id = "purchasedate" })*@
 
 					</div>

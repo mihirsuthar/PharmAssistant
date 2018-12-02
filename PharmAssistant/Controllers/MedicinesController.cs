@@ -104,6 +104,24 @@ namespace PharmAssistant.Controllers
             }
         }
 
+        public ActionResult DeleteMedicine(int MedicineId)
+        {
+            try
+            {
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    db.Medicines.Remove(db.Medicines.Where(m => m.MedicineId == MedicineId).FirstOrDefault());
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return RedirectToAction("MedicinesList");
+        }
+
         private void FillDropdowns()
         {
             ViewBag.Manufacturers = Manufacturers;
@@ -398,35 +416,37 @@ namespace PharmAssistant.Controllers
         {
             try
             {
-                var AllSuppliers = new List<Object>();
-
-                //var AllSuppliers = db.Suppliers.ToList();
-                var Suppliers = db.Medicines.Where(m => m.MedicineId == MedicineId).FirstOrDefault().Suppliers.ToList();
-
-
-                db.Medicines.Where(m => m.MedicineId == MedicineId).FirstOrDefault().Suppliers.ToList();
-
-                foreach (var supplier in db.Suppliers.ToList())
+                using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    if (Suppliers.Contains(supplier))
+                    var AllSuppliers = new List<Object>();
+
+                    //var AllSuppliers = db.Suppliers.ToList();
+                    var Suppliers = db.Medicines.Where(m => m.MedicineId == MedicineId).FirstOrDefault().Suppliers.ToList();
+
+                    db.Medicines.Where(m => m.MedicineId == MedicineId).FirstOrDefault().Suppliers.ToList();
+
+                    foreach (var supplier in db.Suppliers.ToList())
                     {
-                        AllSuppliers.Add(new { SupplierId = supplier.SupplierId, SupplierName = supplier.SupplierName, Select = 1 });
+                        if (Suppliers.Contains(supplier))
+                        {
+                            AllSuppliers.Add(new { SupplierId = supplier.SupplierId, SupplierName = supplier.SupplierName, Select = 1 });
+                        }
+                        else
+                        {
+                            AllSuppliers.Add(new { SupplierId = supplier.SupplierId, SupplierName = supplier.SupplierName, Select = 0 });
+                        }
                     }
-                    else
-                    {
-                        AllSuppliers.Add(new { SupplierId = supplier.SupplierId, SupplierName = supplier.SupplierName, Select = 0 });
-                    }
+
+
+                    //var Suppliers = db.Suppliers.Where(s => s.MedicineCategories.Contains(db.MedicineCategories.Where(c => c.CategoryId == CategoryId).FirstOrDefault())).Select(s => new { SuplierId = s.SupplierId, SupplierName = s.SupplierName }).ToList();
+                    return Json(AllSuppliers, JsonRequestBehavior.AllowGet);
                 }
-
-
-                //var Suppliers = db.Suppliers.Where(s => s.MedicineCategories.Contains(db.MedicineCategories.Where(c => c.CategoryId == CategoryId).FirstOrDefault())).Select(s => new { SuplierId = s.SupplierId, SupplierName = s.SupplierName }).ToList();
-                return Json(AllSuppliers, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return Json(new { }, JsonRequestBehavior.AllowGet);
-            }
+            }        
         }
     }
 }
