@@ -35,20 +35,7 @@ namespace PharmAssistant.Controllers
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    //ICollection<PurchaseOrderViewModel> PurchaseOrdersList = new List<PurchaseOrderViewModel>();
                     ICollection<PurchaseOrder> PurchaseOrders = db.PurchaseOrders.Include("Supplier").ToList();
-                    //ICollection<PurchaseOrderItem> PurchaseOrderItems = db.PurchaseOrderItems.ToList();
-                    //PurchaseOrderViewModel order;
-
-                    //foreach (var purchaseOrder in PurchaseOrders)
-                    //{
-                    //    order = new PurchaseOrderViewModel();
-
-                    //    order.PurchaseOrder = purchaseOrder;
-                    //    order.PurchaseOrderItems = PurchaseOrderItems.Where(i => i.PurchaseOrderId == purchaseOrder.PurchaseOrderId).ToList();
-
-                    //    PurchaseOrdersList.Add(order);
-                    //}
 
                     return View(PurchaseOrders);
                 }
@@ -96,8 +83,6 @@ namespace PharmAssistant.Controllers
                     var medicine = db.Medicines.Where(m => m.MedicineId == PurchaseOrderItem.MedicineId).FirstOrDefault();
                     PurchaseOrderItem.SellingPrice = medicine.SellingPrice;
                     PurchaseOrderItem.MedicineName = medicine.MedicineName;
-
-                    
 
                     if (Session["PurchaseOrderModel"] == null)
                     {
@@ -208,6 +193,102 @@ namespace PharmAssistant.Controllers
             return RedirectToAction("PurchaseOrdersList");
         }
 
+        public ActionResult EditOrder(string OrderId)
+        {
+            string[] uri = Request.UrlReferrer == null ? new string[] { "PurchaseOrdersList" } : Request.UrlReferrer.ToString().Split('/');
+
+            PurchaseOrderViewModel PurchaseOrderModel = new PurchaseOrderViewModel();
+            
+
+            if (uri.Contains("PurchaseOrdersList"))
+            {
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    PurchaseOrderModel.PurchaseOrder = db.PurchaseOrders.Include("Supplier").Where(o => o.PurchaseOrderId == OrderId).FirstOrDefault();
+                    PurchaseOrderModel.PurchaseOrderItems = db.PurchaseOrderItems.Where(i => i.PurchaseOrderId == OrderId).ToList();
+                }
+                Session["PurchaseOrderModel"] = PurchaseOrderModel;
+            }
+            else
+            {   
+                PurchaseOrderModel = (PurchaseOrderViewModel)Session["PurchaseOrderModel"];
+                //PurchaseOrderModel.PurchaseOrder = new PurchaseOrder { PurchaseOrderId = Convert.ToInt64(DateTime.Now.ToString("ffffssmmhhMMddyyyy")) };
+            }
+
+            ViewBag.MedicineCategories = new SelectList(db.MedicineCategories.Where(m => m.Suppliers.Contains(db.Suppliers.Where(s => s.SupplierId == PurchaseOrderModel.PurchaseOrder.SupplierId).FirstOrDefault())).ToList(), "CategoryId", "MedicineCategoryName");
+
+            //FillDropdowns();
+            return View(PurchaseOrderModel);
+        }
+
+        public ActionResult UpdatePurchaseOrder(PurchaseOrderViewModel PurchaseOrderModel)
+        {
+            double OrderCost = 0;
+
+            ICollection<PurchaseOrderItem> OrderItems = ((PurchaseOrderViewModel)Session["PurchaseOrderModel"]).PurchaseOrderItems;
+            foreach (var item in OrderItems)
+            {
+                //item.PurchaseOrderId = Session["PurchaseOrderId"].ToString();
+                if (item.PurchaseOrderId == null)
+                    item.PurchaseOrderId = PurchaseOrderModel.PurchaseOrder.PurchaseOrderId;
+                OrderCost += item.Quantity * item.SellingPrice;
+            }
+
+            PurchaseOrderModel.PurchaseOrderItems = OrderItems;
+            PurchaseOrderModel.PurchaseOrder.OrderCost = Math.Round(OrderCost, 2);
+            PurchaseOrderModel.PurchaseOrder.AmountPaid = Math.Round(OrderCost, 2) - PurchaseOrderModel.PurchaseOrder.Discount;
+
+            using (PharmAssistantContext db = new PharmAssistantContext())
+            {
+                var UpdatedOrder = db.PurchaseOrders.Include("Supplier").Where(o => o.PurchaseOrderId == PurchaseOrderModel.PurchaseOrder.PurchaseOrderId).FirstOrDefault();
+                try
+                {
+                    db.Database.BeginTransaction();
+
+                    UpdatedOrder.Remarks = PurchaseOrderModel.PurchaseOrder.Remarks;
+                    UpdatedOrder.PaymentStatus = PurchaseOrderModel.PurchaseOrder.PaymentStatus;
+                    UpdatedOrder.OrderCost = PurchaseOrderModel.PurchaseOrder.OrderCost;
+                    UpdatedOrder.AmountPaid = PurchaseOrderModel.PurchaseOrder.AmountPaid;
+
+                    db.PurchaseOrders.Attach(UpdatedOrder);
+                    db.Entry(UpdatedOrder).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    foreach(var Item in OrderItems)
+                    {
+                        if(db.PurchaseOrderItems.Where(pi => pi.PurchaseOrderId == Item.PurchaseOrderId && pi.MedicineId == Item.MedicineId).FirstOrDefault() == null)
+                        {
+                            //db.PurchaseOrderItems.Attach(Item);
+                            //db.Entry(Item).State = EntityState.Modified;
+                            db.PurchaseOrderItems.Add(Item);
+                        }                        
+                    }
+
+                    db.SaveChanges();
+
+                    db.Database.CurrentTransaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    db.Database.CurrentTransaction.Rollback();
+                    ViewBag.MedicineCategories = new SelectList(db.MedicineCategories.Where(m => m.Suppliers.Contains(db.Suppliers.Where(s => s.SupplierId == PurchaseOrderModel.PurchaseOrder.SupplierId).FirstOrDefault())).ToList(), "CategoryId", "MedicineCategoryName");
+
+                    PurchaseOrderModel.PurchaseOrderItems = OrderItems;
+                    PurchaseOrderModel.PurchaseOrder.Supplier = UpdatedOrder.Supplier;
+                    PurchaseOrderModel.PurchaseOrder.PurchaseOrderCode = UpdatedOrder.PurchaseOrderCode;
+                    PurchaseOrderModel.PurchaseOrder.PurchaseDate = UpdatedOrder.PurchaseDate;
+                    PurchaseOrderModel.PurchaseOrder.PaymentMode = UpdatedOrder.PaymentMode;
+                    PurchaseOrderModel.PurchaseOrder.Discount = UpdatedOrder.Discount;
+                    PurchaseOrderModel.PurchaseOrder.AmountPaid = UpdatedOrder.AmountPaid;
+
+                    return View("EditOrder", PurchaseOrderModel);
+                }
+            }
+
+            return RedirectToAction("PurchaseOrdersList");
+        }
+
         public ActionResult ReceiveOrder(string OrderId)
         {
             try
@@ -273,29 +354,8 @@ namespace PharmAssistant.Controllers
         }
 
         public ActionResult GenerateInvoice(string OrderId)
-        {
-            //string FilePath = Server.MapPath("~/Invoices/") + OrderId + DateTime.Now.ToString("ddMMyyyyhhmmss") + ".pdf";
-            //IronPdf.Installation.TempFolderPath = Server.MapPath("~/Invoices/");
-
-            //IronPdf.Installation.TempFolderPath = @"F:\Projects\PharmAssistant\Invoices\";
-            //string FilePath = @"F:\Projects\PharmAssistant\Invoices\" + OrderId + DateTime.Now.ToString("ddMMyyyyhhmmss") + ".pdf";
-
-            //try
-            //{   
-            //    //var Renderer = new IronPdf.HtmlToPdf();
-
-            //    //UriBuilder builder = new UriBuilder();
-            //    //builder.Path = Url.Action("GeneratePdfInvoice", new { OrderId = OrderId });
-            //    //IronPdf.PdfDocument document = Renderer.RenderUrlAsPdf(builder.Uri);//.SaveAs(FilePath);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
-
-
+        {           
             return new ActionAsPdf("GeneratePdfInvoice", new { OrderId = OrderId });
-            //return File(FilePath, "application/pdf", OrderId + DateTime.Now.ToString("ddMMyyyyhhmmss") + ".pdf");
         }
 
         public ActionResult GeneratePdfInvoice(string OrderId)
