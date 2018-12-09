@@ -17,11 +17,11 @@ namespace PharmAssistant.Models
         [Required(ErrorMessage = "Please select medicine.")]
         public int MedicineId { get; set; }
         [Required(ErrorMessage = "Purchase order id is required.")]
-        public int PurchaseOrderId { get; set; }
+        public string PurchaseOrderId { get; set; }
         public string BatchNumber { get; set; }
         public int Quantity { get; set; }
-        public float CostPrice { get; set; }
-        public float SellingPrice { get; set; }
+        public double CostPrice { get; set; }
+        public double SellingPrice { get; set; }
 
         [Column(TypeName = "datetime2")]
         public DateTime? ExpiryDate { get; set; }

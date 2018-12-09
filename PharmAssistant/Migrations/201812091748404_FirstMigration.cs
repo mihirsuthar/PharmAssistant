@@ -3,7 +3,7 @@ namespace PharmAssistant.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class First : DbMigration
+    public partial class FirstMigration : DbMigration
     {
         public override void Up()
         {
@@ -311,19 +311,18 @@ namespace PharmAssistant.Migrations
                     {
                         StockId = c.Int(nullable: false, identity: true),
                         MedicineId = c.Int(nullable: false),
-                        PurchaseOrderId = c.Int(nullable: false),
+                        PurchaseOrderId = c.String(nullable: false, maxLength: 20, unicode: false),
                         BatchNumber = c.String(),
                         Quantity = c.Int(nullable: false),
-                        CostPrice = c.Single(nullable: false),
-                        SellingPrice = c.Single(nullable: false),
+                        CostPrice = c.Double(nullable: false),
+                        SellingPrice = c.Double(nullable: false),
                         ExpiryDate = c.DateTime(precision: 7, storeType: "datetime2"),
-                        PurchaseOrder_PurchaseOrderId = c.String(maxLength: 20, unicode: false),
                     })
                 .PrimaryKey(t => t.StockId)
                 .ForeignKey("dbo.Medicines", t => t.MedicineId, cascadeDelete: true)
-                .ForeignKey("dbo.PurchaseOrders", t => t.PurchaseOrder_PurchaseOrderId)
+                .ForeignKey("dbo.PurchaseOrders", t => t.PurchaseOrderId, cascadeDelete: true)
                 .Index(t => t.MedicineId)
-                .Index(t => t.PurchaseOrder_PurchaseOrderId);
+                .Index(t => t.PurchaseOrderId);
             
             CreateTable(
                 "dbo.SupplierMedicineCategories",
@@ -358,7 +357,7 @@ namespace PharmAssistant.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.StockEntries", "PurchaseOrder_PurchaseOrderId", "dbo.PurchaseOrders");
+            DropForeignKey("dbo.StockEntries", "PurchaseOrderId", "dbo.PurchaseOrders");
             DropForeignKey("dbo.StockEntries", "MedicineId", "dbo.Medicines");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.PurchaseOrderItems", "PurchaseOrderId", "dbo.PurchaseOrders");
@@ -383,7 +382,7 @@ namespace PharmAssistant.Migrations
             DropIndex("dbo.SupplierMedicines", new[] { "Supplier_SupplierId" });
             DropIndex("dbo.SupplierMedicineCategories", new[] { "MedicineCategory_CategoryId" });
             DropIndex("dbo.SupplierMedicineCategories", new[] { "Supplier_SupplierId" });
-            DropIndex("dbo.StockEntries", new[] { "PurchaseOrder_PurchaseOrderId" });
+            DropIndex("dbo.StockEntries", new[] { "PurchaseOrderId" });
             DropIndex("dbo.StockEntries", new[] { "MedicineId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.PurchaseOrderItems", new[] { "MedicineId" });

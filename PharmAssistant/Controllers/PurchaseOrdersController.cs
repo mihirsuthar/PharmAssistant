@@ -321,6 +321,8 @@ namespace PharmAssistant.Controllers
                     PurchaseOrder order = db.PurchaseOrders.Where(o => o.PurchaseOrderId == OrderId).FirstOrDefault();
                     ICollection<PurchaseOrderItem> OrderItems = db.PurchaseOrderItems.Where(i => i.PurchaseOrderId == OrderId).ToList();
 
+                    StockEntry stockEntry;
+
                     order.OrderStatus = true;
 
                     long[] batchNumbers = BatchNumbers.ToArray();
@@ -334,6 +336,19 @@ namespace PharmAssistant.Controllers
 
                         db.PurchaseOrderItems.Attach(OrderItem);
                         db.Entry(OrderItem).State = EntityState.Modified;
+
+                        stockEntry = new StockEntry
+                        {
+                            MedicineId = OrderItem.MedicineId,
+                            PurchaseOrderId = OrderItem.PurchaseOrderId,
+                            BatchNumber = OrderItem.BatchNumber.ToString(),
+                            Quantity = OrderItem.Quantity,
+                            CostPrice = OrderItem.CostPrice,
+                            SellingPrice = OrderItem.SellingPrice,
+                            ExpiryDate = OrderItem.ExpiryDate
+                        };
+
+                        db.StockEntries.Add(stockEntry);
                     }
 
                     db.SaveChanges();

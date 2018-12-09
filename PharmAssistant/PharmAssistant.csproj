@@ -243,6 +243,7 @@
       <LastGenOutput>PharmAssistantContext.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <Content Include="App_Browsers\qt.browser" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -278,9 +279,9 @@
     <Compile Include="Infrastructure\DbSeedingData.cs" />
     <Compile Include="Infrastructure\IdentityHelpers.cs" />
     <Compile Include="Infrastructure\LocationClaimsProvider.cs" />
-    <Compile Include="Migrations\201812011236098_First.cs" />
-    <Compile Include="Migrations\201812011236098_First.Designer.cs">
-      <DependentUpon>201812011236098_First.cs</DependentUpon>
+    <Compile Include="Migrations\201812091748404_FirstMigration.cs" />
+    <Compile Include="Migrations\201812091748404_FirstMigration.Designer.cs">
+      <DependentUpon>201812091748404_FirstMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
@@ -364,8 +365,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201812011236098_First.resx">
-      <DependentUpon>201812011236098_First.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201812091748404_FirstMigration.resx">
+      <DependentUpon>201812091748404_FirstMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
