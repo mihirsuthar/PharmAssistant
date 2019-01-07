@@ -1,4 +1,5 @@
-﻿using PharmAssistant.Models;
+﻿using PharmAssistant.Filters;
+using PharmAssistant.Models;
 using PharmAssistant.Models.ViewModels;
 using Rotativa.MVC;
 using System;
@@ -11,6 +12,7 @@ using System.Web.Mvc;
 
 namespace PharmAssistant.Controllers
 {
+    
     public class PurchaseOrdersController : Controller
     {
         //private List<PurchaseOrderItem> PurchaseItems = new List<PurchaseOrderItem>();
@@ -47,6 +49,7 @@ namespace PharmAssistant.Controllers
             }
         }
 
+        [ActionLoggingFilter]
         public ActionResult NewPurchaseOrder()
         {
             string[] uri = Request.UrlReferrer == null ? new string[] { "PurchaseOrdersList" } : Request.UrlReferrer.ToString().Split('/');
@@ -122,6 +125,7 @@ namespace PharmAssistant.Controllers
             }
         }
 
+        [ActionLoggingFilter]
         public ActionResult SavePurchaseOrder(PurchaseOrderViewModel PurchaseOrderModel)
         {
             double OrderCost = 0;
@@ -170,6 +174,7 @@ namespace PharmAssistant.Controllers
             return RedirectToAction("PurchaseOrdersList");
         }
 
+        [ActionLoggingFilter]
         public ActionResult DeleteOrder(string OrderId)
         {
             using (PharmAssistantContext db = new PharmAssistantContext())
@@ -193,6 +198,7 @@ namespace PharmAssistant.Controllers
             return RedirectToAction("PurchaseOrdersList");
         }
 
+        [ActionLoggingFilter]
         public ActionResult EditOrder(string OrderId)
         {
             string[] uri = Request.UrlReferrer == null ? new string[] { "PurchaseOrdersList" } : Request.UrlReferrer.ToString().Split('/');
@@ -221,6 +227,7 @@ namespace PharmAssistant.Controllers
             return View(PurchaseOrderModel);
         }
 
+        [ActionLoggingFilter]
         public ActionResult UpdatePurchaseOrder(PurchaseOrderViewModel PurchaseOrderModel)
         {
             double OrderCost = 0;
@@ -309,6 +316,7 @@ namespace PharmAssistant.Controllers
             }
         }
 
+        [ActionLoggingFilter]
         [HttpPost]
         public ActionResult ReceiveOrder(string OrderId, ICollection<long> BatchNumbers, ICollection<DateTime> ExpiryDates)
         {
@@ -368,6 +376,7 @@ namespace PharmAssistant.Controllers
             return RedirectToAction("PurchaseOrdersList");
         }
 
+        [ActionLoggingFilter]
         public ActionResult GenerateInvoice(string OrderId)
         {           
             return new ActionAsPdf("GeneratePdfInvoice", new { OrderId = OrderId });
@@ -428,7 +437,6 @@ namespace PharmAssistant.Controllers
             }
         }
 
-
         public ActionResult DeletePurchaseOrderItem(int id)
         {
             PurchaseOrderViewModel PurchaseOrderModel = (PurchaseOrderViewModel)Session["PurchaseOrderModel"];            
@@ -437,7 +445,6 @@ namespace PharmAssistant.Controllers
             FillDropdowns();
             //return View("NewPurchaseOrder", PurchaseOrderModel);
             return RedirectToAction("NewPurchaseOrder");
-
         }
 
         private void FillDropdowns()
