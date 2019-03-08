@@ -42,6 +42,15 @@ namespace PharmAssistant.Models
         [Required(ErrorMessage = "Selling Price is required.")]
         public float SellingPrice { get; set; }
 
+        [Required(ErrorMessage = "Stock Capacity is required.")]
+        public int StockCapacity { get; set; }
+
+        [Required(ErrorMessage = "Reorder Level is required.")]
+        public int ReorderLevel { get; set; }
+
+        [Required(ErrorMessage = "Buffer Level is required.")]
+        public int BufferLevel { get; set; }
+
         [StringLength(50)]
         [Column(TypeName = "varchar")]
         public string Description { get; set; }

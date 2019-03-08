@@ -25,31 +25,49 @@
 					</div>
 				}
 
-				<div class="col-md-5">
-					<div class="form-group">
-						<label for="medicineName">Medicine Name</label>
-						@Html.TextBoxFor(m => m.MedicineName, new { @class = "form-control", id = "medicineName", placeholder = "Enter Medicine Name" })
-						@Html.ValidationMessageFor(m => m.MedicineName, "", new { @class = "text text-danger" })
-					</div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="medicineName">Medicine Name</label>
+                            @Html.TextBoxFor(m => m.MedicineName, new { @class = "form-control", id = "medicineName", placeholder = "Enter Medicine Name" })
+                            @Html.ValidationMessageFor(m => m.MedicineName, "", new { @class = "text text-danger" })
+                        </div>
 
-					<div class="form-group">
-						<label for="costPrice">Cost Price</label>
-						@Html.TextBoxFor(m => m.CostPrice, "{0:#.#}", new { @class = "form-control", id = "costPrice", placeholder = "Enter Cost Price" })
-						@Html.ValidationMessageFor(m => m.CostPrice, "", new { @class = "text text-danger" })
-					</div>
+                        <div class="form-group">
+                            <label for="costPrice">Cost Price</label>
+                            @Html.TextBoxFor(m => m.CostPrice, "{0:#.#}", new { @class = "form-control", id = "costPrice", placeholder = "Enter Cost Price" })
+                            @Html.ValidationMessageFor(m => m.CostPrice, "", new { @class = "text text-danger" })
+                        </div>
 
-					<div class="form-group">
-						<label for="sellingPrice">Selling Price</label>
-						@Html.TextBoxFor(m => m.SellingPrice, "{0:#.#}", new { @class = "form-control", id = "sellingPrice", placeholder = "Enter Selling Price" })
-						@Html.ValidationMessageFor(m => m.SellingPrice, "", new { @class = "text text-danger" })
-					</div>
+                        <div class="form-group">
+                            <label for="sellingPrice">Selling Price</label>
+                            @Html.TextBoxFor(m => m.SellingPrice, "{0:#.#}", new { @class = "form-control", id = "sellingPrice", placeholder = "Enter Selling Price" })
+                            @Html.ValidationMessageFor(m => m.SellingPrice, "", new { @class = "text text-danger" })
+                        </div>
 
-					<div class="form-group">
-						<label for="description">Description</label>
-						@Html.TextAreaFor(m => m.Description, new { @class = "form-control", id = "description", placeholder = "Enter Description", style = "resize: none;" })
-						@Html.ValidationMessageFor(m => m.Description, "", new { @class = "text text-danger" })
-					</div>
-				</div>
+                        <div class="form-group">
+                            <label for="stockCapacity">Stock Capacity</label>
+                            @Html.TextBoxFor(m => m.StockCapacity, "{0:#}", new { @class = "form-control", id = "stockCapacity", placeholder = "Enter Stock Capacity" })
+                            @Html.ValidationMessageFor(m => m.StockCapacity, "", new { @class = "text text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sellingPrice">Reorder Level</label>
+                            @Html.TextBoxFor(m => m.ReorderLevel, "{0:#}", new { @class = "form-control", id = "reorderLevel", placeholder = "Enter Reorder Level" })
+                            @Html.ValidationMessageFor(m => m.ReorderLevel, "", new { @class = "text text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sellingPrice">Buffer Level</label>
+                            @Html.TextBoxFor(m => m.BufferLevel, "{0:#.#}", new { @class = "form-control", id = "bufferLevel", placeholder = "Enter Buffer Level" })
+                            @Html.ValidationMessageFor(m => m.BufferLevel, "", new { @class = "text text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", id = "description", placeholder = "Enter Description", style = "resize: none;" })
+                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text text-danger" })
+                        </div>
+                    </div>
 
 				<div class="col-md-5 col-md-offset-1">					
 					<div class="form-group">

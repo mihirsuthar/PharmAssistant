@@ -11,8 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace PharmAssistant.Controllers
-{
-    
+{    
     public class PurchaseOrdersController : Controller
     {
         //private List<PurchaseOrderItem> PurchaseItems = new List<PurchaseOrderItem>();
@@ -23,8 +22,7 @@ namespace PharmAssistant.Controllers
                                                     new PaymentMode{ ModeId = "Cash", ModeName = "Cash" },
                                                     new PaymentMode{ ModeId = "Credit", ModeName = "Credit" },
                                                     new PaymentMode{ ModeId = "NEFT", ModeName = "NEFT" }};
-
-
+        
         static SelectList Medicines = new SelectList(db.Medicines.ToList(), "MedicineId", "MedicineName"),
                             MedicineCategories = new SelectList(db.MedicineCategories.ToList(), "CategoryId", "MedicineCategoryName"),
                             Suppliers = new SelectList(db.Suppliers.ToList(), "SupplierId", "SupplierName"),

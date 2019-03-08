@@ -1,0 +1,63 @@
+﻿@using PharmAssistant.Models.ViewModels
+@using PharmAssistant.Models
+@model IEnumerable<InventoryViewModel>
+@{
+    ViewBag.Title = "AvailableStock";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<h2>Available Stock</h2>
+
+@{
+    ViewBag.Title = "PurchaseOrdersList";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    int i = 1;
+}
+
+<div class="row">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3>Available Stock</h3>
+        </div>
+        <div class="panel-body">
+
+            @if (Model != null && Model.Count() > 0)
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Medicine Name</th>
+                            <th>Manfufacturer</th>
+                            <th>Supplires</th>
+                            <th>Units in Stock</th>
+                            <th>Expiry Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var entry in Model)
+                        {
+                            <tr style="color: @(entry.StockUnits > entry.ReorderLevel ? "#000" : (entry.StockUnits > entry.BufferLevel ? "#0C0" : "#E00"))">
+                                <td>@(i++)</td>
+                                <td title="Reorder Level: @entry.ReorderLevel, Buffer Level: @entry.BufferLevel">@entry.MedicineName</td>
+                                <td>@entry.ManufacturerName</td>
+                                <td>@entry.Supplier</td>
+                                <td>@entry.StockUnits</td>
+                                <td>@entry.ExpiryDate.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <a href="@Url.Action("NewPurchaseOrder", "PurchaseOrders", new { OrderId = entry.MedicineId })" title="Details"><i class="lnr lnr-briefcase"></i></a>
+                                </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <span class="alert alert-warning col-md-12 text-center">No stock available.</span>
+            }
+        </div>
+    </div>
+</div>
+

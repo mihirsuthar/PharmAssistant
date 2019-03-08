@@ -285,6 +285,10 @@
     <Compile Include="Migrations\201812091748404_FirstMigration.Designer.cs">
       <DependentUpon>201812091748404_FirstMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903081657358_MedicineModelUpdate.cs" />
+    <Compile Include="Migrations\201903081657358_MedicineModelUpdate.Designer.cs">
+      <DependentUpon>201903081657358_MedicineModelUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\AppUser.cs" />
@@ -316,6 +320,7 @@
     <Compile Include="Models\ViewModels\PurchaseOrderViewModel.cs" />
     <Compile Include="Models\ViewModels\RoleViewModel.cs" />
     <Compile Include="Models\ViewModels\ShelvesViewModel.cs" />
+    <Compile Include="Models\ViewModels\InventoryViewModel.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
     <Compile Include="Models\ViewModels\UserViewModels.cs" />
     <Compile Include="Models\ViewModels\SupplierViewModel.cs" />
@@ -352,6 +357,7 @@
     <Content Include="Views\PurchaseOrders\ReceiveOrder.cshtml" />
     <Content Include="Views\PurchaseOrders\GeneratePdfInvoice.cshtml" />
     <Content Include="Views\PurchaseOrders\EditOrder.cshtml" />
+    <Content Include="Views\Inventory\AvailableStock.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -362,7 +368,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Diagram\" />
-    <Folder Include="Views\Inventory\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -370,6 +375,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201812091748404_FirstMigration.resx">
       <DependentUpon>201812091748404_FirstMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903081657358_MedicineModelUpdate.resx">
+      <DependentUpon>201903081657358_MedicineModelUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
