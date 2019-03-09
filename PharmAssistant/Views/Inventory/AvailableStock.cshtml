@@ -16,10 +16,16 @@
 
 <div class="row">
     <div class="panel">
-        <div class="panel-heading">
+        @*<div class="panel-heading">
             <h3>Available Stock</h3>
-        </div>
+        </div>*@
         <div class="panel-body">
+
+            <div class="col-md-4">
+                @*<span>Medicine Category: </span>*@<br />
+                @Html.DropDownList("MedicineCategoryId", ViewBag.MedicineCategories as SelectList, "Select Medicine Category", new { @class = "form-control", id = "medicineCategory" })<br />
+            </div>
+
 
             @if (Model != null && Model.Count() > 0)
             {
@@ -28,8 +34,9 @@
                         <tr>
                             <th>#</th>
                             <th>Medicine Name</th>
-                            <th>Manfufacturer</th>
-                            <th>Supplires</th>
+                            <th>Manufacturer</th>
+                            <th>Supplier</th>
+                            <th>Batch Number</th>
                             <th>Units in Stock</th>
                             <th>Expiry Date</th>
                             <th>Actions</th>
@@ -43,13 +50,14 @@
                                 <td title="Reorder Level: @entry.ReorderLevel, Buffer Level: @entry.BufferLevel">@entry.MedicineName</td>
                                 <td>@entry.ManufacturerName</td>
                                 <td>@entry.Supplier</td>
+                                <td>@entry.BatchNumber</td>
                                 <td>@entry.StockUnits</td>
                                 <td>@entry.ExpiryDate.ToString("dd/MM/yyyy")</td>
                                 <td>
                                     <a href="@Url.Action("NewPurchaseOrder", "PurchaseOrders", new { OrderId = entry.MedicineId })" title="Details"><i class="lnr lnr-briefcase"></i></a>
                                 </td>
-                        </tr>
-                    }
+                            </tr>
+                        }
                     </tbody>
                 </table>
             }
