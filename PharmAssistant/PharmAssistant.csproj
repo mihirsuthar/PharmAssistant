@@ -358,6 +358,7 @@
     <Content Include="Views\PurchaseOrders\GeneratePdfInvoice.cshtml" />
     <Content Include="Views\PurchaseOrders\EditOrder.cshtml" />
     <Content Include="Views\Inventory\AvailableStock.cshtml" />
+    <Content Include="Views\Inventory\InventorySettings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

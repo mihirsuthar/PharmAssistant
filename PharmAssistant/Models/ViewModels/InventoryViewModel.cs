@@ -14,6 +14,7 @@ namespace PharmAssistant.Models.ViewModels
         public string MedicineName { get; set; }
         public int ReorderLevel { get; set; }
         public int BufferLevel { get; set; }
+        public int StockCapacity { get; set; }
         public DateTime ExpiryDate { get; set; }
         public string BatchNumber { get; set; }
         public string ManufacturerName { get; set; }

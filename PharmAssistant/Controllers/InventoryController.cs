@@ -21,6 +21,74 @@ namespace PharmAssistant.Controllers
 
         [HttpPost]
         public JsonResult GetStockByCategory(int CategoryId)
+        {   
+            return Json(GetInventoryStock(CategoryId), JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: Inventory
+        public ActionResult AvailableStock()
+        {
+            return View(GetInventoryStock());
+        }
+
+        public ActionResult InventorySettings()
+        {
+            return View(GetInventorySettings());
+        }
+
+        [HttpPost]
+        public ActionResult InventorySettingsByCategory(int CategoryId)
+        {
+            return Json(GetInventorySettings(CategoryId), JsonRequestBehavior.AllowGet);
+        }
+
+        public List<InventoryViewModel> GetInventorySettings(int CategoryId = -1)
+        {
+            List<InventoryViewModel> InventoryStock;
+            try
+            {
+                ViewBag.MedicineCategories = MedicineCategories;
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    InventoryStock = new List<InventoryViewModel>();
+                    var InventoryData = from m in db.Medicines
+                                         select new {
+                                             CategoryId = m.CategoryId,
+                                             MedicineId = m.MedicineId,
+                                             MedicineName = m.MedicineName,
+                                             StockCapacity = m.StockCapacity,
+                                             ReorderLevel = m.ReorderLevel,
+                                             BufferLevel = m.BufferLevel
+                                         };
+
+                    if (CategoryId != -1)
+                    {
+                        InventoryData = InventoryData.Where(m => m.CategoryId == CategoryId);                        
+                    }
+
+                    foreach(var data in InventoryData)
+                    {
+                        InventoryStock.Add(new InventoryViewModel
+                        {
+                            MedicineId = data.MedicineId,
+                            MedicineName = data.MedicineName,
+                            StockCapacity = data.StockCapacity,
+                            ReorderLevel = data.ReorderLevel,
+                            BufferLevel = data.BufferLevel
+                        });
+                    }
+
+                    return InventoryStock;
+                }                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        List<InventoryViewModel> GetInventoryStock(int CategoryId = -1)
         {
             try
             {
@@ -28,16 +96,21 @@ namespace PharmAssistant.Controllers
                 {
                     ViewBag.MedicineCategories = MedicineCategories;
 
+                    //var InventoryData = null;
+
+                    InventoryStock = new List<InventoryViewModel>();
+
                     var InventoryData = from m in db.Medicines
                                         join se in db.StockEntries on m.MedicineId equals se.MedicineId
                                         join po in db.PurchaseOrders on se.PurchaseOrderId equals po.PurchaseOrderId
-                                        where m.CategoryId == CategoryId
                                         orderby m.MedicineName, se.ExpiryDate
                                         select new
                                         {
+                                            CategoryId = m.CategoryId,
                                             MedicineId = m.MedicineId,
                                             MedicineName = m.MedicineName,
                                             ExpiryDate = se.ExpiryDate,
+                                            StockCapacity = m.StockCapacity,
                                             ReorderLevel = m.ReorderLevel,
                                             BufferLevel = m.BufferLevel,
                                             BatchNumber = se.BatchNumber,
@@ -46,7 +119,10 @@ namespace PharmAssistant.Controllers
                                             StockUnits = se.Quantity
                                         };
 
-                    InventoryStock = new List<InventoryViewModel>();
+                    if(CategoryId != -1)
+                    {
+                        InventoryData = InventoryData.Where(i => i.CategoryId == CategoryId);
+                    }
 
                     foreach (var data in InventoryData)
                     {
@@ -55,6 +131,7 @@ namespace PharmAssistant.Controllers
                             MedicineId = data.MedicineId,
                             MedicineName = data.MedicineName,
                             ExpiryDate = (DateTime)data.ExpiryDate,
+                            StockCapacity = data.StockCapacity,
                             ReorderLevel = data.ReorderLevel,
                             BufferLevel = data.BufferLevel,
                             BatchNumber = data.BatchNumber,
@@ -63,67 +140,92 @@ namespace PharmAssistant.Controllers
                             StockUnits = data.StockUnits
                         });
                     }
+                    //if (CategoryId == -1)
+                    //{
+                    //    var InventoryData = from m in db.Medicines
+                    //                        join se in db.StockEntries on m.MedicineId equals se.MedicineId
+                    //                        join po in db.PurchaseOrders on se.PurchaseOrderId equals po.PurchaseOrderId
+                    //                        orderby m.MedicineName, se.ExpiryDate
+                    //                        select new
+                    //                        {
+                    //                            CategoryId = m.CategoryId,
+                    //                            MedicineId = m.MedicineId,
+                    //                            MedicineName = m.MedicineName,
+                    //                            ExpiryDate = se.ExpiryDate,
+                    //                            StockCapacity = m.StockCapacity,
+                    //                            ReorderLevel = m.ReorderLevel,
+                    //                            BufferLevel = m.BufferLevel,
+                    //                            BatchNumber = se.BatchNumber,
+                    //                            Manufacturer = m.Manufacturer.ManufacturerName,
+                    //                            Supplier = po.Supplier.SupplierName,
+                    //                            StockUnits = se.Quantity
+                    //                        };
+
+                    //    InventoryData.Where(i => i.CategoryId == CategoryId);
+
+                    //    foreach (var data in InventoryData)
+                    //    {
+                    //        InventoryStock.Add(new InventoryViewModel
+                    //        {
+                    //            MedicineId = data.MedicineId,
+                    //            MedicineName = data.MedicineName,
+                    //            ExpiryDate = (DateTime)data.ExpiryDate,
+                    //            StockCapacity = data.StockCapacity,
+                    //            ReorderLevel = data.ReorderLevel,
+                    //            BufferLevel = data.BufferLevel,
+                    //            BatchNumber = data.BatchNumber,
+                    //            ManufacturerName = data.Manufacturer,
+                    //            Supplier = data.Supplier,
+                    //            StockUnits = data.StockUnits
+                    //        });
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    var InventoryData = from m in db.Medicines
+                    //                        join se in db.StockEntries on m.MedicineId equals se.MedicineId
+                    //                        join po in db.PurchaseOrders on se.PurchaseOrderId equals po.PurchaseOrderId
+                    //                        where m.CategoryId == CategoryId
+                    //                        orderby m.MedicineName, se.ExpiryDate
+                    //                        select new
+                    //                        {
+                    //                            MedicineId = m.MedicineId,
+                    //                            MedicineName = m.MedicineName,
+                    //                            ExpiryDate = se.ExpiryDate,
+                    //                            StockCapacity = m.StockCapacity,
+                    //                            ReorderLevel = m.ReorderLevel,
+                    //                            BufferLevel = m.BufferLevel,
+                    //                            BatchNumber = se.BatchNumber,
+                    //                            Manufacturer = m.Manufacturer.ManufacturerName,
+                    //                            Supplier = po.Supplier.SupplierName,
+                    //                            StockUnits = se.Quantity
+                    //                        };
+
+                    //    foreach (var data in InventoryData)
+                    //    {
+                    //        InventoryStock.Add(new InventoryViewModel
+                    //        {
+                    //            MedicineId = data.MedicineId,
+                    //            MedicineName = data.MedicineName,
+                    //            ExpiryDate = (DateTime)data.ExpiryDate,
+                    //            StockCapacity = data.StockCapacity,
+                    //            ReorderLevel = data.ReorderLevel,
+                    //            BufferLevel = data.BufferLevel,
+                    //            BatchNumber = data.BatchNumber,
+                    //            ManufacturerName = data.Manufacturer,
+                    //            Supplier = data.Supplier,
+                    //            StockUnits = data.StockUnits
+                    //        });
+                    //    }
+                    //}
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            
-            return Json(InventoryStock, JsonRequestBehavior.AllowGet);
-        }
 
-        // GET: Inventory
-        public ActionResult AvailableStock()
-        {
-            try
-            {
-                using (PharmAssistantContext db = new PharmAssistantContext())
-                {
-                    ViewBag.MedicineCategories = MedicineCategories;
-
-                    var InventoryData = from m in db.Medicines
-                                        join se in db.StockEntries on m.MedicineId equals se.MedicineId
-                                        join po in db.PurchaseOrders on se.PurchaseOrderId equals po.PurchaseOrderId
-                                        orderby m.MedicineName, se.ExpiryDate
-                                        select new
-                                        {
-                                            MedicineId = m.MedicineId,
-                                            MedicineName = m.MedicineName,
-                                            ExpiryDate = se.ExpiryDate,
-                                            ReorderLevel = m.ReorderLevel,
-                                            BufferLevel = m.BufferLevel,
-                                            BatchNumber = se.BatchNumber,
-                                            Manufacturer = m.Manufacturer.ManufacturerName,
-                                            Supplier = po.Supplier.SupplierName,
-                                            StockUnits = se.Quantity
-                                        };
-
-                    InventoryStock = new List<InventoryViewModel>();
-
-                    foreach (var data in InventoryData)
-                    {
-                        InventoryStock.Add(new InventoryViewModel
-                        {
-                            MedicineId = data.MedicineId,
-                            MedicineName = data.MedicineName,
-                            ExpiryDate = (DateTime)data.ExpiryDate,
-                            ReorderLevel = data.ReorderLevel,
-                            BufferLevel = data.BufferLevel,
-                            BatchNumber = data.BatchNumber,
-                            ManufacturerName = data.Manufacturer,
-                            Supplier = data.Supplier,
-                            StockUnits = data.StockUnits
-                        });
-                    }                    
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            return View(InventoryStock);
+            return InventoryStock;
         }
     }
 }

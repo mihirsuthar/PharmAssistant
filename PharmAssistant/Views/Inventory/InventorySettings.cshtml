@@ -1,0 +1,126 @@
+﻿@using PharmAssistant.Models.ViewModels
+@using PharmAssistant.Models
+@model IEnumerable<InventoryViewModel>
+
+@{
+    ViewBag.Title = "Inventory Settings";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+
+    int i = 1;
+}
+
+<h2>Inventory Settings</h2>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+<script type="text/javascript">
+    function AjaxCall(url, data, type) {
+        return $.ajax({
+            url: url,
+            type: type ? type : 'GET',
+            data: data,
+            contentType: 'application/json'
+        });
+    }
+
+    $(function () {
+
+        $('#medicineCategory').on('change', function () {
+            var categoryId = $('#medicineCategory').val();
+
+            if (categoryId != '') {
+                //alert('Category: ' + categoryId);
+                var data = { CategoryId: categoryId };
+
+                AjaxCall('/Inventory/InventorySettingsByCategory', JSON.stringify(data), 'POST')
+                    .done(function (response) {
+
+                        //alert("Medicines Received...");
+
+                        if (response.length > 0) {
+
+                            var rows = '';
+
+                            var header = '<thead><tr>' +
+                                '<th>#</th>' +
+                                '<th>Medicine Name</th>' +
+                                '<th>Stock Capacity</th>' +
+                                '<th>Reorder Level</th>' +
+                                '<th>Buffer Level</th>' +
+                                '<th class="text-center">Actions</th></tr></thead>';
+
+                            for (var i = 0; i < response.length; i++) {
+
+                                rows += "<tr>" +
+                                    "<td>" + (i + 1) + "</td>" +
+                                    "<td>" + response[i]['MedicineName'] + "</td>" +
+                                    "<td>" + response[i]['StockCapacity'] + "</td>" +
+                                    "<td>" + response[i]['ReorderLevel'] + "</td>" +
+                                    "<td>" + response[i]['BufferLevel'] + "</td>" +
+                                    "<td class='text-center'><a href='/PurchaseOrders/NewPurchaseOrder?MedicineId=" + response[i]['MedicineId'] + "' title='Purchase'><i class='lnr lnr-pencil'></i></a></td></tr>"
+
+                            }
+
+                            $('#inventoryStock').html(header + rows);
+                        }
+                        else {
+                            $('#inventoryStock').html("<tr><thead><th><span class='text text-warning text-center'>No stock entries found.</span></th></thead></tr>");
+                        }
+
+                    })
+                    .fail(function (error) {
+                        alert('Unable to get inventory stock: ' + error.StatusText);
+                    });
+            }
+        });
+    });
+
+</script>
+
+
+<div class="row">
+    <div class="panel">
+        <div class="panel-body">
+            <div class="col-md-4">
+                @*<span>Medicine Category: </span>*@<br />
+                @Html.DropDownList("MedicineCategoryId", ViewBag.MedicineCategories as SelectList, "Select Medicine Category", new { @class = "form-control", id = "medicineCategory" })<br />
+            </div>
+
+            @if (Model != null && Model.Count() > 0)
+            {
+                <table class="table table-hover" id="inventoryStock">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Medicine Name</th>
+                            <th>Stock Capacity</th>
+                            <th>Reorder Level</th>
+                            <th>Buffer Level</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var entry in Model)
+                        {
+                            <tr >
+                                <td>@(i++)</td>
+                                <td>@entry.MedicineName</td>
+                                <td>@entry.StockCapacity</td>
+                                <td>@entry.ReorderLevel</td>
+                                <td>@entry.BufferLevel</td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("NewPurchaseOrder", "PurchaseOrders", new { MedicineId = entry.MedicineId })" title="Purchase"><i class="lnr lnr-pencil"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <span class="alert alert-warning col-md-12 text-center">No stock available.</span>
+            }
+        </div>
+    </div>
+</div>
