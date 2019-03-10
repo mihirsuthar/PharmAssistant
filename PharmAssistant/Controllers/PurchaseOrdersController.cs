@@ -54,12 +54,13 @@ namespace PharmAssistant.Controllers
 
             PurchaseOrderViewModel PurchaseOrderModel = new PurchaseOrderViewModel();
 
-            if (uri.Contains("PurchaseOrdersList"))
+            if (uri.Contains("PurchaseOrdersList") || uri.Contains("AvailableStock"))
             {
                 //ViewBag.PurchaseOrderId = DateTime.Now.ToString("ffffssmmhhMMddyyyy");
                 //PurchaseOrderModel.PurchaseOrder = new PurchaseOrder { PurchaseOrderId = Convert.ToInt64(DateTime.Now.ToString("ffffssmmhhMMddyyyy")) };
                 Session["PurchaseOrderId"] = DateTime.Now.ToString("ffffssmmhhMMddyyyy");
                 Session.Remove("PurchaseOrderModel");
+
             }
             else
             {

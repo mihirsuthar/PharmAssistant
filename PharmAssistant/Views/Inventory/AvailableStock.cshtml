@@ -2,23 +2,102 @@
 @using PharmAssistant.Models
 @model IEnumerable<InventoryViewModel>
 @{
-    ViewBag.Title = "AvailableStock";
-    Layout = "~/Views/Shared/_MasterLayout.cshtml";
-}
-
-<h2>Available Stock</h2>
-
-@{
-    ViewBag.Title = "PurchaseOrdersList";
+    ViewBag.Title = "Available Stock";
     Layout = "~/Views/Shared/_MasterLayout.cshtml";
     int i = 1;
 }
 
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+<script type="text/javascript">
+    function AjaxCall(url, data, type) {
+        return $.ajax({
+            url: url,
+            type: type ? type : 'GET',
+            data: data,
+            contentType: 'application/json'
+        });
+    }
+
+    $(function () {
+
+        $('#medicineCategory').on('change', function () {
+            var categoryId = $('#medicineCategory').val();
+
+            if (categoryId != '') {
+                //alert('Category: ' + categoryId);
+                var data = { CategoryId: categoryId };
+
+                AjaxCall('/Inventory/GetStockByCategory', JSON.stringify(data), 'POST')
+                    .done(function (response) {
+
+                        //alert("Medicines Received...");
+
+                        if (response.length > 0) {
+                            
+                            var rows = '';
+
+                            var header = '<thead><tr>' +
+                                '<th>#</th>' +
+                                '<th>Medicine Name</th>' +
+                                '<th>Manufacturer</th>' +
+                                '<th>Supplier</th>' +
+                                '<th>Batch Number</th>' +
+                                '<th>Units in Stock</th>' +
+                                '<th>Expiry Date</th>' +
+                                '<th class="text-center">Actions</th></tr></thead>';
+                            var parsedDate, expiryDate, medicineExpiryDate = '', currentDate, diffDays = 0;
+                            
+                            for (var i = 0; i < response.length; i++) {
+
+                                parsedDate = new Date(parseInt(response[i]['ExpiryDate'].substr(6)));
+                                expiryDate = new Date(parsedDate);                                
+                                medicineExpiryDate = (expiryDate.getDate() < 10 ? '0' + expiryDate.getDate() : expiryDate.getDate()) + '-' +
+                                    ((expiryDate.getMonth() + 1) < 10 ? '0' + (expiryDate.getMonth() + 1) : (expiryDate.getMonth() + 1)) + '-' + expiryDate.getFullYear(); //Date object
+                                currentDate = new Date();
+                                timeDiff = Math.abs(expiryDate - currentDate);
+                                diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+                                if (diffDays > 30) {
+
+                                    rows += "<tr style='color: " + (response[i]['StockUnits'] > response[i]['ReorderLevel'] ? "#000" : (response[i]['StockUnits'] > response[i]['BufferLevel'] ? "#0C0" : "#E00")) + "'>" +
+                                        "<td>" + (i + 1) + "</td>" +
+                                        "<td title='Reorder Level: " + response[i]['ReorderLevel'] + ", Buffer Level: " + response[i]['BUfferLevel'] + "'>" + response[i]['MedicineName'] + "</td>" +
+                                        "<td>" + response[i]['ManufacturerName'] + "</td>" +
+                                        "<td>" + response[i]['Supplier'] + "</td>" +
+                                        "<td>" + response[i]['BatchNumber'] + "</td>" +
+                                        "<td>" + response[i]['StockUnits'] + "</td>" +
+                                        "<td>" + medicineExpiryDate + "</td>" +
+                                        "<td class='text-center'><a href='/PurchaseOrders/NewPurchaseOrder?MedicineId=" + response[i]['MedicineId'] + "' title='Purchase'><i class='lnr lnr-briefcase'></i></a></td></tr>"
+                                }
+                            }
+
+                            $('#inventoryStock').html(header + rows);
+                        }
+                        else {
+                            $('#inventoryStock').html("<tr><thead><th><span class='text text-warning text-center'>No stock entries found.</span></th></thead></tr>");
+                        }
+
+                    })
+                    .fail(function (error) {
+                        alert('Unable to get inventory stock: ' + error.StatusText);
+                    });
+            }
+        });
+    });
+
+</script>
+
+
+
+<h2>Available Stock</h2>
+
 <div class="row">
     <div class="panel">
         @*<div class="panel-heading">
-            <h3>Available Stock</h3>
-        </div>*@
+                <h3>Available Stock</h3>
+            </div>*@
         <div class="panel-body">
 
             <div class="col-md-4">
@@ -26,10 +105,9 @@
                 @Html.DropDownList("MedicineCategoryId", ViewBag.MedicineCategories as SelectList, "Select Medicine Category", new { @class = "form-control", id = "medicineCategory" })<br />
             </div>
 
-
             @if (Model != null && Model.Count() > 0)
             {
-                <table class="table table-hover">
+                <table class="table table-hover" id="inventoryStock">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -39,24 +117,27 @@
                             <th>Batch Number</th>
                             <th>Units in Stock</th>
                             <th>Expiry Date</th>
-                            <th>Actions</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var entry in Model)
                         {
-                            <tr style="color: @(entry.StockUnits > entry.ReorderLevel ? "#000" : (entry.StockUnits > entry.BufferLevel ? "#0C0" : "#E00"))">
-                                <td>@(i++)</td>
-                                <td title="Reorder Level: @entry.ReorderLevel, Buffer Level: @entry.BufferLevel">@entry.MedicineName</td>
-                                <td>@entry.ManufacturerName</td>
-                                <td>@entry.Supplier</td>
-                                <td>@entry.BatchNumber</td>
-                                <td>@entry.StockUnits</td>
-                                <td>@entry.ExpiryDate.ToString("dd/MM/yyyy")</td>
-                                <td>
-                                    <a href="@Url.Action("NewPurchaseOrder", "PurchaseOrders", new { OrderId = entry.MedicineId })" title="Details"><i class="lnr lnr-briefcase"></i></a>
-                                </td>
-                            </tr>
+                            if ((entry.ExpiryDate - DateTime.Now).TotalDays > 30)
+                            {
+                                <tr style="color: @(entry.StockUnits > entry.ReorderLevel ? "#000" : (entry.StockUnits > entry.BufferLevel ? "#0C0" : "#E00"))">
+                                    <td>@(i++)</td>
+                                    <td title="Reorder Level: @entry.ReorderLevel, Buffer Level: @entry.BufferLevel">@entry.MedicineName</td>
+                                    <td>@entry.ManufacturerName</td>
+                                    <td>@entry.Supplier</td>
+                                    <td>@entry.BatchNumber</td>
+                                    <td>@entry.StockUnits</td>
+                                    <td>@entry.ExpiryDate.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("NewPurchaseOrder", "PurchaseOrders", new { MedicineId = entry.MedicineId })" title="Purchase"><i class="lnr lnr-briefcase"></i></a>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>

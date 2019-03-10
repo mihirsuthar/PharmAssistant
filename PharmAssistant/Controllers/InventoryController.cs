@@ -19,6 +19,7 @@ namespace PharmAssistant.Controllers
             MedicineCategories = new SelectList(db.MedicineCategories.ToList(), "CategoryId", "MedicineCategoryName");
         }
 
+        [HttpPost]
         public JsonResult GetStockByCategory(int CategoryId)
         {
             try
@@ -30,7 +31,7 @@ namespace PharmAssistant.Controllers
                     var InventoryData = from m in db.Medicines
                                         join se in db.StockEntries on m.MedicineId equals se.MedicineId
                                         join po in db.PurchaseOrders on se.PurchaseOrderId equals po.PurchaseOrderId
-                                        where m.MedicineCategory.CategoryId == CategoryId
+                                        where m.CategoryId == CategoryId
                                         orderby m.MedicineName, se.ExpiryDate
                                         select new
                                         {
