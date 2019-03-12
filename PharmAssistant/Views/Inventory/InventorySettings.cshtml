@@ -58,7 +58,8 @@
                                     "<td>" + response[i]['StockCapacity'] + "</td>" +
                                     "<td>" + response[i]['ReorderLevel'] + "</td>" +
                                     "<td>" + response[i]['BufferLevel'] + "</td>" +
-                                    "<td class='text-center'><a href='/PurchaseOrders/NewPurchaseOrder?MedicineId=" + response[i]['MedicineId'] + "' title='Purchase'><i class='lnr lnr-pencil'></i></a></td></tr>"
+                                    '<td class="text-center"><a href="#" title="Edit" onclick="editInventorySetting(' + response[i]['MedicineId'] + ',\'' + response[i]['MedicineName'] + '\', ' + response[i]['StockCapacity']
+                                            + ', ' + response[i]['ReorderLevel'] + ', ' + response[i]['BufferLevel'] + ')"><i class="lnr lnr-pencil"></i></a></td></tr>';
 
                             }
 
@@ -75,6 +76,39 @@
             }
         });
     });
+
+    function editInventorySetting(medicineId, medicineName, stockCapacity, reorderLevel, bufferLevel) {
+        alert('Editing Inventory Setting.\nMedicine Id: ' + medicineId + '\nMedicine Name: ' + medicineName +
+                            '\nStock Capacity: ' + stockCapacity + '\nReorder Level: ' + reorderLevel + '\nBuffer Level: ' + bufferLevel);
+        $('#inventorySettingPanel').show();
+
+        $('#medicineId').val(medicineId);
+        $('#medicineName').val(medicineName);
+        $('#stockCapacity').val(stockCapacity);
+        $('#reorderLevel').val(reorderLevel);
+        $('#bufferLevel').val(bufferLevel);
+
+    }
+
+    function updateInventorySetting() {
+
+
+        clearFields();
+        $('#inventorySettingPanel').hide();
+    }
+
+    function cancelUpdate() {
+        clearFields();
+        $('#inventorySettingPanel').hide();
+    }
+
+    function clearFields() {
+        $('#medicineId').val('');
+        $('#medicineName').val('');
+        $('#stockCapacity').val('');
+        $('#reorderLevel').val('');
+        $('#bufferLevel').val('');
+    }
 
 </script>
 
@@ -103,14 +137,16 @@
                     <tbody>
                         @foreach (var entry in Model)
                         {
-                            <tr >
+                            <tr>
                                 <td>@(i++)</td>
                                 <td>@entry.MedicineName</td>
                                 <td>@entry.StockCapacity</td>
                                 <td>@entry.ReorderLevel</td>
                                 <td>@entry.BufferLevel</td>
                                 <td class="text-center">
-                                    <a href="@Url.Action("NewPurchaseOrder", "PurchaseOrders", new { MedicineId = entry.MedicineId })" title="Purchase"><i class="lnr lnr-pencil"></i></a>
+                                    <a href="#" title="Edit" onclick="editInventorySetting(@entry.MedicineId, '@entry.MedicineName', @entry.StockCapacity, @entry.ReorderLevel, @entry.BufferLevel)">
+                                    <i class="lnr lnr-pencil" ></i>
+                                    </a>
                                 </td>
                             </tr>
                         }
@@ -121,6 +157,45 @@
             {
                 <span class="alert alert-warning col-md-12 text-center">No stock available.</span>
             }
+        </div>
+    </div>
+</div>
+
+<div style="display:none; z-index: 10; width: 100%; height: 100%; position:fixed; top: 0; left: 0; background-color: rgba(0,0,0,0.5);" id="inventorySettingPanel">
+    <div class="col-md-6" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Edit Inventory Setting
+            </div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <input type="hidden" id="medicineId" />
+                    <div class="form-group">
+                        <label for="medicineName">Medicine Name</label>
+                        <input type="text" id="medicineName" disabled="disabled" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="stockCapacity">Stock Capacity</label>
+                        <input type="text" id="stockCapacity" class="form-control" placeholder="Enter Stock Capacity" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reorderLevel">Reorder Level</label>
+                        <input type="text" id="reorderLevel" class="form-control" placeholder="Enter Reorder Level" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bufferLevel">Buffer Level</label>
+                        <input type="text" id="bufferLevel" class="form-control" placeholder="Enter Buffer Level" />
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary" onclick="updateInventorySetting();">Update</button>
+                        <button class="btn btn-danger" onclick="cancelUpdate();">Cancel</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
