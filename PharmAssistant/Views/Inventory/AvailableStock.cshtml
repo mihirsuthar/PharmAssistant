@@ -94,6 +94,12 @@
 <h2>Available Stock</h2>
 
 <div class="row">
+    @if(ViewBag.UpdateSuccess != null)
+    {
+        <span class="text text-success">@ViewBag.UpdateSuccess</span>
+    }
+
+
     <div class="panel">
         @*<div class="panel-heading">
                 <h3>Available Stock</h3>

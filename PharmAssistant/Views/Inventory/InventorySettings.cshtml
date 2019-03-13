@@ -78,8 +78,8 @@
     });
 
     function editInventorySetting(medicineId, medicineName, stockCapacity, reorderLevel, bufferLevel) {
-        alert('Editing Inventory Setting.\nMedicine Id: ' + medicineId + '\nMedicine Name: ' + medicineName +
-                            '\nStock Capacity: ' + stockCapacity + '\nReorder Level: ' + reorderLevel + '\nBuffer Level: ' + bufferLevel);
+        //alert('Editing Inventory Setting.\nMedicine Id: ' + medicineId + '\nMedicine Name: ' + medicineName +
+        //                    '\nStock Capacity: ' + stockCapacity + '\nReorder Level: ' + reorderLevel + '\nBuffer Level: ' + bufferLevel);
         $('#inventorySettingPanel').show();
 
         $('#medicineId').val(medicineId);
@@ -91,10 +91,57 @@
     }
 
     function updateInventorySetting() {
+        var data = {
+            MedicineId: $('#medicineId').val(),
+            MedicineName: $('#medicineName').val(),
+            StockCapacity: $('#stockCapacity').val(),
+            ReorderLevel: $('#reorderLevel').val(),
+            BufferLevel: $('#bufferLevel').val()
+        };
+
+        AjaxCall('/Inventory/UpdateInventorySetting', JSON.stringify(data), 'POST')
+            .done(function (response) {
+                clearFields();
+                $('#inventorySettingPanel').hide();
+                alert('Record Updated Successfully.');
+
+                if (response.length > 0) {
+
+                    var rows = '';
+
+                    var header = '<thead><tr>' +
+                        '<th>#</th>' +
+                        '<th>Medicine Name</th>' +
+                        '<th>Stock Capacity</th>' +
+                        '<th>Reorder Level</th>' +
+                        '<th>Buffer Level</th>' +
+                        '<th class="text-center">Actions</th></tr></thead>';
+
+                    for (var i = 0; i < response.length; i++) {
+
+                        rows += "<tr>" +
+                            "<td>" + (i + 1) + "</td>" +
+                            "<td>" + response[i]['MedicineName'] + "</td>" +
+                            "<td>" + response[i]['StockCapacity'] + "</td>" +
+                            "<td>" + response[i]['ReorderLevel'] + "</td>" +
+                            "<td>" + response[i]['BufferLevel'] + "</td>" +
+                            '<td class="text-center"><a href="#" title="Edit" onclick="editInventorySetting(' + response[i]['MedicineId'] + ',\'' + response[i]['MedicineName'] + '\', ' + response[i]['StockCapacity']
+                            + ', ' + response[i]['ReorderLevel'] + ', ' + response[i]['BufferLevel'] + ')"><i class="lnr lnr-pencil"></i></a></td></tr>';
+
+                    }
+
+                    $('#inventoryStock').html(header + rows);
+                }
+                else {
+                    $('#inventoryStock').html("<tr><thead><th><span class='text text-warning text-center'>No stock entries found.</span></th></thead></tr>");
+                }
 
 
-        clearFields();
-        $('#inventorySettingPanel').hide();
+
+            })
+            .fail(function (error) {
+                alert('Record updation failure. Please try again later.');
+            });
     }
 
     function cancelUpdate() {
@@ -162,7 +209,7 @@
 </div>
 
 <div style="display:none; z-index: 10; width: 100%; height: 100%; position:fixed; top: 0; left: 0; background-color: rgba(0,0,0,0.5);" id="inventorySettingPanel">
-    <div class="col-md-6" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <div class="col-md-3" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 Edit Inventory Setting
@@ -190,8 +237,8 @@
                         <input type="text" id="bufferLevel" class="form-control" placeholder="Enter Buffer Level" />
                     </div>
 
-                    <div class="form-group">
-                        <button class="btn btn-primary" onclick="updateInventorySetting();">Update</button>
+                    <div class="form-group text-right">
+                        <button class="btn btn-primary" onclick="updateInventorySetting();">Update</button>&nbsp;&nbsp;&nbsp;
                         <button class="btn btn-danger" onclick="cancelUpdate();">Cancel</button>
                     </div>
                 </div>

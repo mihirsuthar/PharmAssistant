@@ -92,12 +92,12 @@ namespace PharmAssistant.Migrations
 
             context.SaveChanges();
 
-            var Medicine1 = new Medicine { MedicineName = "Brufen", CostPrice = 12.50f, SellingPrice = 14.50f, Description = "Pain Killer", ShelfId = 1, CategoryId = 1, ManufacturerId = 1 };
-            var Medicine2 = new Medicine { MedicineName = "Crocin", CostPrice = 14.50f, SellingPrice = 16.75f, Description = "Fever Relief", ShelfId = 1, CategoryId = 1, ManufacturerId = 3 };
-            var Medicine3 = new Medicine { MedicineName = "Glycodin", CostPrice = 36.70f, SellingPrice = 38.50f, Description = "Cough Syrup", ShelfId = 3, CategoryId = 3, ManufacturerId = 2 };
-            var Medicine4 = new Medicine { MedicineName = "Benadryl", CostPrice = 40.36f, SellingPrice = 43.50f, Description = "Cough Syrup", ShelfId = 3, CategoryId = 3, ManufacturerId = 3 };
-            var Medicine5 = new Medicine { MedicineName = "Insulin Aspart", CostPrice = 32.50f, SellingPrice = 35.50f, Description = "Insulin", ShelfId = 2, CategoryId = 2, ManufacturerId = 1 };
-            var Medicine6 = new Medicine { MedicineName = "Streptokinase", CostPrice = 120.40f, SellingPrice = 125.50f, Description = "Blood Thinner", ShelfId = 2, CategoryId = 2, ManufacturerId = 2 };
+            var Medicine1 = new Medicine { MedicineName = "Brufen", CostPrice = 12.50f, SellingPrice = 14.50f, Description = "Pain Killer", ShelfId = 1, CategoryId = 1, ManufacturerId = 1, StockCapacity = 200, ReorderLevel = 70, BufferLevel = 30 };
+            var Medicine2 = new Medicine { MedicineName = "Crocin", CostPrice = 14.50f, SellingPrice = 16.75f, Description = "Fever Relief", ShelfId = 1, CategoryId = 1, ManufacturerId = 3, StockCapacity = 250, ReorderLevel = 90, BufferLevel = 40 };
+            var Medicine3 = new Medicine { MedicineName = "Glycodin", CostPrice = 36.70f, SellingPrice = 38.50f, Description = "Cough Syrup", ShelfId = 3, CategoryId = 3, ManufacturerId = 2, StockCapacity = 175, ReorderLevel = 55, BufferLevel = 30 };
+            var Medicine4 = new Medicine { MedicineName = "Benadryl", CostPrice = 40.36f, SellingPrice = 43.50f, Description = "Cough Syrup", ShelfId = 3, CategoryId = 3, ManufacturerId = 3, StockCapacity = 200, ReorderLevel = 70, BufferLevel = 30 };
+            var Medicine5 = new Medicine { MedicineName = "Insulin Aspart", CostPrice = 32.50f, SellingPrice = 35.50f, Description = "Insulin", ShelfId = 2, CategoryId = 2, ManufacturerId = 1, StockCapacity = 220, ReorderLevel = 80, BufferLevel = 40 };
+            var Medicine6 = new Medicine { MedicineName = "Streptokinase", CostPrice = 120.40f, SellingPrice = 125.50f, Description = "Blood Thinner", ShelfId = 2, CategoryId = 2, ManufacturerId = 2, StockCapacity = 290, ReorderLevel = 100, BufferLevel = 60 };
 
             Medicine1.Suppliers.Add(Supplier1);
             Medicine1.Suppliers.Add(Supplier3);

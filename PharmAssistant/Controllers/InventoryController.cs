@@ -2,7 +2,9 @@
 using PharmAssistant.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -28,6 +30,10 @@ namespace PharmAssistant.Controllers
         // GET: Inventory
         public ActionResult AvailableStock()
         {
+            //if(TempData["UpdateSuccess"] != null)
+            //{
+            //    ViewBag.UpdateSuccess = TempData["UpdateSuccess"];
+            //}
             return View(GetInventoryStock());
         }
 
@@ -40,6 +46,31 @@ namespace PharmAssistant.Controllers
         public ActionResult InventorySettingsByCategory(int CategoryId)
         {
             return Json(GetInventorySettings(CategoryId), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult UpdateInventorySetting(Medicine medicine)
+        {
+            try
+            {
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    db.Medicines.Attach(medicine);
+                    //db.Entry(medicine).State = EntityState.Modified;
+                    db.Entry(medicine).Property("StockCapacity").IsModified = true;
+                    db.Entry(medicine).Property("ReorderLevel").IsModified = true;
+                    db.Entry(medicine).Property("BufferLevel").IsModified = true;
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            //TempData["UpdateSuccess"] = "Record updated successfully.";
+            //return RedirectToAction("AvailableStock");
+            return Json(GetInventorySettings(), JsonRequestBehavior.AllowGet);
         }
 
         public List<InventoryViewModel> GetInventorySettings(int CategoryId = -1)
@@ -227,5 +258,7 @@ namespace PharmAssistant.Controllers
 
             return InventoryStock;
         }
+
+
     }
 }
