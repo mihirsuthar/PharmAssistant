@@ -23,7 +23,7 @@ namespace PharmAssistant.Controllers
 
         [HttpPost]
         public JsonResult GetStockByCategory(int CategoryId)
-        {   
+        {
             return Json(GetInventoryStock(CategoryId), JsonRequestBehavior.AllowGet);
         }
 
@@ -48,10 +48,15 @@ namespace PharmAssistant.Controllers
             return Json(GetInventorySettings(CategoryId), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult UpdateInventorySetting(Medicine medicine, int CategoryId)
+        public ActionResult UpdateInventorySetting(Medicine medicine)
         {
             try
             {
+                if (medicine.StockCapacity == 0 || medicine.ReorderLevel == 0 || medicine.BufferLevel == 0)
+                {
+                    return Json("Invalid Data", JsonRequestBehavior.AllowGet);
+                }
+
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
                     db.Medicines.Attach(medicine);
@@ -70,15 +75,7 @@ namespace PharmAssistant.Controllers
 
             //TempData["UpdateSuccess"] = "Record updated successfully.";
             //return RedirectToAction("AvailableStock");
-            if(CategoryId == 0)
-            {
-                return Json(GetInventorySettings(), JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json(GetInventorySettings(CategoryId), JsonRequestBehavior.AllowGet);
-            }
-            
+            return Json(GetInventorySettings(), JsonRequestBehavior.AllowGet);
         }
 
         public List<InventoryViewModel> GetInventorySettings(int CategoryId = -1)
@@ -91,21 +88,22 @@ namespace PharmAssistant.Controllers
                 {
                     InventoryStock = new List<InventoryViewModel>();
                     var InventoryData = from m in db.Medicines
-                                         select new {
-                                             CategoryId = m.CategoryId,
-                                             MedicineId = m.MedicineId,
-                                             MedicineName = m.MedicineName,
-                                             StockCapacity = m.StockCapacity,
-                                             ReorderLevel = m.ReorderLevel,
-                                             BufferLevel = m.BufferLevel
-                                         };
+                                        select new
+                                        {
+                                            CategoryId = m.CategoryId,
+                                            MedicineId = m.MedicineId,
+                                            MedicineName = m.MedicineName,
+                                            StockCapacity = m.StockCapacity,
+                                            ReorderLevel = m.ReorderLevel,
+                                            BufferLevel = m.BufferLevel
+                                        };
 
                     if (CategoryId != -1)
                     {
-                        InventoryData = InventoryData.Where(m => m.CategoryId == CategoryId);                        
+                        InventoryData = InventoryData.Where(m => m.CategoryId == CategoryId);
                     }
 
-                    foreach(var data in InventoryData)
+                    foreach (var data in InventoryData)
                     {
                         InventoryStock.Add(new InventoryViewModel
                         {
@@ -118,7 +116,7 @@ namespace PharmAssistant.Controllers
                     }
 
                     return InventoryStock;
-                }                
+                }
             }
             catch (Exception ex)
             {
@@ -158,7 +156,7 @@ namespace PharmAssistant.Controllers
                                             StockUnits = se.Quantity
                                         };
 
-                    if(CategoryId != -1)
+                    if (CategoryId != -1)
                     {
                         InventoryData = InventoryData.Where(i => i.CategoryId == CategoryId);
                     }

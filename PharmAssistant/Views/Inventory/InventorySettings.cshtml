@@ -26,6 +26,10 @@
 
     $(function () {
 
+        $('#stockCapacity').keydown(validateNumber);
+        $('#reorderLevel').keydown(validateNumber);
+        $('#bufferLevel').keydown(validateNumber);
+
         $('#medicineCategory').on('change', function () {
             var categoryId = $('#medicineCategory').val();
 
@@ -59,7 +63,7 @@
                                     "<td>" + response[i]['ReorderLevel'] + "</td>" +
                                     "<td>" + response[i]['BufferLevel'] + "</td>" +
                                     '<td class="text-center"><a href="#" title="Edit" onclick="editInventorySetting(' + response[i]['MedicineId'] + ',\'' + response[i]['MedicineName'] + '\', ' + response[i]['StockCapacity']
-                                            + ', ' + response[i]['ReorderLevel'] + ', ' + response[i]['BufferLevel'] + ')"><i class="lnr lnr-pencil"></i></a></td></tr>';
+                                    + ', ' + response[i]['ReorderLevel'] + ', ' + response[i]['BufferLevel'] + ')"><i class="lnr lnr-pencil"></i></a></td></tr>';
 
                             }
 
@@ -96,53 +100,56 @@
             MedicineName: $('#medicineName').val(),
             StockCapacity: $('#stockCapacity').val(),
             ReorderLevel: $('#reorderLevel').val(),
-            BufferLevel: $('#bufferLevel').val(),
-            CategoryId: $('#medicineCategory').val()
+            BufferLevel: $('#bufferLevel').val()
         };
 
-        AjaxCall('/Inventory/UpdateInventorySetting', JSON.stringify(data), 'POST')
-            .done(function (response) {
-                clearFields();
-                $('#inventorySettingPanel').hide();
-                alert('Record Updated Successfully.');
+        if (!validateSettingUpdate()) {
+            alert('Invalid Data.');
+        }
+        else {
+            alert('Updating Record.');
+            AjaxCall('/Inventory/UpdateInventorySetting', JSON.stringify(data), 'POST')
+                .done(function (response) {
 
-                if (response.length > 0) {
+                    clearFields();
+                    $('#inventorySettingPanel').hide();
+                    alert('Record Updated Successfully.');
 
-                    var rows = '';
+                    if (response.length > 0) {
 
-                    var header = '<thead><tr>' +
-                        '<th>#</th>' +
-                        '<th>Medicine Name</th>' +
-                        '<th>Stock Capacity</th>' +
-                        '<th>Reorder Level</th>' +
-                        '<th>Buffer Level</th>' +
-                        '<th class="text-center">Actions</th></tr></thead>';
+                        var rows = '';
 
-                    for (var i = 0; i < response.length; i++) {
+                        var header = '<thead><tr>' +
+                            '<th>#</th>' +
+                            '<th>Medicine Name</th>' +
+                            '<th>Stock Capacity</th>' +
+                            '<th>Reorder Level</th>' +
+                            '<th>Buffer Level</th>' +
+                            '<th class="text-center">Actions</th></tr></thead>';
 
-                        rows += "<tr>" +
-                            "<td>" + (i + 1) + "</td>" +
-                            "<td>" + response[i]['MedicineName'] + "</td>" +
-                            "<td>" + response[i]['StockCapacity'] + "</td>" +
-                            "<td>" + response[i]['ReorderLevel'] + "</td>" +
-                            "<td>" + response[i]['BufferLevel'] + "</td>" +
-                            '<td class="text-center"><a href="#" title="Edit" onclick="editInventorySetting(' + response[i]['MedicineId'] + ',\'' + response[i]['MedicineName'] + '\', ' + response[i]['StockCapacity']
-                            + ', ' + response[i]['ReorderLevel'] + ', ' + response[i]['BufferLevel'] + ')"><i class="lnr lnr-pencil"></i></a></td></tr>';
+                        for (var i = 0; i < response.length; i++) {
 
+                            rows += "<tr>" +
+                                "<td>" + (i + 1) + "</td>" +
+                                "<td>" + response[i]['MedicineName'] + "</td>" +
+                                "<td>" + response[i]['StockCapacity'] + "</td>" +
+                                "<td>" + response[i]['ReorderLevel'] + "</td>" +
+                                "<td>" + response[i]['BufferLevel'] + "</td>" +
+                                '<td class="text-center"><a href="#" title="Edit" onclick="editInventorySetting(' + response[i]['MedicineId'] + ',\'' + response[i]['MedicineName'] + '\', ' + response[i]['StockCapacity']
+                                + ', ' + response[i]['ReorderLevel'] + ', ' + response[i]['BufferLevel'] + ')"><i class="lnr lnr-pencil"></i></a></td></tr>';
+                        }
+
+                        $('#inventoryStock').html(header + rows);
+                    }
+                    else {
+                        $('#inventoryStock').html("<tr><thead><th><span class='text text-warning text-center'>No stock entries found.</span></th></thead></tr>");
                     }
 
-                    $('#inventoryStock').html(header + rows);
-                }
-                else {
-                    $('#inventoryStock').html("<tr><thead><th><span class='text text-warning text-center'>No stock entries found.</span></th></thead></tr>");
-                }
-
-
-
-            })
-            .fail(function (error) {
-                alert('Record updation failure. Please try again later.');
-            });
+                })
+                .fail(function (error) {
+                    alert('Record updation failure. Please try again later.');
+                });
+        }
     }
 
     function cancelUpdate() {
@@ -157,6 +164,48 @@
         $('#reorderLevel').val('');
         $('#bufferLevel').val('');
     }
+
+    function validateSettingUpdate() {
+
+        try {
+            var stockCapacity = parseInt($('#stockCapacity').val());
+            var reorderLevel = parseInt($('#reorderLevel').val());
+            var bufferLevel = parseInt($('#bufferLevel').val());
+            flag = 0;
+
+            if (stockCapacity <= 0) {
+                $('#stockCapacity').css('border-color', 'red');
+                flag++;
+            }
+            if (reorderLevel > (stockCapacity * 0.50) || reorderLevel <= 0) {
+                $('#reorderLevel').css('border-color', 'red');
+                flag++;
+            }
+            if (bufferLevel > (stockCapacity * 0.25) || bufferLevel <= 0) {
+                $('#bufferLevel').css('border-color', 'red');
+                flag++;
+            }
+
+            if (flag > 0)
+                return false;
+            else
+                return true;
+
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function validateNumber(e) {
+        var key = e.keyCode ? e.keyCode : e.which;
+
+        if (!([8, 9, 13, 27, 46, 110, 190].indexOf(key) !== -1 ||
+            (key == 65 && (e.ctrlKey || e.metaKey)) ||
+            (key >= 35 && key <= 40) ||
+            (key >= 48 && key <= 57 && !(e.shiftKey || e.altKey)) ||
+            (key >= 96 && key <= 105)
+        )) e.preventDefault();
+    };
 
 </script>
 
@@ -193,7 +242,7 @@
                                 <td>@entry.BufferLevel</td>
                                 <td class="text-center">
                                     <a href="#" title="Edit" onclick="editInventorySetting(@entry.MedicineId, '@entry.MedicineName', @entry.StockCapacity, @entry.ReorderLevel, @entry.BufferLevel)">
-                                    <i class="lnr lnr-pencil" ></i>
+                                        <i class="lnr lnr-pencil"></i>
                                     </a>
                                 </td>
                             </tr>
