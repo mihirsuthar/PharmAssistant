@@ -48,7 +48,7 @@ namespace PharmAssistant.Controllers
             return Json(GetInventorySettings(CategoryId), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult UpdateInventorySetting(Medicine medicine)
+        public ActionResult UpdateInventorySetting(Medicine medicine, int CategoryId)
         {
             try
             {
@@ -70,7 +70,15 @@ namespace PharmAssistant.Controllers
 
             //TempData["UpdateSuccess"] = "Record updated successfully.";
             //return RedirectToAction("AvailableStock");
-            return Json(GetInventorySettings(), JsonRequestBehavior.AllowGet);
+            if(CategoryId == 0)
+            {
+                return Json(GetInventorySettings(), JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(GetInventorySettings(CategoryId), JsonRequestBehavior.AllowGet);
+            }
+            
         }
 
         public List<InventoryViewModel> GetInventorySettings(int CategoryId = -1)

@@ -96,7 +96,8 @@
             MedicineName: $('#medicineName').val(),
             StockCapacity: $('#stockCapacity').val(),
             ReorderLevel: $('#reorderLevel').val(),
-            BufferLevel: $('#bufferLevel').val()
+            BufferLevel: $('#bufferLevel').val(),
+            CategoryId: $('#medicineCategory').val()
         };
 
         AjaxCall('/Inventory/UpdateInventorySetting', JSON.stringify(data), 'POST')
