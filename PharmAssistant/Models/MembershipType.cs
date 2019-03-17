@@ -19,8 +19,12 @@ namespace PharmAssistant.Models
         [Required(ErrorMessage = "Membership type name id is required.")]
         public string MembershipTypeName { get; set; }
 
+        public int PolicyId { get; set; }
+
         [StringLength(50)]
         [Column(TypeName = "varchar")]
         public string MembershipTypeDesc { get; set; }
+
+        public DiscountPolicy DiscountPolicy { get; set; }
     }
 }

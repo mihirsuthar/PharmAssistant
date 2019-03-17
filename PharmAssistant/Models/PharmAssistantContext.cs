@@ -31,6 +31,7 @@ namespace PharmAssistant.Models
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<MembershipType> MembershipTypes { get; set; }
+        public DbSet<DiscountPolicy> DiscountPolicies { get; set; }
         public DbSet<MembershipAccount> MembershipAccounts { get; set; }
         public DbSet<MembershipDiscount> MembershipDiscounts { get; set; }
         public DbSet<Medicine> Medicines { get; set; }

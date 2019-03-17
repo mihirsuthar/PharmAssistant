@@ -1,0 +1,595 @@
+﻿@using PharmAssistant.Models.ViewModels
+@model IEnumerable<MembershipViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+    int i = 1;
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+<script type="text/javascript">
+
+    function AjaxCall(url, data, type) {
+        return $.ajax({
+            url: url,
+            type: type ? type : 'GET',
+            data: data,
+            contentType: 'application/json'            
+        });
+    }
+
+    $(function () {
+        $('#btnShowMembershipAccounts').hide();
+    });
+
+    //#region Membership Type Management
+
+    function showMembershipTypes() {        
+        var rows = '';
+
+        AjaxCall('/Memberships/GetMembershipTypes', null, 'GET')
+            .done(function (response) {
+                if (response.length > 0) {
+
+                    var header = '<thead><tr>' +
+                        '<th>Membership Type Id</th>' +
+                        '<th>Membersip Name</th>' +
+                        '<th>Description</th>' +                        
+                        '<th class="text-center">Actions</th></tr></thead>';
+
+                    for (var i = 0; i < response.length; i++) {
+
+                        rows += "<tr>" +
+                            
+                            "<td>" + response[i]['MembershipTypeId'] + "</td>" +
+                            "<td>" + response[i]['MembershipTypeName'] + "</td>" +
+                            "<td>" + response[i]['MembershipTypeDesc'] + "</td>" +
+                            '<td class="text-center"><a href="#" title="Edit" onclick="editMembershipType(' + response[i]['MembershipTypeId'] + ',\'' + response[i]['MembershipTypeName'] + '\',\' ' + response[i]['MembershipTypeDesc'] + '\')"><i class="lnr lnr-pencil"></i></a> ' +
+                            '<a href="#" title="Delete" onclick="deleteMembershipType(' + response[i]['MembershipTypeId'] + ')"><i class="lnr lnr-trash"></i></a></td ></tr > ';
+                    }
+
+                    $('#tblMembershipTypes').html(header + rows);
+                }
+                else {
+                    $('#tblMembershipTypes').html("<tr><thead><th><span class='text text-warning text-center'>No membership types defined yet.</span></th></thead></tr>");
+                }
+            })
+            .fail(function (error) {
+                alert('Unable to get membership types. Try again later. \nError: ' + error.statusText);
+            });
+
+        $('#membershipTypes').show();
+        $('#membershipAccounts').hide();
+        $('#discountPolicies').hide()
+
+        $('#btnShowMembershipAccounts').show();
+        $('#btnShowMembershipTypes').hide();
+        $('#btnShowDiscountPolicies').show();
+    }
+
+    function showNewMembershipTypeForm() {
+        $('#newMembershipTypeForm').show();
+    }
+
+    function addNewMembershipType() {
+        var membershipTypeName = $('#newMembershipTypeName').val(),
+            membershipTypeDescription = $('#newMembershipTypeDesc').val();
+        var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+
+        alert('MembershipTypeName: ' + membershipTypeName + '\nMembershipTypeDescription: ' + membershipTypeDescription + '\nToken: ' + antiForgeryToken);
+
+        var data = { MembershipTypeName: membershipTypeName, MembershipTypeDesc: membershipTypeDescription, __RequestVerificationToken: antiForgeryToken };
+
+        AjaxCall('/Memberships/AddMembershipType', JSON.stringify(data), 'POST')
+            .done(function (response) {
+                clearMembershipTypeFormFields();
+                $('#newMembershipTypeForm').hide();
+                alert("Membership Type added successfully.");
+                showMembershipTypes()
+            })
+            .fail(function (error) {
+                alert('Unable to add new membership type. Try again later. \nError: ' + error.statusText);
+            });
+    }
+
+    function cancelAddingNewMembershipType() {
+        clearMembershipTypeFormFields();
+        $('#newMembershipTypeForm').hide();
+    }
+
+    function editMembershipType(membershipTypeId, membershipTypeName, membershipTypeDesc) {
+        $('#editMembershipTypeId').val(membershipTypeId);
+        $('#editMembershipTypeName').val(membershipTypeName);
+        $('#editMembershipTypeDesc').val(membershipTypeDesc);
+
+        $('#editMembershipTypeForm').show();
+    }
+
+    function updateMembershipType() {
+
+        var data = { MembershipTypeId: $('#editMembershipTypeId').val(), MembershipTypeName: $('#editMembershipTypeName').val(), MembershipTypeDesc: $('#editMembershipTypeDesc').val() };
+
+        AjaxCall('/Memberships/UpdateMembershipType', JSON.stringify(data), 'POST')
+            .done(function (response) {
+                clearMembershipTypeFormFields();
+                $('#editMembershipTypeForm').hide();                
+                
+                showMembershipTypes();
+                alert('Membership type updated successfully.'); 
+            })
+            .fail(function (error) {
+                alert('Unable to update membership types. Try again later. \nError: ' + error.statusText);
+            });
+    }
+
+    function cancelUpdateMembershipType() {
+        clearMembershipTypeFormFields();
+        $('#editMembershipTypeForm').hide();
+    }
+
+    function deleteMembershipType(membershipTypeId) {
+
+        if (confirm('Are you sure to delete this membership type?')) {
+
+            var data = { MembershipTypeId: membershipTypeId };
+
+            AjaxCall('/Memberships/DeleteMembershipType', JSON.stringify(data), 'POST')
+                .done(function (response) {
+                    alert('Membership type deleted successfully.');
+                    showMembershipTypes();
+                })
+                .fail(function (error) {
+                    alert('Unable to update membership types. Try again later. \nError: ' + error.statusText);
+                });
+        }
+    }
+
+    function clearMembershipTypeFormFields() {
+        $('#newMembershipTypeName').val('');
+        $('#newMembershipTypeDescription').val('');
+        $('#editMembershipTypeName').val('');
+        $('#editMembershipTypeDescription').val('');
+    }
+
+    //#endregion
+
+    //#region Membership Account Management
+
+    function showMembershipAccounts() {
+        $('#membershipTypes').hide();
+        $('#membershipAccounts').show();
+        $('#discountPolicies').hide();
+
+        $('#btnShowMembershipAccounts').hide();
+        $('#btnShowMembershipTypes').show();
+        $('#btnShowDiscountPolicies').show();
+    }
+
+    //#endregion
+
+    //#region Discount Policies Management
+
+    function showDiscountPolicies() {
+
+        var rows = '';
+
+        AjaxCall('/Memberships/GetDiscountPolicies', null, 'GET')
+            .done(function (response) {
+                if (response.length > 0) {
+
+                    var header = '<thead><tr>' +
+                        '<th>Discount Policy Id</th>' +                        
+                        '<th>Membership Type</th>' +
+                        '<th>Upper Bill Limit</th>' +
+                        '<th>Bonus Points</th>' +
+                        '<th class="text-center">Actions</th></tr></thead>';
+
+                    for (var i = 0; i < response.length; i++) {
+
+                        rows += "<tr>" +
+
+                            "<td>" + response[i]['PolicyId'] + "</td>" +
+                            "<td>" + response[i]['MembershipTypeName'] + "</td>" +
+                            "<td>" + response[i]['UpperBillLimit'] + "</td>" +
+                            "<td>" + response[i]['BonusPoints'] + "</td>" +
+                            '<td class="text-center"><a href="#" title="Edit" onclick="editDicsountPolicy(' + response[i]['PolicyId'] + ',' + response[i]['MembershipTypeId'] + ', ' + response[i]['UpperBillLimit'] + ',' + response[i]['BonusPoints'] + ')"><i class="lnr lnr-pencil"></i></a> ' +
+                            '<a href="#" title="Delete" onclick="deleteDiscountPolicy(' + response[i]['PolicyId'] + ')"><i class="lnr lnr-trash"></i></a></td ></tr > ';
+                    }
+
+                    $('#tblDiscountPolicies').html(header + rows);
+                }
+                else {
+                    $('#tblDiscountPolicies').html("<tr><thead><th><span class='text text-warning text-center'>No discount policy defined yet.</span></th></thead></tr>");
+                }
+            })
+            .fail(function (error) {
+                alert('Unable to get discount policies. Try again later. \nError: ' + error.statusText);
+            });
+
+
+
+
+        $('#membershipTypes').hide();
+        $('#membershipAccounts').hide();
+        $('#discountPolicies').show();
+
+        $('#btnShowMembershipAccounts').show();
+        $('#btnShowMembershipTypes').show();
+        $('#btnShowDiscountPolicies').hide();
+    }
+
+    function showNewDiscountPolicyForm() {
+
+        var options = '<option value="0">Select Membership Type</option>';
+
+        AjaxCall('/Memberships/GetMembershipTypes', null, 'GET')
+            .done(function (response) {
+                if (response.length > 0) {
+
+                    for (var i = 0; i < response.length; i++) {
+
+                        options += '<option value="'+response[i]['MembershipTypeId']+'">'+response[i]['MembershipTypeName']+'</option>';
+                    }
+
+                    $('#membershipTypeNameAdd').html(options);
+                }
+                else {
+                    $('#tblMembershipTypes').html("<tr><thead><th><span class='text text-warning text-center'>No membership types defined yet.</span></th></thead></tr>");
+                }
+            })
+            .fail(function (error) {
+                alert('Unable to get membership types. Try again later. \nError: ' + error.statusText);
+            });
+
+        $('#newDiscountPolicyForm').show();
+    }
+
+    function addNewDiscountPolicy() {
+        var membershipTypeId = $('#membershipTypeNameAdd').val(),
+            upperBillLimit = $('#newUpperBillLimit').val(),
+            bonusPoints = $('#newBonusPoints').val();
+        var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+
+        //alert('MembershipTypeName: ' + membershipTypeName + '\nMembershipTypeDescription: ' + membershipTypeDescription + '\nToken: ' + antiForgeryToken);
+
+        var data = { MembershipTypeId: membershipTypeId, UpperBillLimit: upperBillLimit, BonusPoints: bonusPoints, __RequestVerificationToken: antiForgeryToken };
+
+        AjaxCall('/Memberships/AddDiscountPolicy', JSON.stringify(data), 'POST')
+            .done(function (response) {
+                clearDiscountPilicyFormFields();
+                $('#newDiscountPolicyForm').hide();
+                alert("Discount Policy added successfully.");
+                showMembershipTypes();
+            })
+            .fail(function (error) {
+                alert('Unable to add new discount policy. Try again later. \nError: ' + error.statusText);
+            });
+    }
+
+    function cancelAddingDiscountPolicy() {
+        clearDiscountPilicyFormFields();
+        $('#newDiscountPolicyForm').hide();
+    }
+
+    function editDiscountPolicy(policyId, membershipTypeId, upperBillLimit, bonusPoints) {
+
+        var options = '<option value="0">Select Membership Type</option>';
+
+        AjaxCall('/Memberships/GetMembershipTypes', null, 'GET')
+            .done(function (response) {
+                if (response.length > 0) {
+
+                    for (var i = 0; i < response.length; i++) {
+
+                        options += '<option value="' + response[i]['MembershipTypeId'] + '">' + response[i]['MembershipTypeName'] + '</option>';
+                    }
+
+                    $('#membershipTypeNameEdit').html(options);
+                }                
+            })
+            .fail(function (error) {
+                alert('Unable to get membership types. Try again later. \nError: ' + error.statusText);
+            });
+
+
+        $('#editPolicyId').val(policyId);
+        $('#membershipTypeNameEdit').selectedValue = membershipTypeId;
+        $('#editUpperBillLimit').val(upperBillLimit);
+        $('#editBonusPoints').val(bonusPoints);
+
+        $('#editDiscountPolicy').show();
+    }
+
+    function updateDiscountPolicy() {
+
+        var data = { PolicyId: $('#editPolicyId').val(), MembershipTypeId: $('#membershipTypeNameEdit').val(), UpperBillLimit: $('#editUpperBillLimit').val(), BonusPoints: $('#editBonusPoints').val() };
+
+        AjaxCall('/Memberships/UpdateDiscountPolicy', JSON.stringify(data), 'POST')
+            .done(function (response) {
+                clearDiscountPilicyFormFields();
+                $('#editDiscountPolicyForm').hide();
+
+                showDiscountPolicies();
+                alert('Discount policy updated successfully.');
+            })
+            .fail(function (error) {
+                alert('Unable to update discount policy. Try again later. \nError: ' + error.statusText);
+            });
+    }
+
+    function cancelUpdateDiscountPolicy() {
+        clearDiscountPilicyFormFields();
+        $('#editDiscountPolicyForm').hide();
+    }
+
+    function deleteDiscountPolicy(policyId) {
+
+        if (confirm('Are you sure to delete this discount policy?')) {
+
+            var data = { PolicyId: policyId };
+
+            AjaxCall('/Memberships/DeleteDiscountPolicy', JSON.stringify(data), 'POST')
+                .done(function (response) {
+                    alert('Discount policy deleted successfully.');
+                    showDiscountPolicies();
+                })
+                .fail(function (error) {
+                    alert('Unable to delete discount policy. Try again later. \nError: ' + error.statusText);
+                });
+        }
+    }
+
+    function clearDiscountPilicyFormFields() {
+        $('#newUpperBillLimit').val('');
+        $('#newBonusPoints').val('');
+
+        $('#editUpperBillLimit').val('');
+        $('#editBonusPoints').val('');
+    }
+    
+    //#endregion
+
+</script>
+
+<h2>Memberships</h2>
+
+<div class="row">
+    @Html.AntiForgeryToken()
+    <div class="panel-body">
+        <input type="button" id="btnShowMembershipAccounts" value="Membership Accounts" class="btn btn-primary" onclick="showMembershipAccounts();" />
+        <input type="button" id="btnShowMembershipTypes" value="Membership Types" class="btn btn-primary" onclick="showMembershipTypes();" />
+        <input type="button" id="btnShowDiscountPolicies" value="Discount Policies" class="btn btn-primary" onclick="showDiscountPolicies();" />
+    </div>
+
+    <div class="panel panel-primary" id="membershipAccounts">
+        <div class="panel-heading">
+            Mambership Accounts
+        </div>
+
+        <div class="panel-body">
+            @if (Model != null && Model.Count() > 0)
+            {
+                <table class="table table-hover" id="tblMembershipAccounts">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Customer Id</th>
+                            <th>Customer Name</th>
+                            <th>Membership Id</th>
+                            <th>Membership Type</th>
+                            <th>Joining Date</th>
+                            <th>Total Purchase</th>
+                            <th>Bonus Points</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membershipAccountsList">
+                        @foreach (var entry in Model)
+                        {
+                            <tr>
+                                <td>@(i++)</td>
+                                <td>@entry.CustomerId</td>
+                                <td>@entry.CustomerName</td>
+                                <td>@entry.MembershipId</td>
+                                <td>@entry.MembershipType</td>
+                                <td>@entry.JoiningDate.ToString("dd/MM/yyyy")</td>
+                                <td>@entry.TotalPurchase</td>
+                                <td>@entry.BonusPoints</td>
+                                <td class="text-center">
+                                    <a href="#" onclick="updateMembershipAccount(@entry.MembershipId);" title="Edit"><i class="lnr lnr-pencil"></i></a>&nbsp;&nbsp;&nbsp;
+                                    <a href="#" onclick="deleteMembershipAccount(@entry.MembershipId);" title="Delete"><i class="lnr lnr-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <span class="alert alert-warning col-md-12 text-center">No membrship account exists.</span>
+            }
+        </div>
+    </div>
+
+    <div class="panel panel-primary" id="membershipTypes" style="display: none;">
+        <div class="panel-heading">
+            Mambership Types
+        </div>
+
+        <div class="panel-body">
+
+            <input type="button" value="New Membership Type" class="btn btn-success" onclick="showNewMembershipTypeForm();" />
+
+            <table class="table table-hover" id="tblMembershipTypes">
+                <thead>
+                    <tr>
+                        <th>Membership Type Id</th>
+                        <th>Membreship Type</th>
+                        <th>Description</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="membershipTypesList"></tbody>
+            </table>
+            <select>
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+
+    <div style="display:none; z-index: 10; width: 100%; height: 100%; position:fixed; top: 0; left: 0; background-color: rgba(0,0,0,0.5);" id="newMembershipTypeForm">
+        <div class="col-md-3" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    New Membership Type
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            <label for="medicineName">Membership Type Name</label>
+                            <input type="text" id="newMembershipTypeName" class="form-control" placeholder="Enter Membership Type Name" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="stockCapacity">Description</label>
+                            <textarea id="newMembershipTypeDesc" class="form-control" placeholder="Enter Description" cols="30" rows="6" style="resize: none;"></textarea>
+                        </div>
+
+                        <div class="form-group text-right">
+                            <button class="btn btn-primary" onclick="addNewMembershipType();">Add</button>&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-danger" onclick="cancelAddingNewMembershipType();">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:none; z-index: 10; width: 100%; height: 100%; position:fixed; top: 0; left: 0; background-color: rgba(0,0,0,0.5);" id="editMembershipTypeForm">
+        <div class="col-md-3" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Edit Membership Type
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <input type="hidden" id="editMembershipTypeId" />
+                        <div class="form-group">
+                            <label for="medicineName">Membership Type Name</label>
+                            <input type="text" id="editMembershipTypeName" class="form-control" placeholder="Enter Membership Type Name" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="stockCapacity">Description</label>
+                            <textarea id="editMembershipTypeDesc" class="form-control" placeholder="Enter Description" cols="30" rows="6" style="resize: none;"></textarea>
+                        </div>
+
+                        <div class="form-group text-right">
+                            <button class="btn btn-primary" onclick="updateMembershipType();">Update</button>&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-danger" onclick="cancelUpdateMembershipType();">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-primary" id="discountPolicies" style="display: none;">
+        <div class="panel-heading">
+            Discount Policies
+        </div>
+
+        <div class="panel-body">
+
+            <input type="button" value="New Discount Policy" class="btn btn-success" onclick="showNewDiscountPolicyForm();" />
+
+            <table class="table table-hover" id="tblDiscountPolicies">
+                <thead>
+                    <tr>
+                        <th>Policy Id</th>
+                        <th>Membership Type</th>
+                        <th>Upper Bill Limit</th>
+                        <th>Bonus Points</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="discountPoliciesList"></tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div style="display:none; z-index: 10; width: 100%; height: 100%; position:fixed; top: 0; left: 0; background-color: rgba(0,0,0,0.5);" id="newDiscountPolicyForm">
+        <div class="col-md-3" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    New Discount Policy
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label for="membershipTypeNameAdd">Membership Type Name</label>
+                            @*<input type="text" id="membershipTypeName" class="form-control" placeholder="Enter Membership Type Name" />*@
+                            <select id="membershipTypeNameAdd" class="form-control"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newUpperBillLimit">Upper Bill Limit</label>
+                            <input type="text" id="newUpperBillLimit" class="form-control" placeholder="Enter Upper Bill Limit" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newBonusPoints">Bonus Points</label>
+                            <input type="text" id="newBonusPoints" class="form-control" placeholder="Enter Bonus Points" />
+                        </div>
+
+                        <div class="form-group text-right">
+                            <button class="btn btn-primary" onclick="addNewDiscountPolicy();">Add</button>&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-danger" onclick="cancelAddingDiscountPolicy();">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:none; z-index: 10; width: 100%; height: 100%; position:fixed; top: 0; left: 0; background-color: rgba(0,0,0,0.5);" id="editDiscountPolicyForm">
+        <div class="col-md-3" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Edit Discount Policy
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <input type="hidden" id="editPolicyId" />
+                        <div class="form-group">
+                            <label for="medicineName">Membership Type Name</label>
+                            @*<input type="text" id="editMembershipTypeName" class="form-control" placeholder="Enter Membership Type Name" />*@
+                            <select id="membershipTypeNameEdit" class="form-control"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editUpperBillLimit">Upper Bill Limit</label>
+                            <input type="text" id="editUpperBillLimit" class="form-control" placeholder="Enter Upper Bill Limit" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editBonusPoints">Bonus Points</label>
+                            <input type="text" id="editBonusPoints" class="form-control" placeholder="Enter Bonus Points" />
+                        </div>
+
+                        <div class="form-group text-right">
+                            <button class="btn btn-primary" onclick="updateDiscountPolicy();">Update</button>&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-danger" onclick="cancelUpdateDiscountPolicy();">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

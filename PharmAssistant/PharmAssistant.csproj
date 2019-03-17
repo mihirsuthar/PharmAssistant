@@ -266,6 +266,7 @@
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\ManufacturersController.cs" />
     <Compile Include="Controllers\MedicinesController.cs" />
+    <Compile Include="Controllers\MembershipsController.cs" />
     <Compile Include="Controllers\PurchaseOrdersController.cs" />
     <Compile Include="Controllers\RoleAdminController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
@@ -289,10 +290,15 @@
     <Compile Include="Migrations\201903081657358_MedicineModelUpdate.Designer.cs">
       <DependentUpon>201903081657358_MedicineModelUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903151008328_DiscountPolicy.cs" />
+    <Compile Include="Migrations\201903151008328_DiscountPolicy.Designer.cs">
+      <DependentUpon>201903151008328_DiscountPolicy.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\AppUser.cs" />
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\DiscountPolicy.cs" />
     <Compile Include="Models\Doctor.cs" />
     <Compile Include="Models\Manufacturer.cs" />
     <Compile Include="Models\MembershipAccount.cs" />
@@ -317,6 +323,7 @@
     <Compile Include="Models\ViewModels\MedicineCategoryViewModel.cs" />
     <Compile Include="Models\ViewModels\MedicineSupplierViewModel.cs" />
     <Compile Include="Models\ViewModels\MedicineViewModel.cs" />
+    <Compile Include="Models\ViewModels\MembershipViewModel.cs" />
     <Compile Include="Models\ViewModels\PurchaseOrderViewModel.cs" />
     <Compile Include="Models\ViewModels\RoleViewModel.cs" />
     <Compile Include="Models\ViewModels\ShelvesViewModel.cs" />
@@ -359,6 +366,7 @@
     <Content Include="Views\PurchaseOrders\EditOrder.cshtml" />
     <Content Include="Views\Inventory\AvailableStock.cshtml" />
     <Content Include="Views\Inventory\InventorySettings.cshtml" />
+    <Content Include="Views\Memberships\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -379,6 +387,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903081657358_MedicineModelUpdate.resx">
       <DependentUpon>201903081657358_MedicineModelUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903151008328_DiscountPolicy.resx">
+      <DependentUpon>201903151008328_DiscountPolicy.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
