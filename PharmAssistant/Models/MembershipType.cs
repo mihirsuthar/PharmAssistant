@@ -25,6 +25,5 @@ namespace PharmAssistant.Models
         [Column(TypeName = "varchar")]
         public string MembershipTypeDesc { get; set; }
 
-        public DiscountPolicy DiscountPolicy { get; set; }
     }
 }

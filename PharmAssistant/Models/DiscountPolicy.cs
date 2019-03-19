@@ -20,7 +20,5 @@ namespace PharmAssistant.Models
         [Required(ErrorMessage = "Bonus points are required.")]
         public int BonusPoints { get; set; }
 
-        public MembershipType membershipType { get; set; }
-
     }
 }

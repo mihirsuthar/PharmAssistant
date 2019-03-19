@@ -294,6 +294,10 @@
     <Compile Include="Migrations\201903151008328_DiscountPolicy.Designer.cs">
       <DependentUpon>201903151008328_DiscountPolicy.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903191519446_DiscountType.cs" />
+    <Compile Include="Migrations\201903191519446_DiscountType.Designer.cs">
+      <DependentUpon>201903191519446_DiscountType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\AppUser.cs" />
@@ -390,6 +394,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903151008328_DiscountPolicy.resx">
       <DependentUpon>201903151008328_DiscountPolicy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903191519446_DiscountType.resx">
+      <DependentUpon>201903191519446_DiscountType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
