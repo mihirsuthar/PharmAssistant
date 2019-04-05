@@ -9,8 +9,7 @@ namespace PharmAssistant.Models
 {
     public class MembershipDiscount
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]        
         [Required(ErrorMessage = "Please select Membership Id.")]
         public int MembershipId { get; set; }
 

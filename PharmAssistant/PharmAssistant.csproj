@@ -262,6 +262,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\ManufacturersController.cs" />
@@ -297,6 +298,10 @@
     <Compile Include="Migrations\201903191519446_DiscountType.cs" />
     <Compile Include="Migrations\201903191519446_DiscountType.Designer.cs">
       <DependentUpon>201903191519446_DiscountType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903310654414_MembershipAccount.cs" />
+    <Compile Include="Migrations\201903310654414_MembershipAccount.Designer.cs">
+      <DependentUpon>201903310654414_MembershipAccount.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
@@ -336,6 +341,7 @@
     <Compile Include="Models\ViewModels\UserViewModels.cs" />
     <Compile Include="Models\ViewModels\SupplierViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\VaildateEmail.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -371,6 +377,9 @@
     <Content Include="Views\Inventory\AvailableStock.cshtml" />
     <Content Include="Views\Inventory\InventorySettings.cshtml" />
     <Content Include="Views\Memberships\Index.cshtml" />
+    <Content Include="Views\Customers\Index.cshtml" />
+    <Content Include="Views\Customers\NewCustomer.cshtml" />
+    <Content Include="Views\Customers\EditCustomer.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -397,6 +406,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903191519446_DiscountType.resx">
       <DependentUpon>201903191519446_DiscountType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903310654414_MembershipAccount.resx">
+      <DependentUpon>201903310654414_MembershipAccount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,0 +1,54 @@
+﻿@model PharmAssistant.Models.Customer
+
+@{
+    ViewBag.Title = "NewCustomer";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel">
+            <div class="panel-heading bg-primary" style="font-size: 16pt; padding: 10px;">
+                New Customer
+            </div>
+
+            <div class="panel-body">
+                @using (Html.BeginForm("AddCustomer", "Customers", FormMethod.Post, new { @class = "form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.CustomerName)
+                        @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", placeholder = "Enter Customer Name" })
+                        @Html.ValidationMessageFor(m => m.CustomerName, "", new { @class = "text text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Address)
+                        @Html.TextAreaFor(m => m.Address, new { @class = "form-control", placeholder = "Enter Address", columns = 30, rows = 5, style = "resize: none;" })
+                        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ContactNumber)
+                        @Html.TextBoxFor(m => m.ContactNumber, "{0:#.#}", new { @class = "form-control", placeholder = "Enter Contact Number" })
+                        @Html.ValidationMessageFor(m => m.ContactNumber, "", new { @class = "text text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EmailId)
+                        @Html.TextBoxFor(m => m.EmailId, new { @class = "form-control", placeholder = "Enter Email Id" })
+                        @Html.ValidationMessageFor(m => m.EmailId, "", new { @class = "text text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Add Customer" />&nbsp;&nbsp;
+                        <a href="@Url.Action("Index", "Customers")" class="btn btn-danger">Cancel</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

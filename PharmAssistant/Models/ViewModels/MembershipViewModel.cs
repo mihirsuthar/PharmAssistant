@@ -10,7 +10,7 @@ namespace PharmAssistant.Models.ViewModels
         public int CustomerId { get; set; }
         public string CustomerName { get; set; }
         public int MembershipId { get; set; }
-        public string MembershipType { get; set; }
+        public string MembershipName { get; set; }
         public DateTime JoiningDate { get; set; }
         public double TotalPurchase { get; set; }
         public int BonusPoints { get; set; }

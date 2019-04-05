@@ -35,13 +35,14 @@ namespace PharmAssistant.Controllers
         #region Membership Accounts Management
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public HttpStatusCodeResult NewMembershipAccount(MembershipAccount membershipAccount)
+        //[ValidateAntiForgeryToken]
+        public HttpStatusCodeResult NewMembershipAccount(int CustomerId, int MembershipTypeId)
         {
             try
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
+                    MembershipAccount membershipAccount = new MembershipAccount { CustomerId = CustomerId, MembershipTypeId = MembershipTypeId, JoiningDate = DateTime.Now };
                     db.MembershipAccounts.Add(membershipAccount);
                     db.SaveChanges();
                 }
@@ -88,17 +89,20 @@ namespace PharmAssistant.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public HttpStatusCodeResult UpdateMembership(MembershipAccount membershipAccount)
+        //[ValidateAntiForgeryToken]
+        public HttpStatusCodeResult UpdateMembership(int MembershipId, int MembershipTypeId)
         {
             try
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
+                    var membershipAccount = db.MembershipAccounts.Where(a => a.MembershipId == MembershipId).FirstOrDefault();
+                    membershipAccount.MembershipTypeId = MembershipTypeId;
+
                     db.MembershipAccounts.Attach(membershipAccount);
                     db.Entry(membershipAccount).Property("MembershipTypeId").IsModified = true;
-                    db.Entry(membershipAccount).Property("TotalPurchaseAmount").IsModified = true;
-                    db.Entry(membershipAccount).Property("BonusPoints").IsModified = true;
+                    //db.Entry(membershipAccount).Property("TotalPurchaseAmount").IsModified = true;
+                    //db.Entry(membershipAccount).Property("BonusPoints").IsModified = true;
                     db.SaveChanges();
 
                     return new HttpStatusCodeResult(HttpStatusCode.OK);
@@ -112,7 +116,7 @@ namespace PharmAssistant.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public HttpStatusCodeResult DeleteMembersip(MembershipAccount membershipAccount)
         {
             try
@@ -238,7 +242,7 @@ namespace PharmAssistant.Controllers
         #region Discount Policy Management
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public HttpStatusCodeResult NewDiscountPolicy(DiscountPolicy discountPolicy)
         {
             try
@@ -280,7 +284,19 @@ namespace PharmAssistant.Controllers
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    return Json(db.DiscountPolicies.Include("MembershipType").ToList(), JsonRequestBehavior.AllowGet);
+                    var discountPolicies =  from d in db.DiscountPolicies join
+                                            m in db.MembershipTypes 
+                                            on d.MembershipTypeId equals m.MembershipTypeId
+                                           select new
+                                           {
+                                               PolicyId = d.PolicyId,
+                                               MembershipTypeId = m.MembershipTypeId,
+                                               MembershipTypeName = m.MembershipTypeName,
+                                               UpperBillLimit = d.UpperBillLimit,
+                                               BonusPoints = d.BonusPoints
+                                           };
+
+                    return Json(discountPolicies.ToList(), JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)
@@ -321,7 +337,7 @@ namespace PharmAssistant.Controllers
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    db.DiscountPolicies.Remove(discountPolicy);
+                    db.DiscountPolicies.Remove(db.DiscountPolicies.Where(d => d.PolicyId == discountPolicy.PolicyId).FirstOrDefault());
                     db.SaveChanges();
 
                     return new HttpStatusCodeResult(HttpStatusCode.OK);

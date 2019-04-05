@@ -169,6 +169,26 @@
         $('#btnShowDiscountPolicies').show();
     }
 
+    function addNewMembershipAccount() {
+        var customerId = $('#newMembershipAccountCustomer').selectedValue;
+        var membershipTypeId = $('#newMembershipAccountType').selectedValue;
+        var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+
+        var data = { CustomerId: customerId, MembershipTypeId: membershipTypeId };
+
+        AjaxCall('/Memberships/NewMembershipAccount', JSON.stringify(data), 'POST')
+            .done(function (response) {
+                clearMembershipAccountFormFields();
+                $('#newMembershipAccountForm').hide();
+                alert('New membership account created successfully.');
+                showMembershipAccounts();
+            })
+            .fail(function (error) {
+
+            });
+
+    }
+
     //#endregion
 
     //#region Discount Policies Management
@@ -196,7 +216,7 @@
                             "<td>" + response[i]['MembershipTypeName'] + "</td>" +
                             "<td>" + response[i]['UpperBillLimit'] + "</td>" +
                             "<td>" + response[i]['BonusPoints'] + "</td>" +
-                            '<td class="text-center"><a href="#" title="Edit" onclick="editDicsountPolicy(' + response[i]['PolicyId'] + ',' + response[i]['MembershipTypeId'] + ', ' + response[i]['UpperBillLimit'] + ',' + response[i]['BonusPoints'] + ')"><i class="lnr lnr-pencil"></i></a> ' +
+                            '<td class="text-center"><a href="#" title="Edit" onclick="editDiscountPolicy(' + response[i]['PolicyId'] + ',' + response[i]['MembershipTypeId'] + ', ' + response[i]['UpperBillLimit'] + ',' + response[i]['BonusPoints'] + ')"><i class="lnr lnr-pencil"></i></a> ' +
                             '<a href="#" title="Delete" onclick="deleteDiscountPolicy(' + response[i]['PolicyId'] + ')"><i class="lnr lnr-trash"></i></a></td ></tr > ';
                     }
 
@@ -209,9 +229,6 @@
             .fail(function (error) {
                 alert('Unable to get discount policies. Try again later. \nError: ' + error.statusText);
             });
-
-
-
 
         $('#membershipTypes').hide();
         $('#membershipAccounts').hide();
@@ -258,12 +275,12 @@
 
         var data = { MembershipTypeId: membershipTypeId, UpperBillLimit: upperBillLimit, BonusPoints: bonusPoints, __RequestVerificationToken: antiForgeryToken };
 
-        AjaxCall('/Memberships/AddDiscountPolicy', JSON.stringify(data), 'POST')
+        AjaxCall('/Memberships/NewDiscountPolicy', JSON.stringify(data), 'POST')
             .done(function (response) {
                 clearDiscountPilicyFormFields();
                 $('#newDiscountPolicyForm').hide();
                 alert("Discount Policy added successfully.");
-                showMembershipTypes();
+                showDiscountPolicies();
             })
             .fail(function (error) {
                 alert('Unable to add new discount policy. Try again later. \nError: ' + error.statusText);
@@ -301,7 +318,7 @@
         $('#editUpperBillLimit').val(upperBillLimit);
         $('#editBonusPoints').val(bonusPoints);
 
-        $('#editDiscountPolicy').show();
+        $('#editDiscountPolicyForm').show();
     }
 
     function updateDiscountPolicy() {
@@ -395,7 +412,7 @@
                                 <td>@entry.CustomerId</td>
                                 <td>@entry.CustomerName</td>
                                 <td>@entry.MembershipId</td>
-                                <td>@entry.MembershipType</td>
+                                <td>@entry.MembershipName</td>
                                 <td>@entry.JoiningDate.ToString("dd/MM/yyyy")</td>
                                 <td>@entry.TotalPurchase</td>
                                 <td>@entry.BonusPoints</td>
@@ -412,6 +429,61 @@
             {
                 <span class="alert alert-warning col-md-12 text-center">No membrship account exists.</span>
             }
+        </div>
+    </div>
+
+    <div style="display:none; z-index: 10; width: 100%; height: 100%; position:fixed; top: 0; left: 0; background-color: rgba(0,0,0,0.5);" id="newMembershipAccountForm">
+        <div class="col-md-3" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    New Membership Account
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+
+                        <div class="form-group">                            
+                            <select id="newMembershipAccountCustomer" class="form-control"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <select id="newMembershipAccountType" class="form-control"></select>
+                        </div>
+
+                        <div class="form-group text-right">
+                            <button class="btn btn-primary" onclick="addNewMembershipAccount();">Add</button>&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-danger" onclick="cancelAddingNewMembershipAccount();">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:none; z-index: 10; width: 100%; height: 100%; position:fixed; top: 0; left: 0; background-color: rgba(0,0,0,0.5);" id="editMembershipAccountForm">
+        <div class="col-md-3" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Edit Membership Account
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <input type="hidden" id="editMembershipId" />
+                        <div class="form-group">
+                            <label for="medicineName">Customer</label>
+                            <input type="text" id="editMembershipAccountCustomer" class="form-control" readonly="readonly" />
+                        </div>
+
+                        <div class="form-group">
+                            <select id="editMembershipAccountType" class="form-control"></select>
+                        </div>
+
+                        <div class="form-group text-right">
+                            <button class="btn btn-primary" onclick="updateMembershipAccount();">Update</button>&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-danger" onclick="cancelUpdateMembershipAccount();">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -435,9 +507,9 @@
                 </thead>
                 <tbody id="membershipTypesList"></tbody>
             </table>
-            <select>
-                <option value=""></option>
-            </select>
+            @*<select>
+                    <option value=""></option>
+                </select>*@
         </div>
     </div>
 
