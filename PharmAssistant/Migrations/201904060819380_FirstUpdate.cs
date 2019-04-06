@@ -3,7 +3,7 @@ namespace PharmAssistant.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class FirstMigration : DbMigration
+    public partial class FirstUpdate : DbMigration
     {
         public override void Up()
         {
@@ -18,33 +18,18 @@ namespace PharmAssistant.Migrations
                         ContactNumber = c.Long(nullable: false),
                         EmailId = c.String(maxLength: 30, unicode: false),
                     })
-                .PrimaryKey(t => t.CustomerId)
-                .ForeignKey("dbo.MembershipAccounts", t => t.MembershipId, cascadeDelete: true)
-                .Index(t => t.MembershipId);
+                .PrimaryKey(t => t.CustomerId);
             
             CreateTable(
-                "dbo.MembershipAccounts",
+                "dbo.DiscountPolicies",
                 c => new
                     {
-                        MembershipId = c.Int(nullable: false, identity: true),
+                        PolicyId = c.Int(nullable: false, identity: true),
                         MembershipTypeId = c.Int(nullable: false),
-                        JoiningDate = c.DateTime(precision: 7, storeType: "datetime2"),
-                        TotalPurchaseAmount = c.Double(nullable: false),
+                        UpperBillLimit = c.Double(nullable: false),
                         BonusPoints = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.MembershipId)
-                .ForeignKey("dbo.MembershipTypes", t => t.MembershipTypeId, cascadeDelete: true)
-                .Index(t => t.MembershipTypeId);
-            
-            CreateTable(
-                "dbo.MembershipTypes",
-                c => new
-                    {
-                        MembershipTypeId = c.Int(nullable: false, identity: true),
-                        MembershipTypeName = c.String(nullable: false, maxLength: 30, unicode: false),
-                        MembershipTypeDesc = c.String(maxLength: 50, unicode: false),
-                    })
-                .PrimaryKey(t => t.MembershipTypeId);
+                .PrimaryKey(t => t.PolicyId);
             
             CreateTable(
                 "dbo.Doctors",
@@ -108,6 +93,9 @@ namespace PharmAssistant.Migrations
                         ShelfId = c.Int(nullable: false),
                         CostPrice = c.Single(nullable: false),
                         SellingPrice = c.Single(nullable: false),
+                        StockCapacity = c.Int(nullable: false),
+                        ReorderLevel = c.Int(nullable: false),
+                        BufferLevel = c.Int(nullable: false),
                         Description = c.String(maxLength: 50, unicode: false),
                     })
                 .PrimaryKey(t => t.MedicineId)
@@ -253,6 +241,35 @@ namespace PharmAssistant.Migrations
                 .PrimaryKey(t => t.Name);
             
             CreateTable(
+                "dbo.MembershipAccounts",
+                c => new
+                    {
+                        MembershipId = c.Int(nullable: false, identity: true),
+                        CustomerId = c.Int(nullable: false),
+                        MembershipTypeId = c.Int(nullable: false),
+                        JoiningDate = c.DateTime(precision: 7, storeType: "datetime2"),
+                        TotalPurchaseAmount = c.Double(nullable: false),
+                        BonusPoints = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.MembershipId)
+                .ForeignKey("dbo.Customers", t => t.CustomerId, cascadeDelete: true)
+                .ForeignKey("dbo.MembershipTypes", t => t.MembershipTypeId, cascadeDelete: true)
+                .Index(t => t.CustomerId)
+                .Index(t => t.MembershipTypeId);
+            
+            CreateTable(
+                "dbo.MembershipTypes",
+                c => new
+                    {
+                        MembershipTypeId = c.Int(nullable: false, identity: true),
+                        MembershipTypeName = c.String(nullable: false, maxLength: 30, unicode: false),
+                        MembershipTypeDesc = c.String(maxLength: 50, unicode: false),
+                        UpperBillLimit = c.Double(nullable: false),
+                        BonusPoints = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.MembershipTypeId);
+            
+            CreateTable(
                 "dbo.MembershipDiscounts",
                 c => new
                     {
@@ -363,6 +380,8 @@ namespace PharmAssistant.Migrations
             DropForeignKey("dbo.PurchaseOrderItems", "PurchaseOrderId", "dbo.PurchaseOrders");
             DropForeignKey("dbo.PurchaseOrderItems", "MedicineId", "dbo.Medicines");
             DropForeignKey("dbo.MembershipDiscounts", "MembershipAccount_MembershipId", "dbo.MembershipAccounts");
+            DropForeignKey("dbo.MembershipAccounts", "MembershipTypeId", "dbo.MembershipTypes");
+            DropForeignKey("dbo.MembershipAccounts", "CustomerId", "dbo.Customers");
             DropForeignKey("dbo.SalesOrders", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.SalesOrderItems", "SalesOrderId", "dbo.SalesOrders");
             DropForeignKey("dbo.SalesOrderItems", "MedicineId", "dbo.Medicines");
@@ -376,8 +395,6 @@ namespace PharmAssistant.Migrations
             DropForeignKey("dbo.Medicines", "ManufacturerId", "dbo.Manufacturers");
             DropForeignKey("dbo.SalesOrders", "DoctorId", "dbo.Doctors");
             DropForeignKey("dbo.SalesOrders", "CustomerId", "dbo.Customers");
-            DropForeignKey("dbo.MembershipAccounts", "MembershipTypeId", "dbo.MembershipTypes");
-            DropForeignKey("dbo.Customers", "MembershipId", "dbo.MembershipAccounts");
             DropIndex("dbo.SupplierMedicines", new[] { "Medicine_MedicineId" });
             DropIndex("dbo.SupplierMedicines", new[] { "Supplier_SupplierId" });
             DropIndex("dbo.SupplierMedicineCategories", new[] { "MedicineCategory_CategoryId" });
@@ -388,6 +405,8 @@ namespace PharmAssistant.Migrations
             DropIndex("dbo.PurchaseOrderItems", new[] { "MedicineId" });
             DropIndex("dbo.PurchaseOrderItems", new[] { "PurchaseOrderId" });
             DropIndex("dbo.MembershipDiscounts", new[] { "MembershipAccount_MembershipId" });
+            DropIndex("dbo.MembershipAccounts", new[] { "MembershipTypeId" });
+            DropIndex("dbo.MembershipAccounts", new[] { "CustomerId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
@@ -402,8 +421,6 @@ namespace PharmAssistant.Migrations
             DropIndex("dbo.SalesOrders", new[] { "UserId" });
             DropIndex("dbo.SalesOrders", new[] { "DoctorId" });
             DropIndex("dbo.SalesOrders", new[] { "CustomerId" });
-            DropIndex("dbo.MembershipAccounts", new[] { "MembershipTypeId" });
-            DropIndex("dbo.Customers", new[] { "MembershipId" });
             DropTable("dbo.SupplierMedicines");
             DropTable("dbo.SupplierMedicineCategories");
             DropTable("dbo.StockEntries");
@@ -411,6 +428,8 @@ namespace PharmAssistant.Migrations
             DropTable("dbo.RoleModificationModels");
             DropTable("dbo.PurchaseOrderItems");
             DropTable("dbo.MembershipDiscounts");
+            DropTable("dbo.MembershipTypes");
+            DropTable("dbo.MembershipAccounts");
             DropTable("dbo.LoginModels");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
@@ -425,8 +444,7 @@ namespace PharmAssistant.Migrations
             DropTable("dbo.SalesOrderItems");
             DropTable("dbo.SalesOrders");
             DropTable("dbo.Doctors");
-            DropTable("dbo.MembershipTypes");
-            DropTable("dbo.MembershipAccounts");
+            DropTable("dbo.DiscountPolicies");
             DropTable("dbo.Customers");
         }
     }

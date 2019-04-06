@@ -18,12 +18,16 @@ namespace PharmAssistant.Models
         [Column(TypeName = "varchar")]
         [Required(ErrorMessage = "Membership type name id is required.")]
         public string MembershipTypeName { get; set; }
-
-        public int PolicyId { get; set; }
-
+        
         [StringLength(50)]
         [Column(TypeName = "varchar")]
         public string MembershipTypeDesc { get; set; }
+
+        [Required(ErrorMessage = "Upper Bill limit is required.")]
+        public double UpperBillLimit { get; set; }
+
+        [Required(ErrorMessage = "Bonus points are required.")]
+        public int BonusPoints { get; set; }
 
     }
 }

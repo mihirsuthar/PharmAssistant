@@ -283,25 +283,9 @@
     <Compile Include="Infrastructure\DbSeedingData.cs" />
     <Compile Include="Infrastructure\IdentityHelpers.cs" />
     <Compile Include="Infrastructure\LocationClaimsProvider.cs" />
-    <Compile Include="Migrations\201812091748404_FirstMigration.cs" />
-    <Compile Include="Migrations\201812091748404_FirstMigration.Designer.cs">
-      <DependentUpon>201812091748404_FirstMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201903081657358_MedicineModelUpdate.cs" />
-    <Compile Include="Migrations\201903081657358_MedicineModelUpdate.Designer.cs">
-      <DependentUpon>201903081657358_MedicineModelUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201903151008328_DiscountPolicy.cs" />
-    <Compile Include="Migrations\201903151008328_DiscountPolicy.Designer.cs">
-      <DependentUpon>201903151008328_DiscountPolicy.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201903191519446_DiscountType.cs" />
-    <Compile Include="Migrations\201903191519446_DiscountType.Designer.cs">
-      <DependentUpon>201903191519446_DiscountType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201903310654414_MembershipAccount.cs" />
-    <Compile Include="Migrations\201903310654414_MembershipAccount.Designer.cs">
-      <DependentUpon>201903310654414_MembershipAccount.cs</DependentUpon>
+    <Compile Include="Migrations\201904060819380_FirstUpdate.cs" />
+    <Compile Include="Migrations\201904060819380_FirstUpdate.Designer.cs">
+      <DependentUpon>201904060819380_FirstUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
@@ -395,20 +379,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201812091748404_FirstMigration.resx">
-      <DependentUpon>201812091748404_FirstMigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201903081657358_MedicineModelUpdate.resx">
-      <DependentUpon>201903081657358_MedicineModelUpdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201903151008328_DiscountPolicy.resx">
-      <DependentUpon>201903151008328_DiscountPolicy.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201903191519446_DiscountType.resx">
-      <DependentUpon>201903191519446_DiscountType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201903310654414_MembershipAccount.resx">
-      <DependentUpon>201903310654414_MembershipAccount.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201904060819380_FirstUpdate.resx">
+      <DependentUpon>201904060819380_FirstUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

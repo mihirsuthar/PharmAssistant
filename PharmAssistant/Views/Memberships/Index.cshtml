@@ -24,6 +24,7 @@
 
     $(function () {
         $('#btnShowMembershipAccounts').hide();
+        showMembershipAccounts();
     });
 
     //#region Membership Type Management
@@ -38,7 +39,9 @@
                     var header = '<thead><tr>' +
                         '<th>Membership Type Id</th>' +
                         '<th>Membersip Name</th>' +
-                        '<th>Description</th>' +                        
+                        '<th>Description</th>' + 
+                        '<th>Upper Bill Limit</th>' + 
+                        '<th>Bonus Points</th>' +                         
                         '<th class="text-center">Actions</th></tr></thead>';
 
                     for (var i = 0; i < response.length; i++) {
@@ -48,7 +51,9 @@
                             "<td>" + response[i]['MembershipTypeId'] + "</td>" +
                             "<td>" + response[i]['MembershipTypeName'] + "</td>" +
                             "<td>" + response[i]['MembershipTypeDesc'] + "</td>" +
-                            '<td class="text-center"><a href="#" title="Edit" onclick="editMembershipType(' + response[i]['MembershipTypeId'] + ',\'' + response[i]['MembershipTypeName'] + '\',\' ' + response[i]['MembershipTypeDesc'] + '\')"><i class="lnr lnr-pencil"></i></a> ' +
+                            "<td>" + response[i]['UpperBillLimit'] + "</td>" +
+                            "<td>" + response[i]['BonusPoints'] + "</td>" +
+                            '<td class="text-center"><a href="#" title="Edit" onclick="editMembershipType(' + response[i]['MembershipTypeId'] + ',\'' + response[i]['MembershipTypeName'] + '\',\' ' + response[i]['MembershipTypeDesc'] + '\, ' + response[i]['UpperBillLimit'] + ', ' + response[i]['BonusPoints'] + ')"><i class="lnr lnr-pencil"></i></a> ' +
                             '<a href="#" title="Delete" onclick="deleteMembershipType(' + response[i]['MembershipTypeId'] + ')"><i class="lnr lnr-trash"></i></a></td ></tr > ';
                     }
 
@@ -64,11 +69,11 @@
 
         $('#membershipTypes').show();
         $('#membershipAccounts').hide();
-        $('#discountPolicies').hide()
+        //$('#discountPolicies').hide()
 
         $('#btnShowMembershipAccounts').show();
         $('#btnShowMembershipTypes').hide();
-        $('#btnShowDiscountPolicies').show();
+        //$('#btnShowDiscountPolicies').show();
     }
 
     function showNewMembershipTypeForm() {
@@ -77,19 +82,22 @@
 
     function addNewMembershipType() {
         var membershipTypeName = $('#newMembershipTypeName').val(),
-            membershipTypeDescription = $('#newMembershipTypeDesc').val();
+            membershipTypeDescription = $('#newMembershipTypeDesc').val(),
+            upperBillLimit = $('#newMembershipTypeUpperBillLimit').val(),
+            bonusPoints = $('#newMembershipTypeBonusPoints').val();
+
         var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
 
-        alert('MembershipTypeName: ' + membershipTypeName + '\nMembershipTypeDescription: ' + membershipTypeDescription + '\nToken: ' + antiForgeryToken);
+        //alert('MembershipTypeName: ' + membershipTypeName + '\nMembershipTypeDescription: ' + membershipTypeDescription + '\nToken: ' + antiForgeryToken);
 
-        var data = { MembershipTypeName: membershipTypeName, MembershipTypeDesc: membershipTypeDescription, __RequestVerificationToken: antiForgeryToken };
+        var data = { MembershipTypeName: membershipTypeName, MembershipTypeDesc: membershipTypeDescription, UpperBillLimit: upperBillLimit, BonusPoints: bonusPoints, __RequestVerificationToken: antiForgeryToken };
 
         AjaxCall('/Memberships/AddMembershipType', JSON.stringify(data), 'POST')
             .done(function (response) {
                 clearMembershipTypeFormFields();
                 $('#newMembershipTypeForm').hide();
                 alert("Membership Type added successfully.");
-                showMembershipTypes()
+                showMembershipTypes();
             })
             .fail(function (error) {
                 alert('Unable to add new membership type. Try again later. \nError: ' + error.statusText);
@@ -101,17 +109,21 @@
         $('#newMembershipTypeForm').hide();
     }
 
-    function editMembershipType(membershipTypeId, membershipTypeName, membershipTypeDesc) {
+    function editMembershipType(membershipTypeId, membershipTypeName, membershipTypeDesc, upperBillLimit, bonusPoints) {
         $('#editMembershipTypeId').val(membershipTypeId);
         $('#editMembershipTypeName').val(membershipTypeName);
         $('#editMembershipTypeDesc').val(membershipTypeDesc);
+        $('#editMembershipTypeUpperBillLimit').val(upperBillLimit);
+        $('#editMembershipTypeBonusPoints').val(bonusPoints);
 
         $('#editMembershipTypeForm').show();
     }
 
     function updateMembershipType() {
 
-        var data = { MembershipTypeId: $('#editMembershipTypeId').val(), MembershipTypeName: $('#editMembershipTypeName').val(), MembershipTypeDesc: $('#editMembershipTypeDesc').val() };
+        var data = {
+            MembershipTypeId: $('#editMembershipTypeId').val(), MembershipTypeName: $('#editMembershipTypeName').val(), MembershipTypeDesc: $('#editMembershipTypeDesc').val(),
+            UpperBillLimit: $('#editMembershipTypeUpperBillLimit').val(), BonusPoints: $('#editMembershipTypeBonusPoints').val()};
 
         AjaxCall('/Memberships/UpdateMembershipType', JSON.stringify(data), 'POST')
             .done(function (response) {
@@ -150,9 +162,13 @@
 
     function clearMembershipTypeFormFields() {
         $('#newMembershipTypeName').val('');
-        $('#newMembershipTypeDescription').val('');
+        $('#newMembershipTypeDesc').val('');
+        $('#newMembershipTypeUpperBillLimit').val('');
+        $('#newMembershipTypeBonusPoints').val('');
         $('#editMembershipTypeName').val('');
-        $('#editMembershipTypeDescription').val('');
+        $('#editMembershipTypeDesc').val('');
+        $('#editMembershipTypeUpperBillLimit').val('');
+        $('#editMembershipTypeBonusPoints').val('');
     }
 
     //#endregion
@@ -160,19 +176,97 @@
     //#region Membership Account Management
 
     function showMembershipAccounts() {
+
+        AjaxCall('/Memberships/GetMemberships', null, 'GET')
+            .done(function (response) {
+                //alert('Data: \n' + JSON.stringify(response));
+                //tblMembershipAccounts
+                var tableData = '<thead><tr>' +
+                    '<th>#</th>' +
+                    '<th>Customer Id</th>' +
+                    '<th>Customer Name</th>' +
+                    '<th>Membership Id</th>' +
+                    '<th>Membership Type</th>' +
+                    '<th>Joining Date</th>' +
+                    '<th>Total Purchase</th>' +
+                    '<th>Bonus Points</th>' +
+                    '<th class="text-center">Actions</th>' +
+                    '</tr></thead><tbody>';
+                if (response != null && response.length > 0) {
+                    for (var i = 0; i < response.length; i++) {
+                        parsedDate = new Date(parseInt(response[i]['JoiningDate'].substr(6)));
+                        convertedDate = new Date(parsedDate);
+                        joiningDate = (convertedDate.getDate() < 10 ? '0' + convertedDate.getDate() : convertedDate.getDate()) + '-' +
+                            ((convertedDate.getMonth() + 1) < 10 ? '0' + (convertedDate.getMonth() + 1) : (convertedDate.getMonth() + 1)) + '-' + convertedDate.getFullYear(); //Date object
+
+                        tableData += '<tr>' +
+                            '<td>' + (i + 1) + '</td>' +
+                            '<td>' + response[i]['CustomerId'] + '</td>' +
+                            '<td>' + response[i]['CustomerName'] + '</td>' +
+                            '<td>' + response[i]['MembershipId'] + '</td>' +
+                            '<td>' + response[i]['MembershipType'] + '</td>' +
+                            '<td>' + joiningDate + '</td>' +
+                            '<td>' + response[i]['TotalPurchase'] + '</td>' +
+                            '<td>' + response[i]['BonusPoints'] + '</td>' +
+                            '<td class="text-center">' +
+                            '<a href="#" onclick="updateMembershipAccount(' + response[i]['MembershipId']+');" title="Edit"><i class="lnr lnr-pencil"></i></a>&nbsp;&nbsp;&nbsp;' +
+                            '<a href="#" onclick="deleteMembershipAccount(' + response[i]['MembershipId']+');" title="Delete"><i class="lnr lnr-trash"></i></a>' +
+                            '</td>';
+                    }
+
+                    tableData += '</tbody>';
+                    //alert('TableData: ' + tableData);
+                    $('#tblMembershipAccounts').html(tableData);
+                }
+                else {
+                    $('#tblMembershipAccounts').html("<span class='alert alert-danger col-md-12 text-center'>No membrship account exists.</span>")
+                }
+
+            })
+            .fail(function (error) {
+                alert("Error: \n" + JSON.stringify(error));
+            });
+
+
         $('#membershipTypes').hide();
         $('#membershipAccounts').show();
-        $('#discountPolicies').hide();
+        //$('#discountPolicies').hide();
 
         $('#btnShowMembershipAccounts').hide();
         $('#btnShowMembershipTypes').show();
-        $('#btnShowDiscountPolicies').show();
+        //$('#btnShowDiscountPolicies').show();
+    }
+
+    function showNewMembershipAccountForm() {
+        $('#newMembershipAccountForm').show();
+        AjaxCall('/Memberships/FillNewMembershipAccountForm', null, 'GET')
+            .done(function (response) {
+                //alert('Response: ' + JSON.stringify(response));
+                var customers = "<option value='0'>Select Customer</option>";
+                var membershipTypes = "<option value='0'>Select MembershipType</option>";
+
+                for (var i = 0; i < response.Customers.length; i++) {
+                    customers += "<option value=" + response.Customers[i].CustomerId + ">" + response.Customers[i].CustomerName + "</option>";
+                }
+                for (var i = 0; i < response.MembershipTypes.length; i++) {
+                    membershipTypes += "<option value=" + response.MembershipTypes[i].MembershipTypeId + ">" + response.MembershipTypes[i].MembershipTypeName + "</option>";
+                }
+
+                $('#newMembershipAccountCustomer').html(customers);
+                $('#newMembershipAccountType').html(membershipTypes);
+
+            })
+            .fail(function (error) {
+                alert('Error: ' + error);
+            });
     }
 
     function addNewMembershipAccount() {
-        var customerId = $('#newMembershipAccountCustomer').selectedValue;
-        var membershipTypeId = $('#newMembershipAccountType').selectedValue;
-        var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+        var customerId = $('#newMembershipAccountCustomer').val();
+        var membershipTypeId = $('#newMembershipAccountType').val();
+        //var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+
+        //alert('CustomerId: ' + customerId + '\nMembershipTypeId: ' + membershipTypeId);
 
         var data = { CustomerId: customerId, MembershipTypeId: membershipTypeId };
 
@@ -184,189 +278,248 @@
                 showMembershipAccounts();
             })
             .fail(function (error) {
-
+                alert('Error: ' + JSON.stringify(error));
             });
 
     }
 
-    //#endregion
+    function cancelAddingNewMembershipAccount() {
+        clearMembershipAccountFormFields();
+        $('#newMembershipAccountForm').hide();
+    }
 
-    //#region Discount Policies Management
+    function editMembershipAccount() {//pending
+        $('#editMembershipTypeId').val(membershipTypeId);
+        $('#editMembershipTypeName').val(membershipTypeName);
+        $('#editMembershipTypeDesc').val(membershipTypeDesc);
 
-    function showDiscountPolicies() {
+        $('#editMembershipTypeForm').show();
+    }
 
-        var rows = '';
+    function updateMembershipAccount() {
 
-        AjaxCall('/Memberships/GetDiscountPolicies', null, 'GET')
+        var data = { MembershipTypeId: $('#editMembershipTypeId').val(), MembershipTypeName: $('#editMembershipTypeName').val(), MembershipTypeDesc: $('#editMembershipTypeDesc').val() };
+
+        AjaxCall('/Memberships/UpdateMembershipType', JSON.stringify(data), 'POST')
             .done(function (response) {
-                if (response.length > 0) {
+                clearMembershipTypeFormFields();
+                $('#editMembershipTypeForm').hide();
 
-                    var header = '<thead><tr>' +
-                        '<th>Discount Policy Id</th>' +                        
-                        '<th>Membership Type</th>' +
-                        '<th>Upper Bill Limit</th>' +
-                        '<th>Bonus Points</th>' +
-                        '<th class="text-center">Actions</th></tr></thead>';
-
-                    for (var i = 0; i < response.length; i++) {
-
-                        rows += "<tr>" +
-
-                            "<td>" + response[i]['PolicyId'] + "</td>" +
-                            "<td>" + response[i]['MembershipTypeName'] + "</td>" +
-                            "<td>" + response[i]['UpperBillLimit'] + "</td>" +
-                            "<td>" + response[i]['BonusPoints'] + "</td>" +
-                            '<td class="text-center"><a href="#" title="Edit" onclick="editDiscountPolicy(' + response[i]['PolicyId'] + ',' + response[i]['MembershipTypeId'] + ', ' + response[i]['UpperBillLimit'] + ',' + response[i]['BonusPoints'] + ')"><i class="lnr lnr-pencil"></i></a> ' +
-                            '<a href="#" title="Delete" onclick="deleteDiscountPolicy(' + response[i]['PolicyId'] + ')"><i class="lnr lnr-trash"></i></a></td ></tr > ';
-                    }
-
-                    $('#tblDiscountPolicies').html(header + rows);
-                }
-                else {
-                    $('#tblDiscountPolicies').html("<tr><thead><th><span class='text text-warning text-center'>No discount policy defined yet.</span></th></thead></tr>");
-                }
+                showMembershipTypes();
+                alert('Membership type updated successfully.');
             })
             .fail(function (error) {
-                alert('Unable to get discount policies. Try again later. \nError: ' + error.statusText);
-            });
-
-        $('#membershipTypes').hide();
-        $('#membershipAccounts').hide();
-        $('#discountPolicies').show();
-
-        $('#btnShowMembershipAccounts').show();
-        $('#btnShowMembershipTypes').show();
-        $('#btnShowDiscountPolicies').hide();
-    }
-
-    function showNewDiscountPolicyForm() {
-
-        var options = '<option value="0">Select Membership Type</option>';
-
-        AjaxCall('/Memberships/GetMembershipTypes', null, 'GET')
-            .done(function (response) {
-                if (response.length > 0) {
-
-                    for (var i = 0; i < response.length; i++) {
-
-                        options += '<option value="'+response[i]['MembershipTypeId']+'">'+response[i]['MembershipTypeName']+'</option>';
-                    }
-
-                    $('#membershipTypeNameAdd').html(options);
-                }
-                else {
-                    $('#tblMembershipTypes').html("<tr><thead><th><span class='text text-warning text-center'>No membership types defined yet.</span></th></thead></tr>");
-                }
-            })
-            .fail(function (error) {
-                alert('Unable to get membership types. Try again later. \nError: ' + error.statusText);
-            });
-
-        $('#newDiscountPolicyForm').show();
-    }
-
-    function addNewDiscountPolicy() {
-        var membershipTypeId = $('#membershipTypeNameAdd').val(),
-            upperBillLimit = $('#newUpperBillLimit').val(),
-            bonusPoints = $('#newBonusPoints').val();
-        var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
-
-        //alert('MembershipTypeName: ' + membershipTypeName + '\nMembershipTypeDescription: ' + membershipTypeDescription + '\nToken: ' + antiForgeryToken);
-
-        var data = { MembershipTypeId: membershipTypeId, UpperBillLimit: upperBillLimit, BonusPoints: bonusPoints, __RequestVerificationToken: antiForgeryToken };
-
-        AjaxCall('/Memberships/NewDiscountPolicy', JSON.stringify(data), 'POST')
-            .done(function (response) {
-                clearDiscountPilicyFormFields();
-                $('#newDiscountPolicyForm').hide();
-                alert("Discount Policy added successfully.");
-                showDiscountPolicies();
-            })
-            .fail(function (error) {
-                alert('Unable to add new discount policy. Try again later. \nError: ' + error.statusText);
+                alert('Unable to update membership types. Try again later. \nError: ' + error.statusText);
             });
     }
 
-    function cancelAddingDiscountPolicy() {
-        clearDiscountPilicyFormFields();
-        $('#newDiscountPolicyForm').hide();
+    function cancelUpdateMembershipAccount() {
+        clearMembershipAccountFormFields();
+        $('#editMembershipAccountForm').hide();
     }
 
-    function editDiscountPolicy(policyId, membershipTypeId, upperBillLimit, bonusPoints) {
+    function deleteMembershipAccount(membershipTypeId) {//pending
 
-        var options = '<option value="0">Select Membership Type</option>';
+        if (confirm('Are you sure to delete this membership type?')) {
 
-        AjaxCall('/Memberships/GetMembershipTypes', null, 'GET')
-            .done(function (response) {
-                if (response.length > 0) {
+            var data = { MembershipTypeId: membershipTypeId };
 
-                    for (var i = 0; i < response.length; i++) {
-
-                        options += '<option value="' + response[i]['MembershipTypeId'] + '">' + response[i]['MembershipTypeName'] + '</option>';
-                    }
-
-                    $('#membershipTypeNameEdit').html(options);
-                }                
-            })
-            .fail(function (error) {
-                alert('Unable to get membership types. Try again later. \nError: ' + error.statusText);
-            });
-
-
-        $('#editPolicyId').val(policyId);
-        $('#membershipTypeNameEdit').selectedValue = membershipTypeId;
-        $('#editUpperBillLimit').val(upperBillLimit);
-        $('#editBonusPoints').val(bonusPoints);
-
-        $('#editDiscountPolicyForm').show();
-    }
-
-    function updateDiscountPolicy() {
-
-        var data = { PolicyId: $('#editPolicyId').val(), MembershipTypeId: $('#membershipTypeNameEdit').val(), UpperBillLimit: $('#editUpperBillLimit').val(), BonusPoints: $('#editBonusPoints').val() };
-
-        AjaxCall('/Memberships/UpdateDiscountPolicy', JSON.stringify(data), 'POST')
-            .done(function (response) {
-                clearDiscountPilicyFormFields();
-                $('#editDiscountPolicyForm').hide();
-
-                showDiscountPolicies();
-                alert('Discount policy updated successfully.');
-            })
-            .fail(function (error) {
-                alert('Unable to update discount policy. Try again later. \nError: ' + error.statusText);
-            });
-    }
-
-    function cancelUpdateDiscountPolicy() {
-        clearDiscountPilicyFormFields();
-        $('#editDiscountPolicyForm').hide();
-    }
-
-    function deleteDiscountPolicy(policyId) {
-
-        if (confirm('Are you sure to delete this discount policy?')) {
-
-            var data = { PolicyId: policyId };
-
-            AjaxCall('/Memberships/DeleteDiscountPolicy', JSON.stringify(data), 'POST')
+            AjaxCall('/Memberships/DeleteMembershipType', JSON.stringify(data), 'POST')
                 .done(function (response) {
-                    alert('Discount policy deleted successfully.');
-                    showDiscountPolicies();
+                    alert('Membership type deleted successfully.');
+                    showMembershipTypes();
                 })
                 .fail(function (error) {
-                    alert('Unable to delete discount policy. Try again later. \nError: ' + error.statusText);
+                    alert('Unable to update membership types. Try again later. \nError: ' + error.statusText);
                 });
         }
     }
 
-    function clearDiscountPilicyFormFields() {
-        $('#newUpperBillLimit').val('');
-        $('#newBonusPoints').val('');
-
-        $('#editUpperBillLimit').val('');
-        $('#editBonusPoints').val('');
+    function clearMembershipAccountFormFields() {//Pending
+        $('#newMembershipTypeName').val('');
+        $('#newMembershipTypeDescription').val('');
+        $('#editMembershipTypeName').val('');
+        $('#editMembershipTypeDescription').val('');
     }
+
+    //#endregion
+
+    //#region Discount Policies Management - Disabled
+
+    //function showDiscountPolicies() {
+
+    //    var rows = '';
+
+    //    AjaxCall('/Memberships/GetDiscountPolicies', null, 'GET')
+    //        .done(function (response) {
+    //            if (response.length > 0) {
+
+    //                var header = '<thead><tr>' +
+    //                    '<th>Discount Policy Id</th>' +                        
+    //                    '<th>Membership Type</th>' +
+    //                    '<th>Upper Bill Limit</th>' +
+    //                    '<th>Bonus Points</th>' +
+    //                    '<th class="text-center">Actions</th></tr></thead>';
+
+    //                for (var i = 0; i < response.length; i++) {
+
+    //                    rows += "<tr>" +
+
+    //                        "<td>" + response[i]['PolicyId'] + "</td>" +
+    //                        "<td>" + response[i]['MembershipTypeName'] + "</td>" +
+    //                        "<td>" + response[i]['UpperBillLimit'] + "</td>" +
+    //                        "<td>" + response[i]['BonusPoints'] + "</td>" +
+    //                        '<td class="text-center"><a href="#" title="Edit" onclick="editDiscountPolicy(' + response[i]['PolicyId'] + ',' + response[i]['MembershipTypeId'] + ', ' + response[i]['UpperBillLimit'] + ',' + response[i]['BonusPoints'] + ')"><i class="lnr lnr-pencil"></i></a> ' +
+    //                        '<a href="#" title="Delete" onclick="deleteDiscountPolicy(' + response[i]['PolicyId'] + ')"><i class="lnr lnr-trash"></i></a></td ></tr > ';
+    //                }
+
+    //                $('#tblDiscountPolicies').html(header + rows);
+    //            }
+    //            else {
+    //                $('#tblDiscountPolicies').html("<tr><thead><th><span class='text text-warning text-center'>No discount policy defined yet.</span></th></thead></tr>");
+    //            }
+    //        })
+    //        .fail(function (error) {
+    //            alert('Unable to get discount policies. Try again later. \nError: ' + error.statusText);
+    //        });
+
+    //    $('#membershipTypes').hide();
+    //    $('#membershipAccounts').hide();
+    //    $('#discountPolicies').show();
+
+    //    $('#btnShowMembershipAccounts').show();
+    //    $('#btnShowMembershipTypes').show();
+    //    $('#btnShowDiscountPolicies').hide();
+    //}
+
+    //function showNewDiscountPolicyForm() {
+
+    //    var options = '<option value="0">Select Membership Type</option>';
+
+    //    AjaxCall('/Memberships/GetMembershipTypes', null, 'GET')
+    //        .done(function (response) {
+    //            if (response.length > 0) {
+
+    //                for (var i = 0; i < response.length; i++) {
+
+    //                    options += '<option value="'+response[i]['MembershipTypeId']+'">'+response[i]['MembershipTypeName']+'</option>';
+    //                }
+
+    //                $('#membershipTypeNameAdd').html(options);
+    //            }
+    //            else {
+    //                $('#tblMembershipTypes').html("<tr><thead><th><span class='text text-warning text-center'>No membership types defined yet.</span></th></thead></tr>");
+    //            }
+    //        })
+    //        .fail(function (error) {
+    //            alert('Unable to get membership types. Try again later. \nError: ' + error.statusText);
+    //        });
+
+    //    $('#newDiscountPolicyForm').show();
+    //}
+
+    //function addNewDiscountPolicy() {
+    //    var membershipTypeId = $('#membershipTypeNameAdd').val(),
+    //        upperBillLimit = $('#newUpperBillLimit').val(),
+    //        bonusPoints = $('#newBonusPoints').val();
+    //    var antiForgeryToken = $("input[name=__RequestVerificationToken]").val();
+
+    //    //alert('MembershipTypeName: ' + membershipTypeName + '\nMembershipTypeDescription: ' + membershipTypeDescription + '\nToken: ' + antiForgeryToken);
+
+    //    var data = { MembershipTypeId: membershipTypeId, UpperBillLimit: upperBillLimit, BonusPoints: bonusPoints, __RequestVerificationToken: antiForgeryToken };
+
+    //    AjaxCall('/Memberships/NewDiscountPolicy', JSON.stringify(data), 'POST')
+    //        .done(function (response) {
+    //            clearDiscountPilicyFormFields();
+    //            $('#newDiscountPolicyForm').hide();
+    //            alert("Discount Policy added successfully.");
+    //            showDiscountPolicies();
+    //        })
+    //        .fail(function (error) {
+    //            alert('Unable to add new discount policy. Try again later. \nError: ' + error.statusText);
+    //        });
+    //}
+
+    //function cancelAddingDiscountPolicy() {
+    //    clearDiscountPilicyFormFields();
+    //    $('#newDiscountPolicyForm').hide();
+    //}
+
+    //function editDiscountPolicy(policyId, membershipTypeId, upperBillLimit, bonusPoints) {
+
+    //    var options = '<option value="0">Select Membership Type</option>';
+
+    //    AjaxCall('/Memberships/GetMembershipTypes', null, 'GET')
+    //        .done(function (response) {
+    //            if (response.length > 0) {
+
+    //                for (var i = 0; i < response.length; i++) {
+
+    //                    options += '<option value="' + response[i]['MembershipTypeId'] + '">' + response[i]['MembershipTypeName'] + '</option>';
+    //                }
+
+    //                $('#membershipTypeNameEdit').html(options);
+    //            }                
+    //        })
+    //        .fail(function (error) {
+    //            alert('Unable to get membership types. Try again later. \nError: ' + error.statusText);
+    //        });
+
+
+    //    $('#editPolicyId').val(policyId);
+    //    $('#membershipTypeNameEdit').selectedValue = membershipTypeId;
+    //    $('#editUpperBillLimit').val(upperBillLimit);
+    //    $('#editBonusPoints').val(bonusPoints);
+
+    //    $('#editDiscountPolicyForm').show();
+    //}
+
+    //function updateDiscountPolicy() {
+
+    //    var data = { PolicyId: $('#editPolicyId').val(), MembershipTypeId: $('#membershipTypeNameEdit').val(), UpperBillLimit: $('#editUpperBillLimit').val(), BonusPoints: $('#editBonusPoints').val() };
+
+    //    AjaxCall('/Memberships/UpdateDiscountPolicy', JSON.stringify(data), 'POST')
+    //        .done(function (response) {
+    //            clearDiscountPilicyFormFields();
+    //            $('#editDiscountPolicyForm').hide();
+
+    //            showDiscountPolicies();
+    //            alert('Discount policy updated successfully.');
+    //        })
+    //        .fail(function (error) {
+    //            alert('Unable to update discount policy. Try again later. \nError: ' + error.statusText);
+    //        });
+    //}
+
+    //function cancelUpdateDiscountPolicy() {
+    //    clearDiscountPilicyFormFields();
+    //    $('#editDiscountPolicyForm').hide();
+    //}
+
+    //function deleteDiscountPolicy(policyId) {
+
+    //    if (confirm('Are you sure to delete this discount policy?')) {
+
+    //        var data = { PolicyId: policyId };
+
+    //        AjaxCall('/Memberships/DeleteDiscountPolicy', JSON.stringify(data), 'POST')
+    //            .done(function (response) {
+    //                alert('Discount policy deleted successfully.');
+    //                showDiscountPolicies();
+    //            })
+    //            .fail(function (error) {
+    //                alert('Unable to delete discount policy. Try again later. \nError: ' + error.statusText);
+    //            });
+    //    }
+    //}
+
+    //function clearDiscountPilicyFormFields() {
+    //    $('#newUpperBillLimit').val('');
+    //    $('#newBonusPoints').val('');
+
+    //    $('#editUpperBillLimit').val('');
+    //    $('#editBonusPoints').val('');
+    //}
     
     //#endregion
 
@@ -379,7 +532,7 @@
     <div class="panel-body">
         <input type="button" id="btnShowMembershipAccounts" value="Membership Accounts" class="btn btn-primary" onclick="showMembershipAccounts();" />
         <input type="button" id="btnShowMembershipTypes" value="Membership Types" class="btn btn-primary" onclick="showMembershipTypes();" />
-        <input type="button" id="btnShowDiscountPolicies" value="Discount Policies" class="btn btn-primary" onclick="showDiscountPolicies();" />
+        @*<input type="button" id="btnShowDiscountPolicies" value="Discount Policies" class="btn btn-primary" onclick="showDiscountPolicies();" />*@
     </div>
 
     <div class="panel panel-primary" id="membershipAccounts">
@@ -388,47 +541,54 @@
         </div>
 
         <div class="panel-body">
-            @if (Model != null && Model.Count() > 0)
-            {
-                <table class="table table-hover" id="tblMembershipAccounts">
-                    <thead>
+
+            <div class="col-md-12 text-right">
+                <button class="btn btn-primary" onclick="showNewMembershipAccountForm();">New Membership Account</button><br /><br />
+            </div>
+
+            <table class="table table-hover" id="tblMembershipAccounts"></table>
+
+            @*@if (Model != null && Model.Count() > 0)
+        {
+            <table class="table table-hover" id="tblMembershipAccounts">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Customer Id</th>
+                        <th>Customer Name</th>
+                        <th>Membership Id</th>
+                        <th>Membership Type</th>
+                        <th>Joining Date</th>
+                        <th>Total Purchase</th>
+                        <th>Bonus Points</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="membershipAccountsList">
+                    @foreach (var entry in Model)
+                    {
                         <tr>
-                            <th>#</th>
-                            <th>Customer Id</th>
-                            <th>Customer Name</th>
-                            <th>Membership Id</th>
-                            <th>Membership Type</th>
-                            <th>Joining Date</th>
-                            <th>Total Purchase</th>
-                            <th>Bonus Points</th>
-                            <th class="text-center">Actions</th>
+                            <td>@(i++)</td>
+                            <td>@entry.CustomerId</td>
+                            <td>@entry.CustomerName</td>
+                            <td>@entry.MembershipId</td>
+                            <td>@entry.MembershipName</td>
+                            <td>@entry.JoiningDate.ToString("dd/MM/yyyy")</td>
+                            <td>@entry.TotalPurchase</td>
+                            <td>@entry.BonusPoints</td>
+                            <td class="text-center">
+                                <a href="#" onclick="updateMembershipAccount(@entry.MembershipId);" title="Edit"><i class="lnr lnr-pencil"></i></a>&nbsp;&nbsp;&nbsp;
+                                <a href="#" onclick="deleteMembershipAccount(@entry.MembershipId);" title="Delete"><i class="lnr lnr-trash"></i></a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody id="membershipAccountsList">
-                        @foreach (var entry in Model)
-                        {
-                            <tr>
-                                <td>@(i++)</td>
-                                <td>@entry.CustomerId</td>
-                                <td>@entry.CustomerName</td>
-                                <td>@entry.MembershipId</td>
-                                <td>@entry.MembershipName</td>
-                                <td>@entry.JoiningDate.ToString("dd/MM/yyyy")</td>
-                                <td>@entry.TotalPurchase</td>
-                                <td>@entry.BonusPoints</td>
-                                <td class="text-center">
-                                    <a href="#" onclick="updateMembershipAccount(@entry.MembershipId);" title="Edit"><i class="lnr lnr-pencil"></i></a>&nbsp;&nbsp;&nbsp;
-                                    <a href="#" onclick="deleteMembershipAccount(@entry.MembershipId);" title="Delete"><i class="lnr lnr-trash"></i></a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
+                    }
+                </tbody>
+            </table>
+        }
             else
             {
-                <span class="alert alert-warning col-md-12 text-center">No membrship account exists.</span>
-            }
+            <span class="alert alert-warning col-md-12 text-center">No membrship account exists.</span>
+            }*@
         </div>
     </div>
 
@@ -502,6 +662,8 @@
                         <th>Membership Type Id</th>
                         <th>Membreship Type</th>
                         <th>Description</th>
+                        <th>Upper Bill Limit</th>
+                        <th>Bonus Points</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -530,6 +692,16 @@
                         <div class="form-group">
                             <label for="stockCapacity">Description</label>
                             <textarea id="newMembershipTypeDesc" class="form-control" placeholder="Enter Description" cols="30" rows="6" style="resize: none;"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newMembershipTypeUpperBillLimit">Upper Bill Limit</label>
+                            <input type="text" id="newMembershipTypeUpperBillLimit" class="form-control" placeholder="Enter Upper Bill Limit" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newMembershipTypeBonusPoints">Bonus Points</label>
+                            <input type="text" id="newMembershipTypeBonusPoints" class="form-control" placeholder="Enter Bonus Points" />
                         </div>
 
                         <div class="form-group text-right">
@@ -561,6 +733,16 @@
                             <textarea id="editMembershipTypeDesc" class="form-control" placeholder="Enter Description" cols="30" rows="6" style="resize: none;"></textarea>
                         </div>
 
+                        <div class="form-group">
+                            <label for="editMembershipTypeUpperBillLimit">Upper Bill Limit</label>
+                            <input type="text" id="editMembershipTypeUpperBillLimit" class="form-control" placeholder="Enter Upper Bill Limit" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editMembershipTypeBonusPoints">Bonus Points</label>
+                            <input type="text" id="editMembershipTypeBonusPoints" class="form-control" placeholder="Enter Bonus Points" />
+                        </div>
+
                         <div class="form-group text-right">
                             <button class="btn btn-primary" onclick="updateMembershipType();">Update</button>&nbsp;&nbsp;&nbsp;
                             <button class="btn btn-danger" onclick="cancelUpdateMembershipType();">Cancel</button>
@@ -571,7 +753,8 @@
         </div>
     </div>
 
-    <div class="panel panel-primary" id="discountPolicies" style="display: none;">
+
+    @*<div class="panel panel-primary" id="discountPolicies" style="display: none;">
         <div class="panel-heading">
             Discount Policies
         </div>
@@ -605,8 +788,7 @@
                 <div class="panel-body">
                     <div class="form-horizontal">
                         <div class="form-group">
-                            <label for="membershipTypeNameAdd">Membership Type Name</label>
-                            @*<input type="text" id="membershipTypeName" class="form-control" placeholder="Enter Membership Type Name" />*@
+                            <label for="membershipTypeNameAdd">Membership Type Name</label>                            
                             <select id="membershipTypeNameAdd" class="form-control"></select>
                         </div>
 
@@ -641,7 +823,6 @@
                         <input type="hidden" id="editPolicyId" />
                         <div class="form-group">
                             <label for="medicineName">Membership Type Name</label>
-                            @*<input type="text" id="editMembershipTypeName" class="form-control" placeholder="Enter Membership Type Name" />*@
                             <select id="membershipTypeNameEdit" class="form-control"></select>
                         </div>
 
@@ -663,5 +844,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>*@
 </div>

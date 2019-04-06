@@ -36,6 +36,9 @@ namespace PharmAssistant.Models
         [Display(Name = "Email Id")]
         [ValidateEmail(ErrorMessage = "Please enter valid Email Id.")]
         public string EmailId { get; set; }
+                
+        //[Display(Name = "Status")]
+        //public bool Status { get; set; }
 
         //public virtual MembershipAccount MembershipAccount { get; set; }
     }

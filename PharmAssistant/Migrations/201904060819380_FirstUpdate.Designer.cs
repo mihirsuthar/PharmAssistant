@@ -7,13 +7,13 @@ namespace PharmAssistant.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class DiscountType : IMigrationMetadata
+    public sealed partial class FirstUpdate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(DiscountType));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(FirstUpdate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201903191519446_DiscountType"; }
+            get { return "201904060819380_FirstUpdate"; }
         }
         
         string IMigrationMetadata.Source

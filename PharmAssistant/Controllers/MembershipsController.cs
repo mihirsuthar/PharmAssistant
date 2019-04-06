@@ -1,4 +1,5 @@
-﻿using PharmAssistant.Models;
+﻿using Newtonsoft.Json;
+using PharmAssistant.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,25 @@ namespace PharmAssistant.Controllers
             }
         }
 
+        public JsonResult FillNewMembershipAccountForm()
+        {
+            try
+            {
+                using (PharmAssistantContext db = new PharmAssistantContext())
+                {
+                    var customers = db.Customers.Select(c => new { CustomerId = c.CustomerId, CustomerName = c.CustomerName }).ToList();
+                    var membershipTypes = db.MembershipTypes.Select(mt => new { MembershipTypeId = mt.MembershipTypeId, MembershipTypeName = mt.MembershipTypeName }).ToList();
+
+                    return Json(new { Customers = customers, MembershipTypes = membershipTypes }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Json(new { Customers = new { }, MembershipTypes = new { } });
+            }
+        }
+
         public ActionResult GetMembershipById(int membershipId)
         {
             try
@@ -78,7 +98,21 @@ namespace PharmAssistant.Controllers
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    return Json(db.MembershipAccounts.ToList(), JsonRequestBehavior.AllowGet);
+                    var membershipAcounts = (from c in db.Customers
+                                            join ma in db.MembershipAccounts on c.CustomerId equals ma.CustomerId
+                                            join mtype in db.MembershipTypes on ma.MembershipTypeId equals mtype.MembershipTypeId
+                                            select new
+                                            {
+                                                CustomerId = c.CustomerId,
+                                                CustomerName = c.CustomerName,
+                                                MembershipId = c.MembershipId,
+                                                MembershipType = mtype.MembershipTypeName,
+                                                JoiningDate = ma.JoiningDate,
+                                                TotalPurchase = ma.TotalPurchaseAmount,
+                                                BonusPoints = ma.BonusPoints
+                                            }).ToList();
+
+                    return Json(membershipAcounts, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)
@@ -203,7 +237,9 @@ namespace PharmAssistant.Controllers
                 {
                     db.MembershipTypes.Attach(membershipType);
                     db.Entry(membershipType).Property("MembershipTypeName").IsModified = true;
-                    db.Entry(membershipType).Property("MembershipTypeDesc").IsModified = true;                    
+                    db.Entry(membershipType).Property("MembershipTypeDesc").IsModified = true;
+                    db.Entry(membershipType).Property("UpperBillLimit").IsModified = true;
+                    db.Entry(membershipType).Property("BonusPoints").IsModified = true;
                     db.SaveChanges();
 
                     return new HttpStatusCodeResult(HttpStatusCode.OK);
@@ -239,132 +275,132 @@ namespace PharmAssistant.Controllers
 
         #endregion
 
-        #region Discount Policy Management
+        #region Discount Policy Management - Disabled
 
-        [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public HttpStatusCodeResult NewDiscountPolicy(DiscountPolicy discountPolicy)
-        {
-            try
-            {
-                using (PharmAssistantContext db = new PharmAssistantContext())
-                {
-                    db.DiscountPolicies.Add(discountPolicy);
-                    db.SaveChanges();
-                }
+        //[HttpPost]
+        ////[ValidateAntiForgeryToken]
+        //public HttpStatusCodeResult NewDiscountPolicy(DiscountPolicy discountPolicy)
+        //{
+        //    try
+        //    {
+        //        using (PharmAssistantContext db = new PharmAssistantContext())
+        //        {
+        //            db.DiscountPolicies.Add(discountPolicy);
+        //            db.SaveChanges();
+        //        }
 
-                return new HttpStatusCodeResult(HttpStatusCode.OK);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-        }
+        //        return new HttpStatusCodeResult(HttpStatusCode.OK);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //}
 
-        public ActionResult GetDiscountPolicyById(int policyId)
-        {
-            try
-            {
-                using (PharmAssistantContext db = new PharmAssistantContext())
-                {
-                    return Json(db.DiscountPolicies.Where(d => d.PolicyId == policyId).FirstOrDefault(), JsonRequestBehavior.AllowGet);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            }
-        }
+        //public ActionResult GetDiscountPolicyById(int policyId)
+        //{
+        //    try
+        //    {
+        //        using (PharmAssistantContext db = new PharmAssistantContext())
+        //        {
+        //            return Json(db.DiscountPolicies.Where(d => d.PolicyId == policyId).FirstOrDefault(), JsonRequestBehavior.AllowGet);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //        return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+        //    }
+        //}
 
-        public ActionResult GetDiscountPolicies()
-        {
-            try
-            {
-                using (PharmAssistantContext db = new PharmAssistantContext())
-                {
-                    var discountPolicies =  from d in db.DiscountPolicies join
-                                            m in db.MembershipTypes 
-                                            on d.MembershipTypeId equals m.MembershipTypeId
-                                           select new
-                                           {
-                                               PolicyId = d.PolicyId,
-                                               MembershipTypeId = m.MembershipTypeId,
-                                               MembershipTypeName = m.MembershipTypeName,
-                                               UpperBillLimit = d.UpperBillLimit,
-                                               BonusPoints = d.BonusPoints
-                                           };
+        //public ActionResult GetDiscountPolicies()
+        //{
+        //    try
+        //    {
+        //        using (PharmAssistantContext db = new PharmAssistantContext())
+        //        {
+        //            var discountPolicies =  from d in db.DiscountPolicies join
+        //                                    m in db.MembershipTypes 
+        //                                    on d.MembershipTypeId equals m.MembershipTypeId
+        //                                   select new
+        //                                   {
+        //                                       PolicyId = d.PolicyId,
+        //                                       MembershipTypeId = m.MembershipTypeId,
+        //                                       MembershipTypeName = m.MembershipTypeName,
+        //                                       UpperBillLimit = d.UpperBillLimit,
+        //                                       BonusPoints = d.BonusPoints
+        //                                   };
 
-                    return Json(discountPolicies.ToList(), JsonRequestBehavior.AllowGet);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            }
-        }
+        //            return Json(discountPolicies.ToList(), JsonRequestBehavior.AllowGet);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //        return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+        //    }
+        //}
 
-        [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public HttpStatusCodeResult UpdateDiscountPolicy(DiscountPolicy discountPolicy)
-        {
-            try
-            {
-                using (PharmAssistantContext db = new PharmAssistantContext())
-                {
-                    db.DiscountPolicies.Attach(discountPolicy);
-                    db.Entry(discountPolicy).Property("UpperBillLimit").IsModified = true;
-                    db.Entry(discountPolicy).Property("BonusPoints").IsModified = true;
-                    db.SaveChanges();
+        //[HttpPost]
+        ////[ValidateAntiForgeryToken]
+        //public HttpStatusCodeResult UpdateDiscountPolicy(DiscountPolicy discountPolicy)
+        //{
+        //    try
+        //    {
+        //        using (PharmAssistantContext db = new PharmAssistantContext())
+        //        {
+        //            db.DiscountPolicies.Attach(discountPolicy);
+        //            db.Entry(discountPolicy).Property("UpperBillLimit").IsModified = true;
+        //            db.Entry(discountPolicy).Property("BonusPoints").IsModified = true;
+        //            db.SaveChanges();
 
-                    return new HttpStatusCodeResult(HttpStatusCode.OK);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-        }
+        //            return new HttpStatusCodeResult(HttpStatusCode.OK);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //}
 
-        [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public HttpStatusCodeResult DeleteDiscountPolicy(DiscountPolicy discountPolicy)
-        {
-            try
-            {
-                using (PharmAssistantContext db = new PharmAssistantContext())
-                {
-                    db.DiscountPolicies.Remove(db.DiscountPolicies.Where(d => d.PolicyId == discountPolicy.PolicyId).FirstOrDefault());
-                    db.SaveChanges();
+        //[HttpPost]
+        ////[ValidateAntiForgeryToken]
+        //public HttpStatusCodeResult DeleteDiscountPolicy(DiscountPolicy discountPolicy)
+        //{
+        //    try
+        //    {
+        //        using (PharmAssistantContext db = new PharmAssistantContext())
+        //        {
+        //            db.DiscountPolicies.Remove(db.DiscountPolicies.Where(d => d.PolicyId == discountPolicy.PolicyId).FirstOrDefault());
+        //            db.SaveChanges();
 
-                    return new HttpStatusCodeResult(HttpStatusCode.OK);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-        }
+        //            return new HttpStatusCodeResult(HttpStatusCode.OK);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //}
 
-        public ActionResult GetDiscountRedeemHistory(int membershipId)
-        {
-            try
-            {
-                using (PharmAssistantContext db = new PharmAssistantContext())
-                {
-                    return Json(db.MembershipDiscounts.Where(md => md.MembershipId == membershipId).ToList(), JsonRequestBehavior.AllowGet);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            }
-        }
+        //public ActionResult GetDiscountRedeemHistory(int membershipId)
+        //{
+        //    try
+        //    {
+        //        using (PharmAssistantContext db = new PharmAssistantContext())
+        //        {
+        //            return Json(db.MembershipDiscounts.Where(md => md.MembershipId == membershipId).ToList(), JsonRequestBehavior.AllowGet);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //        return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+        //    }
+        //}
         
         #endregion
 

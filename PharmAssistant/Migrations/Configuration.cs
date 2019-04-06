@@ -120,6 +120,22 @@ namespace PharmAssistant.Migrations
             context.Medicines.AddRange(new List<Medicine> { Medicine1, Medicine2, Medicine3, Medicine4, Medicine5, Medicine6 });
 
             context.SaveChanges();
+
+            Customer customer1 = new Customer { CustomerName = "First Customer", Address = "Anand", ContactNumber = 8857483748, EmailId = "first@gmail.com" };
+            Customer customer2 = new Customer { CustomerName = "Second Customer", Address = "Ahmedabad", ContactNumber = 9847382938, EmailId = "second@gmail.com" };
+            Customer customer3 = new Customer { CustomerName = "Third Customer", Address = "Baroda", ContactNumber = 9944374837, EmailId = "third@gmail.com" };
+
+            context.Customers.AddRange(new List<Customer> { customer1, customer2, customer3 });
+
+            context.SaveChanges();
+
+            MembershipType membershipType1 = new MembershipType { MembershipTypeName = "Silver", MembershipTypeDesc = "Silver Membership", UpperBillLimit = 1500, BonusPoints = 150 };
+            MembershipType membershipType2 = new MembershipType { MembershipTypeName = "Gold", MembershipTypeDesc = "Gold Membership", UpperBillLimit = 2500, BonusPoints = 250 };
+            MembershipType membershipType3 = new MembershipType { MembershipTypeName = "Platinum", MembershipTypeDesc = "Platinum Membership", UpperBillLimit = 3500, BonusPoints = 350 };
+
+            context.MembershipTypes.AddRange(new List<MembershipType> { membershipType1, membershipType2, membershipType3 });
+
+            context.SaveChanges();
         }
     }
 }
