@@ -2,6 +2,7 @@
 using PharmAssistant.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -45,6 +46,14 @@ namespace PharmAssistant.Controllers
                 {
                     MembershipAccount membershipAccount = new MembershipAccount { CustomerId = CustomerId, MembershipTypeId = MembershipTypeId, JoiningDate = DateTime.Now };
                     db.MembershipAccounts.Add(membershipAccount);
+                    db.SaveChanges();
+
+                    Customer customer = db.Customers.Where(c => c.CustomerId == CustomerId).FirstOrDefault();
+                    customer.MembershipId = db.MembershipAccounts.Where(ma => ma.CustomerId == CustomerId).FirstOrDefault().MembershipId;
+
+                    db.Customers.Attach(customer);
+                    db.Entry(customer).State = EntityState.Modified;
+
                     db.SaveChanges();
                 }
 
@@ -105,7 +114,8 @@ namespace PharmAssistant.Controllers
                                             {
                                                 CustomerId = c.CustomerId,
                                                 CustomerName = c.CustomerName,
-                                                MembershipId = c.MembershipId,
+                                                MembershipId = ma.MembershipId,
+                                                MembershipTypeId = mtype.MembershipTypeId,
                                                 MembershipType = mtype.MembershipTypeName,
                                                 JoiningDate = ma.JoiningDate,
                                                 TotalPurchase = ma.TotalPurchaseAmount,
@@ -124,7 +134,7 @@ namespace PharmAssistant.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public HttpStatusCodeResult UpdateMembership(int MembershipId, int MembershipTypeId)
+        public HttpStatusCodeResult UpdateMembershipAccount(int MembershipId, int MembershipTypeId)
         {
             try
             {
@@ -151,13 +161,13 @@ namespace PharmAssistant.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public HttpStatusCodeResult DeleteMembersip(MembershipAccount membershipAccount)
+        public HttpStatusCodeResult DeleteMembersip(int MembershipId)
         {
             try
             {
                 using (PharmAssistantContext db = new PharmAssistantContext())
                 {
-                    db.MembershipAccounts.Remove(membershipAccount);                    
+                    db.MembershipAccounts.Remove(db.MembershipAccounts.Where(ma => ma.MembershipId == MembershipId).FirstOrDefault());                    
                     db.SaveChanges();
 
                     return new HttpStatusCodeResult(HttpStatusCode.OK);

@@ -53,7 +53,7 @@
                             "<td>" + response[i]['MembershipTypeDesc'] + "</td>" +
                             "<td>" + response[i]['UpperBillLimit'] + "</td>" +
                             "<td>" + response[i]['BonusPoints'] + "</td>" +
-                            '<td class="text-center"><a href="#" title="Edit" onclick="editMembershipType(' + response[i]['MembershipTypeId'] + ',\'' + response[i]['MembershipTypeName'] + '\',\' ' + response[i]['MembershipTypeDesc'] + '\, ' + response[i]['UpperBillLimit'] + ', ' + response[i]['BonusPoints'] + ')"><i class="lnr lnr-pencil"></i></a> ' +
+                            '<td class="text-center"><a href="#" title="Edit" onclick="editMembershipType(' + response[i]['MembershipTypeId'] + ',\'' + response[i]['MembershipTypeName'] + '\',\' ' + response[i]['MembershipTypeDesc'] + '\', ' + response[i]['UpperBillLimit'] + ', ' + response[i]['BonusPoints'] + ')"><i class="lnr lnr-pencil"></i></a> ' +
                             '<a href="#" title="Delete" onclick="deleteMembershipType(' + response[i]['MembershipTypeId'] + ')"><i class="lnr lnr-trash"></i></a></td ></tr > ';
                     }
 
@@ -209,8 +209,8 @@
                             '<td>' + response[i]['TotalPurchase'] + '</td>' +
                             '<td>' + response[i]['BonusPoints'] + '</td>' +
                             '<td class="text-center">' +
-                            '<a href="#" onclick="updateMembershipAccount(' + response[i]['MembershipId']+');" title="Edit"><i class="lnr lnr-pencil"></i></a>&nbsp;&nbsp;&nbsp;' +
-                            '<a href="#" onclick="deleteMembershipAccount(' + response[i]['MembershipId']+');" title="Delete"><i class="lnr lnr-trash"></i></a>' +
+                            '<a href="#" onclick="editMembershipAccount(\'' + response[i]['CustomerName'] + '\', ' + response[i]['MembershipTypeId'] + ', ' + response[i]['MembershipId'] + ');" title="Edit"><i class="lnr lnr-pencil"></i></a>&nbsp;&nbsp;&nbsp;' +
+                            '<a href="#" onclick="deleteMembershipAccount(' + response[i]['MembershipId'] + ');" title="Delete"><i class="lnr lnr-trash"></i></a>' +
                             '</td>';
                     }
 
@@ -288,28 +288,45 @@
         $('#newMembershipAccountForm').hide();
     }
 
-    function editMembershipAccount() {//pending
-        $('#editMembershipTypeId').val(membershipTypeId);
-        $('#editMembershipTypeName').val(membershipTypeName);
-        $('#editMembershipTypeDesc').val(membershipTypeDesc);
+    function editMembershipAccount(customerName, membershipTypeId, membershipId) {//pending
+        AjaxCall('/Memberships/FillNewMembershipAccountForm', null, 'GET')
+            .done(function (response) {                
+                var membershipTypes = "<option value=0>Select Membership Type</option>";
 
-        $('#editMembershipTypeForm').show();
+                for (var i = 0; i < response.MembershipTypes.length; i++) {
+                    membershipTypes += "<option value=" + response.MembershipTypes[i].MembershipTypeId + ">" + response.MembershipTypes[i].MembershipTypeName + "</option>";
+                }
+
+                $('#editMembershipAccountType').html(membershipTypes);
+            })
+            .fail(function (error) {
+                alert('Error: ' + error);
+            });
+
+        //alert('MembershipId: ' + membershipId + '\nMembershipType: ' + membershipTypeId + '\nType: ' + typeof (membershipTypeId));
+        $('#editMembershipId').val(membershipId);
+        $('#editMembershipAccountCustomer').val(customerName);
+        setTimeout(selectMembershipType, 200, membershipTypeId);                
+        $('#editMembershipAccountForm').show();
+    }
+    function selectMembershipType(membershipTypeId) {
+        $('#editMembershipAccountType').val(membershipTypeId);
     }
 
     function updateMembershipAccount() {
 
-        var data = { MembershipTypeId: $('#editMembershipTypeId').val(), MembershipTypeName: $('#editMembershipTypeName').val(), MembershipTypeDesc: $('#editMembershipTypeDesc').val() };
+        var data = { MembershipId: $('#editMembershipId').val(), MembershipTypeId: $('#editMembershipAccountType').val() };
 
-        AjaxCall('/Memberships/UpdateMembershipType', JSON.stringify(data), 'POST')
+        AjaxCall('/Memberships/UpdateMembershipAccount', JSON.stringify(data), 'POST')
             .done(function (response) {
-                clearMembershipTypeFormFields();
-                $('#editMembershipTypeForm').hide();
+                clearMembershipAccountFormFields();
+                $('#editMembershipAccountForm').hide();
 
-                showMembershipTypes();
-                alert('Membership type updated successfully.');
+                showMembershipAccounts();
+                alert('Membership account updated successfully.');
             })
             .fail(function (error) {
-                alert('Unable to update membership types. Try again later. \nError: ' + error.statusText);
+                alert('Unable to update membership account. Try again later. \nError: ' + error.statusText);
             });
     }
 
@@ -318,28 +335,28 @@
         $('#editMembershipAccountForm').hide();
     }
 
-    function deleteMembershipAccount(membershipTypeId) {//pending
+    function deleteMembershipAccount(membershipId) {
 
-        if (confirm('Are you sure to delete this membership type?')) {
+        if (confirm('Are you sure to delete this membership account?')) {
 
-            var data = { MembershipTypeId: membershipTypeId };
+            var data = { MembershipId: membershipId };
 
-            AjaxCall('/Memberships/DeleteMembershipType', JSON.stringify(data), 'POST')
+            AjaxCall('/Memberships/DeleteMembershipAccount', JSON.stringify(data), 'POST')
                 .done(function (response) {
-                    alert('Membership type deleted successfully.');
-                    showMembershipTypes();
+                    alert('Membership account deleted successfully.');
+                    showMembershipAccounts();
                 })
                 .fail(function (error) {
-                    alert('Unable to update membership types. Try again later. \nError: ' + error.statusText);
+                    alert('Unable to delete membership account. Try again later. \nError: ' + error.statusText);
                 });
         }
     }
 
-    function clearMembershipAccountFormFields() {//Pending
-        $('#newMembershipTypeName').val('');
-        $('#newMembershipTypeDescription').val('');
-        $('#editMembershipTypeName').val('');
-        $('#editMembershipTypeDescription').val('');
+    function clearMembershipAccountFormFields() {
+        $('#newMembershipAccountCustomer').val(0);
+        $('#newMembershipAccountType').val(0);
+        $('#editMembershipAccountCustomer').val(0);
+        $('#editMembershipAccountType').val(0);
     }
 
     //#endregion
@@ -628,6 +645,7 @@
                 <div class="panel-body">
                     <div class="form-horizontal">
                         <input type="hidden" id="editMembershipId" />
+                        <input type="hidden" id="editCustomerId" />
                         <div class="form-group">
                             <label for="medicineName">Customer</label>
                             <input type="text" id="editMembershipAccountCustomer" class="form-control" readonly="readonly" />
